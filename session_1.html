@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>session 1 - scratch</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #fdf4e3 0%, #fff0f5 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* أنيميشن */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes shake {
+            0%,100%{ transform: rotate(0deg); }
+            25%{ transform: rotate(15deg); }
+            75%{ transform: rotate(-15deg); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes sizzle {
+            0% { opacity: 0.7; text-shadow: 0 0 0px orange; }
+            100% { opacity: 1; text-shadow: 0 0 15px red; }
+        }
+        @keyframes floatHero {
+            0%,100%{ transform: translateY(0); }
+            50%{ transform: translateY(-10px); }
+        }
+        @keyframes sparkleAnim {
+            0% { opacity: 1; transform: scale(0.5); }
+            100% { opacity: 0; transform: scale(1.5) translateY(-30px); }
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 70px;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            box-shadow: 0 25px 35px rgba(0,0,0,0.2);
+            animation: floatHero 4s ease-in-out infinite;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow: 3px 3px 0 #c2410c;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            background: rgba(255,255,255,0.2);
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 60px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            border: 2px solid #ffd966;
+        }
+        .card:hover {
+            transform: scale(1.01);
+        }
+        .card-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #f97316, #ec489a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        /* شبكة المكونات */
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .comp-item {
+            background: #fef9e3;
+            border-radius: 40px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            animation: bounceSoft 2s infinite;
+        }
+        @keyframes bounceSoft {
+            0%,100%{ transform: translateY(0); }
+            50%{ transform: translateY(-6px); }
+        }
+        .comp-item i {
+            font-size: 3.5rem;
+            color: #db2777;
+        }
+        .comp-item h3 {
+            font-size: 1.3rem;
+            margin: 10px 0;
+        }
+
+        /* الأجهزة الذكية */
+        .smart-devices {
+            background: linear-gradient(145deg, #e0f2fe, #bae6fd);
+            border-radius: 50px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .smart-devices-grid {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .smart-device {
+            background: white;
+            border-radius: 40px;
+            padding: 15px 20px;
+            text-align: center;
+            min-width: 120px;
+            transition: 0.2s;
+        }
+        .smart-device:hover { transform: translateY(-5px); }
+        .smart-device i { font-size: 2.5rem; }
+        .smart-device h4 { margin: 8px 0; font-size: 1.1rem; }
+
+        /* قسم المدخلات والمخرجات */
+        .io-section {
+            background: linear-gradient(145deg, #e8f4f8, #d4ecf5);
+            border-radius: 60px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        .io-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 25px 0;
+        }
+        .io-card {
+            background: white;
+            border-radius: 50px;
+            padding: 25px;
+            text-align: center;
+            transition: 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .io-card:hover { transform: translateY(-5px); }
+        .io-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+        .io-example {
+            background: #f0f0f0;
+            border-radius: 30px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+        .process-demo {
+            background: #2d1b4e;
+            color: white;
+            border-radius: 50px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* لعبة الباينري - ترتيب من اليمين للشمال */
+        .binary-game {
+            background: #2d1b4e;
+            border-radius: 60px;
+            padding: 30px;
+            color: white;
+            text-align: center;
+        }
+        .binary-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px;
+            flex-wrap: wrap;
+            flex-direction: row-reverse;
+        }
+        .binary-bit {
+            width: 75px;
+            height: 75px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            border-radius: 30px;
+            border: 4px solid #ffd966;
+            background: #4c1d95;
+            color: white;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .binary-bit.active {
+            background: #facc15;
+            color: #2d1b4e;
+            box-shadow: 0 0 20px gold;
+        }
+        .binary-result-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .binary-card {
+            background: #1e293b;
+            border-radius: 30px;
+            padding: 15px 25px;
+            min-width: 200px;
+        }
+        .binary-card h4 {
+            color: #facc15;
+            margin-bottom: 10px;
+        }
+        .binary-value {
+            font-size: 1.8rem;
+            font-family: monospace;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 20px;
+            letter-spacing: 4px;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* قسم الخوارزميات والقطة */
+        .pizza-section {
+            background: #fff5e6;
+            border-radius: 60px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 3px solid #ffb347;
+        }
+        .pizza-stage {
+            background: #fce4b2;
+            border-radius: 50px;
+            padding: 25px;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .cat-pizza-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .cat-chef {
+            font-size: 4.5rem;
+            filter: drop-shadow(5px 8px 12px rgba(0,0,0,0.2));
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .pizza-pan {
+            background: #8b5a2b;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .pizza-base {
+            background: #d49436;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .topping-icon {
+            font-size: 1.8rem;
+            position: absolute;
+            transition: all 0.2s;
+        }
+        .step-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .step-btn {
+            padding: 12px 22px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+            font-family: inherit;
+        }
+        .step-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0;
+        }
+        .step-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+        .step-1 { background: #f4a261; color: white; }
+        .step-2 { background: #e76f51; color: white; }
+        .step-3 { background: #f4d03f; color: #5d3a1a; }
+        .step-4 { background: #e63946; color: white; }
+        .reset-btn { background: #2c3e50; color: white; }
+        .progress-bar-container {
+            background: #ddd;
+            border-radius: 30px;
+            height: 18px;
+            width: 100%;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 30px;
+        }
+        .message-box {
+            background: #fff3cd;
+            border-radius: 40px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-right: 8px solid #ff6b35;
+        }
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            font-size: 1.3rem;
+            animation: sparkleAnim 0.8s ease-out forwards;
+        }
+
+        /* قسم التحدي والتفكير */
+        .challenge-section {
+            background: linear-gradient(145deg, #f3e8ff, #e9d5ff);
+            border-radius: 60px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        .challenge-question {
+            background: white;
+            border-radius: 50px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .show-solution-btn {
+            background: #8b5cf6;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        .show-solution-btn:hover {
+            background: #7c3aed;
+            transform: scale(1.02);
+        }
+        .solution-area {
+            background: #d9f99d;
+            border-radius: 40px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+            border-right: 10px solid #65a30d;
+        }
+
+        /* قسم شرح واجهة سكراتش */
+        .scratch-interface-section {
+            background: linear-gradient(145deg, #f0f9ff, #d9f0f7);
+            border-radius: 60px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 3px solid #4c97ff;
+        }
+        .interface-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .interface-card {
+            background: white;
+            border-radius: 40px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.2s;
+            cursor: pointer;
+            border-bottom: 8px solid;
+        }
+        .interface-card:hover {
+            transform: translateY(-8px);
+        }
+        .interface-card.stage-card { border-bottom-color: #10b981; }
+        .interface-card.sprites-card { border-bottom-color: #f59e0b; }
+        .interface-card.blocks-card { border-bottom-color: #ef4444; }
+        .interface-card.code-card { border-bottom-color: #8b5cf6; }
+        .interface-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+        .interface-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .interface-card .eng-name {
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+        .interface-desc {
+            font-size: 0.95rem;
+            color: #334155;
+            line-height: 1.5;
+        }
+        .interface-visual {
+            background: #f8fafc;
+            border-radius: 30px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px dashed #cbd5e1;
+        }
+        .visual-map {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .visual-item {
+            background: white;
+            border-radius: 20px;
+            padding: 10px 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .visual-item .color-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+        }
+
+        /* سكراتش محاكي مع Event و Sound */
+        .scratch-sim {
+            background: #e0f2fe;
+            border-radius: 50px;
+            padding: 25px;
+        }
+        .block-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 6px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+        }
+        .block-btn:active { transform: translateY(2px); box-shadow: 0 1px 0; }
+        .green { background: #4caf50; color: white; }
+        .blue { background: #2196f3; color: white; }
+        .purple { background: #9c27b0; color: white; }
+        .orange { background: #ff9800; color: white; }
+        .red { background: #e63946; color: white; }
+        .stage {
+            background: #fff9e6;
+            min-height: 220px;
+            border-radius: 40px;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #ffb74d;
+        }
+        .scratch-cat {
+            font-size: 75px;
+            position: absolute;
+            bottom: 15px;
+            right: 25px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .green-flag {
+            background: #4caf50;
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #1b5e20;
+            transition: 0.1s;
+            margin: 5px;
+        }
+        .green-flag:active { transform: translateY(2px); box-shadow: 0 1px 0 #1b5e20; }
+
+        .homework {
+            background: linear-gradient(145deg, #fff0df, #ffe4c4);
+            border: 4px dashed #f97316;
+            border-radius: 60px;
+            padding: 35px;
+            margin-top: 20px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background: #6b21e5;
+            color: white;
+            border-radius: 40px 40px 0 0;
+        }
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 1.8rem; }
+            .pizza-pan { width: 180px; height: 180px; }
+            .pizza-base { width: 150px; height: 150px; }
+            .cat-chef { font-size: 3rem; }
+            .binary-bit { width: 55px; height: 55px; font-size: 1.3rem; }
+            .interface-grid { grid-template-columns: 1fr; }
+            .binary-value { font-size: 1.2rem; letter-spacing: 2px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- هيدر -->
+    <div class="hero">
+      
+        <p>تعالوا نعرف الكمبيوتر، المدخلات والمخرجات، الخوارزميات، ونتعلم سكراتش! 🐱💻🍕</p>
+        <div style="font-size: 2rem; margin-top: 15px;">⌨️🖥️🎧🖱️🐱⌚📱</div>
+    </div>
+
+    <!-- ========== 1. شرح الكمبيوتر ========== -->
+    <div class="card">
+        <h2 class="card-title">🤔 إيه هو الكمبيوتر وبيتكون من إيه؟</h2>
+        <p style="font-size: 1.2rem;">الكمبيوتر جهاز إلكتروني ذكي جداً بيسمع أوامرنا وينفذها بسرعة الضوء ⚡. هو زي "الصندوق السحري" اللي بيفهم لغة خاصة!</p>
+        
+        <div class="components-grid">
+            <div class="comp-item"><i class="fas fa-tower-cell"></i><h3>كيسة (CPU)</h3><p>الدماغ</p></div>
+            <div class="comp-item"><i class="fas fa-headphones"></i><h3>سماعات</h3><p>تسمع صوت</p></div>
+            <div class="comp-item"><i class="fas fa-keyboard"></i><h3>كيبورد</h3><p>نكتب به</p></div>
+            <div class="comp-item"><i class="fas fa-mouse"></i><h3>ماوس</h3><p>نضغط به</p></div>
+            <div class="comp-item"><i class="fas fa-tv"></i><h3>شاشة</h3><p>نشوف عليه</p></div>
+        </div>
+        
+        <div class="smart-devices">
+            <h3 style="color: #075985; margin-bottom: 15px;">📱 الكمبيوتر مش بس كيسة! كمان الأجهزة الذكية دي كلها "كمبيوترات" صغيرة 📱</h3>
+            <div class="smart-devices-grid">
+                <div class="smart-device"><i class="fas fa-mobile-alt"></i><h4>الموبايل الذكي</h4><p style="font-size: 0.8rem;">بيستقبل مكالمات (مدخل) ويخرج صوت (مخرج)</p></div>
+                <div class="smart-device"><i class="fas fa-tablet-alt"></i><h4>التابلت</h4><p style="font-size: 0.8rem;">بتضغط على الشاشة (مدخل) وتشوف الفيديو (مخرج)</p></div>
+                <div class="smart-device"><i class="fas fa-clock"></i><h4>الساعة الذكية</h4><p style="font-size: 0.8rem;">تقيس نبضات قلبك (مدخل) وتعرض الوقت (مخرج)</p></div>
+                <div class="smart-device"><i class="fas fa-gamepad"></i><h4>جهاز الألعاب</h4><p style="font-size: 0.8rem;">بتضغط على الدراع (مدخل) وتلعب (مخرج)</p></div>
+                <div class="smart-device"><i class="fas fa-calculator"></i><h4>الآلة الحاسبة</h4><p style="font-size: 0.8rem;">بتدخل أرقام (مدخل) وتطلع ناتج الجمع (مخرج)</p></div>
+            </div>
+            <p style="margin-top: 12px; font-size: 0.9rem; background: white; border-radius: 30px; padding: 8px;">💡 <strong>أي جهاز بيدخل بيانات ← يعالجها ← يطلع نتيجة = كمبيوتر!</strong> الساعة الذكية، التابلت، الموبايل، كلهم كمبيوترات صغيرة!</p>
+        </div>
+        
+        <p style="background:#ffe6f0; border-radius: 30px; padding: 12px; margin-top: 15px;"><strong>📝 خلاصة:</strong> الكمبيوتر = أجزاء ملموسة (هاردوير) + برامج (سوفت وير) زي الألعاب والوورد. وكل الأجهزة الذكية حوالينا هي كمبيوترات!</p>
+    </div>
+
+    <!-- هاردوير وسوفت وير -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 40px;">
+        <div class="card" style="background:#fef2f2;">
+            <i class="fas fa-microchip" style="font-size: 2.5rem; color: #b91c1c;"></i>
+            <h2>🔧 هاردوير (Hardware)</h2>
+            <p>الحاجات اللي نقدر نلمسها: المازر بورد، المعالج (CPU)، الرامات، الهارد ديسك، وماوس وسماعات.</p>
+            <div><span class="block-btn green">المازر بورد</span> <span class="block-btn blue">الهارد ديسك</span></div>
+        </div>
+        <div class="card" style="background:#e6f7e6;">
+            <i class="fas fa-code" style="font-size: 2.5rem; color: #166534;"></i>
+            <h2>💾 سوفت وير (Software)</h2>
+            <p>البرامج والأوامر الخفية: زي ويندوز، الألعاب، وسكراتش. من غير سوفت وير، الكمبيوتر زي جسم من غير روح!</p>
+            <div><span class="block-btn purple">سكراتش</span> <span class="block-btn orange">باوربوينت</span></div>
+        </div>
+    </div>
+
+    <!-- ========== 2. المدخلات والمخرجات ========== -->
+    <div class="io-section">
+        <h2 class="card-title">📥 المدخلات (Input) - المعالجة (Process) - المخرجات (Output) 📤</h2>
+        <p style="font-size: 1.2rem; text-align: center;">الكمبيوتر بيشتغل بثلاث خطوات أساسية: <strong>يدخل حاجة ← يعالجها ← يطلع نتيجة</strong></p>
+        
+        <div class="io-grid">
+            <div class="io-card">
+                <div class="io-icon">⌨️🖱️🎤📷</div>
+                <h3 style="color:#db2777;">📥 المدخلات (Input)</h3>
+                <p>هي الحاجات اللي <strong>ندخلها</strong> للكمبيوتر عشان يشتغل عليها.</p>
+                <div class="io-example">
+                    <strong>أمثلة:</strong><br>
+                    ✏️ الكتابة على الكيبورد<br>
+                    🖱️ الضغط بالماوس<br>
+                    🎤 الكلام في الميكروفون<br>
+                    📷 الصور من الكاميرا<br>
+                    ❤️ قياس نبضات الساعة الذكية
+                </div>
+            </div>
+            
+            <div class="io-card">
+                <div class="io-icon">🧠⚙️🔧</div>
+                <h3 style="color:#f97316;">🧠 المعالجة (Process)</h3>
+                <p>الكمبيوتر <strong>يفكر ويحسب وينفذ</strong> الأوامر على المدخلات.</p>
+                <div class="io-example">
+                    <strong>أمثلة:</strong><br>
+                    ➕ جمع الأرقام<br>
+                    🎮 حساب حركة اللاعب في اللعبة<br>
+                    🎨 تغيير لون الصورة<br>
+                    📝 ترتيب الحروف عشان تكون كلمة<br>
+                    ⌚ حساب عدد الخطوات اللي مشيتها
+                </div>
+            </div>
+            
+            <div class="io-card">
+                <div class="io-icon">🖥️🔊🖨️📱</div>
+                <h3 style="color:#16a34a;">📤 المخرجات (Output)</h3>
+                <p>النتيجة اللي <strong>يطلعها</strong> الكمبيوتر بعد المعالجة.</p>
+                <div class="io-example">
+                    <strong>أمثلة:</strong><br>
+                    🖥️ ظهور الصورة على الشاشة<br>
+                    🔊 خروج صوت من السماعات<br>
+                    🖨️ طباعة ورقة<br>
+                    📱 إرسال رسالة<br>
+                    ⌚ اهتزاز الساعة لتنبيهك
+                </div>
+            </div>
+        </div>
+        
+        <div class="process-demo">
+            <p style="font-size: 1.2rem;">🎯 <strong>جرب بنفسك:</strong> اكتب أي حاجة في المربع، وشوف إزاي الكمبيوتر بياخدها (مدخل)، يعالجها، ويطلع مخرج!</p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+                <input type="text" id="ioExampleInput" placeholder="اكتب اسمك أو أي كلمة (مدخل)" style="padding: 12px; border-radius: 50px; border: none; width: 250px; text-align: center;">
+                <button id="ioProcessBtn" class="step-btn step-1" style="padding: 10px 20px;">⚙️ معالجة</button>
+            </div>
+            <div id="ioOutputResult" style="background: #1e293b; border-radius: 40px; padding: 15px; margin-top: 15px; font-size: 1.1rem;">
+                📤 المخرج هيظهر هنا
+            </div>
+            <p style="margin-top: 12px; font-size: 0.9rem;">💡 <strong>شرح العملية:</strong> المدخل (نص) ← المعالجة (تجهيز الرد) ← المخرج (رسالة ترحيب)</p>
+        </div>
+        
+        <div class="message-box" style="background: #e0f2fe; margin-top: 15px;">
+            🌟 <strong>خلاصة:</strong> أي جهاز إلكتروني بيمر بـ (مدخل ← معالجة ← مخرج). حتى الميكروويف والساعة الذكية!
+        </div>
+    </div>
+
+    <!-- ========== 3. لغة الباينري (مطابق تماماً من اليمين للشمال) ========== -->
+    <div class="binary-game">
+        <h2>🔢 لغة الكمبيوتر: 0 و 1 (الباينري / Binary)</h2>
+        <p>الكمبيوتر بيفهم بس "صفر وواحد"! زي كود سري. جرب تشغل الأزرار (الأرقام مقروءة من اليمين للشمال):</p>
+        <div class="binary-buttons" id="binaryButtons">
+            <!-- الأزرار معكوسة ترتيبها عشان تظهر من اليمين للشمال -->
+            <button data-bit="1" class="binary-bit">1</button>
+            <button data-bit="0" class="binary-bit">0</button>
+            <button data-bit="0" class="binary-bit">0</button>
+            <button data-bit="1" class="binary-bit">1</button>
+            <button data-bit="0" class="binary-bit">0</button>
+            <button data-bit="1" class="binary-bit">1</button>
+        </div>
+        
+        <div class="binary-result-row">
+            <div class="binary-card">
+                <h4>🔢 الرقم الثنائي (Binary)</h4>
+                <div class="binary-value" id="binaryCodeDisplay">101001</div>
+                <p style="font-size:0.8rem; margin-top:5px;"></p>
+            </div>
+            <div class="binary-card">
+                <h4>🔢 الرقم العشري (Decimal)</h4>
+                <div class="binary-value" id="decimalValue">41</div>
+            </div>
+        </div>
+        
+        <div class="binary-result-row">
+            <div class="binary-card">
+                <h4>✅ البايت كامل (Byte)</h4>
+                <div class="binary-value" id="fullByteDisplay">00101001</div>
+            </div>
+            <div class="binary-card">
+                <h4>💡 معلومة</h4>
+                <div class="binary-value" style="font-size:1rem;">حرف A = 01000001</div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- ========== 4. الخوارزميات ========== -->
+    <div class="card">
+        <h2 class="card-title">🧠 إيه هي الخوارزمية (Algorithm)؟</h2>
+        <p style="font-size: 1.2rem;"><strong>الخوارزمية = مجموعة خطوات مرتبة ومنظمة عشان نوصل لحل مشكلة معينة.</strong></p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+            <div style="background: #e8f4f8; border-radius: 40px; padding: 20px;">
+                <h3>📝 مثال 1: خوارزمية عمل ساندوتش</h3>
+                <ol style="padding-right: 25px;">
+                    <li>أحضر رغيف عيش 🥖</li>
+                    <li>أفرد جبنة أو زبدة 🧈</li>
+                    <li>أضف خيار وطماطم 🥒🍅</li>
+                    <li>أغلق الرغيف 🥪</li>
+                    <li>أقطع نصين وأقدم 🍽️</li>
+                </ol>
+            </div>
+            <div style="background: #fef2e8; border-radius: 40px; padding: 20px;">
+                <h3>📝 مثال 2: خوارزمية الاستعداد للمدرسة</h3>
+                <ol style="padding-right: 25px;">
+                    <li>أصحى من النوم 🌅</li>
+                    <li>أغسل وشي وأسناني 🪥</li>
+                    <li>ألبس هدومي 👕</li>
+                    <li>آكل الفطار 🍳</li>
+                    <li>آخد شنطتي وأخرج 🎒</li>
+                </ol>
+            </div>
+        </div>
+        <div class="message-box" style="margin-top: 20px; background: #fef9e3;">
+            💡 <strong>معلومة مهمة:</strong> لو غيرنا ترتيب الخطوات، النتيجة مش هتظبط! مثال: لو لبست هدومك قبل ما تغسل وشك؟ مش منطقي! الخوارزمية لازم تكون مرتبة.
+        </div>
+    </div>
+
+    <!-- القطة والبيتزا -->
+    <div class="pizza-section">
+        <h2 class="card-title">🍕🐱 تطبيق عملي: القطة تطبق خوارزمية البيتزا 🐱🍕</h2>
+        <p style="text-align: center;">القطة "لبى" عايزة تعمل بيتزا. ساعدها تنفذ الخطوات بالترتيب عشان البيتزا تنجح!</p>
+        
+        <div class="pizza-stage" id="pizzaStage">
+            <div class="cat-pizza-area">
+                <div class="cat-chef" id="catChef">🐱👩‍🍳</div>
+                <div class="pizza-pan" id="pizzaPan">
+                    <div class="pizza-base" id="pizzaBase">
+                        <div id="toppingsContainer" style="position: relative; width: 100%; height: 100%;">
+                            <div class="topping-icon" style="top: 20%; right: 25%; display: none;">🍅</div>
+                            <div class="topping-icon" style="top: 50%; right: 60%; display: none;">🧀</div>
+                            <div class="topping-icon" style="top: 70%; right: 35%; display: none;">🌿</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="stepMessage" class="message-box">✨ اضغط على الخطوات بالترتيب (1 ثم 2 ثم 3 ثم 4) عشان تساعد القطة! ✨</div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="step-buttons">
+            <button class="step-btn step-1" id="step1Btn">🥣 1. تجهيز العجينة</button>
+            <button class="step-btn step-2" id="step2Btn">🍅 2. فرد الصلصة</button>
+            <button class="step-btn step-3" id="step3Btn">🧀 3. رش الجبن</button>
+            <button class="step-btn step-4" id="step4Btn">🔥 4. وضعها في الفرن</button>
+            <button class="step-btn reset-btn" id="resetBtn">🔄 بيتزا جديدة</button>
+        </div>
+        
+        <div class="message-box" style="background: #e0f2fe; margin-top: 15px;">
+            💡 <strong>لاحظ:</strong> لو ضغطت على خطوة قبل أختها، القطة هتقولك "غلط! لازم نرتب الخطوات أولاً". الخوارزمية محتاجة ترتيب دقيق.
+        </div>
+    </div>
+
+    <!-- التحديات -->
+    <div class="challenge-section">
+        <h2 class="card-title">🏆 تحدي العقول الصغيرة 🏆</h2>
+        <div class="challenge-question">
+            <h3 style="font-size: 1.5rem;">🤔 المشكلة: "عايز أجهز حقيبتي للمدرسة بكفاءة"</h3>
+            <p style="font-size: 1.1rem; margin-top: 15px;">المطلوب: اكتب خطوات (خوارزمية) منظمة عشان تجهز حقيبتك المدرسية. فكر شوية، وبعدين اضغط على "إظهار الحل" عشان تشوف الحل النموذجي.</p>
+            <div style="text-align: center; margin-top: 25px;">
+                <button id="showSolutionBtn" class="show-solution-btn">💡 إظهار الحل 💡</button>
+            </div>
+            <div id="solutionArea" class="solution-area">
+                <h3>✅ الحل النموذجي (خوارزمية تجهيز الحقيبة):</h3>
+                <ol style="padding-right: 25px; font-size: 1.1rem;">
+                    <li><strong>1.</strong> أحضر الحقيبة الفارغة على السرير 🎒</li>
+                    <li><strong>2.</strong> أرتب الكتب المدرسية حسب الجدول 📚</li>
+                    <li><strong>3.</strong> أضع الكراسات والأقلام في الجيوب ✏️</li>
+                    <li><strong>4.</strong> أتأكد من وجود زجاجة المياه 🧴</li>
+                    <li><strong>5.</strong> أضع علبة الطعام (ساندوتش) 🥪</li>
+                    <li><strong>6.</strong> أغلق الحقيبة وأكون جاهز للمدرسة 🏫</li>
+                </ol>
+                <p style="margin-top: 15px;"><strong>🎯 ملاحظة:</strong> لو غيرنا الترتيب (مثلاً حطينا الأكل قبل الكتب) ممكن الأكل يتكسر! الخوارزمية محتاجة ترتيب منطقي.</p>
+            </div>
+        </div>
+        
+        <div class="challenge-question" style="margin-top: 20px; background: #fefce8;">
+            <h3 style="font-size: 1.3rem;">⭐ تحدي إضافي: رتب الخطوات دي بشكل صحيح لعمل "عصير ليمون"</h3>
+            <p>الخطوات (مرتبة حالياً بشكل عشوائي):</p>
+            <ul style="padding-right: 25px; margin: 15px 0;">
+                <li>أ. أشرب العصير 🥤</li>
+                <li>ب. أعصر الليمون 🍋</li>
+                <li>ج. أحضر ليمون وسكر ومية</li>
+                <li>د. أخلط المكونات مع بعض 🥄</li>
+                <li>ه. أضيف السكر والمية</li>
+            </ul>
+            <button id="lemonSolutionBtn" class="step-btn step-2" style="padding: 8px 20px;">🔍 إظهار الترتيب الصحيح</button>
+            <div id="lemonSolutionArea" class="solution-area" style="background: #fef9c3; display: none;">
+                <h3>✅ الترتيب الصحيح لخوارزمية عمل عصير الليمون:</h3>
+                <ol style="padding-right: 25px;">
+                    <li>ج. أحضر ليمون وسكر ومية</li>
+                    <li>ب. أعصر الليمون</li>
+                    <li>ه. أضيف السكر والمية</li>
+                    <li>د. أخلط المكونات مع بعض</li>
+                    <li>أ. أشرب العصير</li>
+                </ol>
+                <p>🎉 شفت إزاي الترتيب بيفرق؟ لو شربت قبل ما تعصر، مش هتعمل عصير!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- شرح واجهة سكراتش -->
+    <div class="scratch-interface-section">
+        <h2 class="card-title">🎮 تعالوا نتعرف على واجهة سكراتش (Scratch Interface) 🎮</h2>
+        <p style="text-align: center; font-size: 1.1rem;">برنامج سكراتش بيتكون من 4 أجزاء رئيسية، كل جزء ليه اسم وشكل مختلف!</p>
+        
+        <div class="interface-grid">
+            <div class="interface-card stage-card">
+                <div class="interface-icon">🎬🏟️</div>
+                <h3>المسرح (Stage)</h3>
+                <div class="eng-name">Stage</div>
+                <p class="interface-desc">هو المكان اللي بتمثل فيه الشخصيات وتظهر فيه الأحداث. زي خشبة المسرح في المسرحية!</p>
+                <div class="visual-item" style="display: inline-flex; background: #d1fae5;">
+                    <div class="color-badge" style="background: #10b981;"></div>
+                    <span>مكان التمثيل والعرض</span>
+                </div>
+            </div>
+            
+            <div class="interface-card sprites-card">
+                <div class="interface-icon">🐱🧸🎮</div>
+                <h3>الكائنات (Sprites)</h3>
+                <div class="eng-name">Sprites Area</div>
+                <p class="interface-desc">هي الشخصيات اللي بنبرمجها، زي القط، الكرة، أي حرف نتحكم فيه. كل كائن ليه لبنات خاصة بيه!</p>
+                <div class="visual-item" style="display: inline-flex; background: #fed7aa;">
+                    <div class="color-badge" style="background: #f59e0b;"></div>
+                    <span>قائمة الشخصيات</span>
+                </div>
+            </div>
+            
+            <div class="interface-card blocks-card">
+                <div class="interface-icon">🧩🎨📦</div>
+                <h3>منطقة اللبنات (Blocks Palette)</h3>
+                <div class="eng-name">Blocks Palette</div>
+                <p class="interface-desc">هنا بنلاقي كل المكعبات (الأوامر) متقسمة بألوان: حركة (أزرق)، مظهر (بنفسجي)، أحداث (أصفر)، تحكم (برتقالي) وغيرهم!</p>
+                <div class="visual-item" style="display: inline-flex; background: #fecaca;">
+                    <div class="color-badge" style="background: #ef4444;"></div>
+                    <span>مكتبة الأوامر الملونة</span>
+                </div>
+            </div>
+            
+            <div class="interface-card code-card">
+                <div class="interface-icon">💻📝🔨</div>
+                <h3>منطقة السكريبت (Code/Scripts Area)</h3>
+                <div class="eng-name">Code Area (Scripts Area)</div>
+                <p class="interface-desc">هنا بنركب اللبنات جنب بعض عشان نكون الكود (البرنامج). زي تركيب المكعبات لتكوين شكل جميل!</p>
+                <div class="visual-item" style="display: inline-flex; background: #e9d5ff;">
+                    <div class="color-badge" style="background: #8b5cf6;"></div>
+                    <span>مكان تركيب الأوامر</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interface-visual">
+            <p><strong>🎨 شكل واجهة سكراتش بالمختصر:</strong></p>
+            <div class="visual-map">
+                <div class="visual-item"><span>📦</span> منطقة اللبنات<br><span style="font-size: 0.7rem;">(Blocks)</span></div>
+                <div class="visual-item"><span>💻</span> منطقة السكريبت<br><span style="font-size: 0.7rem;">(Code)</span></div>
+                <div class="visual-item"><span>🎬</span> المسرح<br><span style="font-size: 0.7rem;">(Stage)</span></div>
+                <div class="visual-item"><span>🐱</span> الكائنات<br><span style="font-size: 0.7rem;">(Sprites)</span></div>
+            </div>
+            <p style="margin-top: 12px; font-size: 0.9rem;">💡 <strong>تذكر:</strong> اللبنات الزرقاء = حركة (Motion) | البنفسجية = مظهر (Looks) | الصفراء = أحداث (Events) | البرتقالية = تحكم (Control)</p>
+        </div>
+        
+        <div class="message-box" style="background: #e0f2fe; margin-top: 20px;">
+            ⭐ <strong>نشاط سريع:</strong> افتح برنامج سكراتش على الكمبيوتر، وشوف بنفسك كل جزء في مكانه! المسرح في الناحية اليمين، ومنطقة اللبنات على الشمال.
+        </div>
+    </div>
+
+    <!-- ========== محاكي سكراتش مع Event و Sound واضحين ========== -->
+    <div class="card">
+        <h2 class="card-title">🎨 جرب البرمجة بنفسك! (محاكي سكراتش)</h2>
+        <p>دلوقتي نطبق اللي اتعلمناه: اضغط على الأزرار وشوف القطة بتتحرك وتتكلم 🐱</p>
+        <div class="scratch-sim">
+            <!-- Event واضح: العلم الأخضر -->
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div class="green-flag" id="greenFlagEvent">
+                    🏁
+                </div>
+                <span style="background: #ff9800; padding: 5px 12px; border-radius: 30px; font-size: 0.8rem; margin-right: 10px;">📢 Event: عند نقر العلم الأخضر</span>
+            </div>
+            
+            <div class="stage" id="scratchStage">
+                <div class="scratch-cat" id="scratchCatSprite">🐱</div>
+                <div id="scratchSpeech" style="position: absolute; top: 15px; right: 100px; background: white; padding: 6px 15px; border-radius: 30px; opacity: 0; transition: 0.2s;">نص</div>
+            </div>
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <div class="block-btn blue" id="moveBlock">🚶 تحرك 20 خطوة (Motion)</div>
+                <div class="block-btn purple" id="sayBlock">💬 قول "أنا مبرمج" (Looks)</div>
+                <div class="block-btn orange" id="eventBlockDemo">🎤 عند نقر المسافة (Events)</div>
+                <div class="block-btn green" id="resetCatStage">🔄 إرجاع القط</div>
+                <div class="block-btn red" id="soundBlock">🔊 مواء (Sound)</div>
+            </div>
+            <p style="margin-top: 15px;"><strong>تذكير بالشرح:</strong> لبنة <span class="block-btn orange" style="display: inline-block; padding: 4px 12px;">الأحداث (Events)</span> بتحدد متى يبدأ الكود، ولبنة <span class="block-btn blue">الحركة (Motion)</span> بتخلي الشخصية تمشي، ولبنة <span class="block-btn purple">المظهر (Looks)</span> بتخليها تتكلم، ولبنة <span class="block-btn red">الصوت (Sound)</span> بتخليها تعمل مواء.</p>
+        </div>
+    </div>
+
+    <!-- الواجب المنزلي -->
+    <div class="homework">
+        <h2 style="font-size: 1.8rem;">📚 واجب المنزل 📚</h2>
+        <p><strong>✏️ المطلوب: كتابة تقرير مختصر وجميل عن الكمبيوتر وشرح المدخلات والمخرجات بطريقة بسيطة.</strong></p>
+       
+        <div id="homeworkFeedback" class="message-box" style="background: #c8e6d9; margin-top: 15px; display: none;"></div>
+        <p style="margin-top: 15px; text-align: center;"><i class="fas fa-star" style="color: gold;"></i> نصيحة: ارسم رسمة كيبورد وشاشة جنب التقرير عشان تبان مبدع!</p>
+    </div>
+</div>
+
+
+<script>
+    // ========== 1. لعبة الباينري (مطابقة تماماً) ==========
+    const bits = document.querySelectorAll('.binary-bit');
+    const binarySpan = document.getElementById('binaryCodeDisplay');
+    const decimalSpan = document.getElementById('decimalValue');
+    const fullByteSpan = document.getElementById('fullByteDisplay');
+    
+    // هنجمع الأرقام بالترتيب من اليمين للشمال (عشان تظهر زي ما الطفل شايفها)
+    function updateBinary() {
+        let code = '';
+        // نجمع الأزرار من أول واحد (اللي في أقصى اليمين بصرياً)
+        bits.forEach(btn => code += btn.getAttribute('data-bit'));
+        // الرقم الثنائي
+        binarySpan.innerText = code;
+        // الرقم العشري
+        let dec = parseInt(code, 2);
+        decimalSpan.innerText = dec;
+        // البايت كامل
+        let fullByte = code.padStart(8, '0');
+        fullByteSpan.innerText = fullByte;
+    }
+    
+    bits.forEach(btn => {
+        btn.addEventListener('click', () => {
+            let current = btn.getAttribute('data-bit');
+            let newBit = current === '1' ? '0' : '1';
+            btn.setAttribute('data-bit', newBit);
+            btn.innerText = newBit;
+            if(newBit === '1') btn.classList.add('active');
+            else btn.classList.remove('active');
+            updateBinary();
+        });
+    });
+    updateBinary();
+
+    // ========== 2. المدخلات والمخرجات ==========
+    document.getElementById('ioProcessBtn').addEventListener('click', () => {
+        let inputVal = document.getElementById('ioExampleInput').value;
+        let outputDiv = document.getElementById('ioOutputResult');
+        if(inputVal.trim() === "") {
+            outputDiv.innerHTML = "📤 المخرج: مرحباً يا صديقي! (المدخل كان فارغ، فرحبت بيك) 💬";
+        } else {
+            outputDiv.innerHTML = `📤 المخرج: أهلاً وسهلاً يا ${inputVal}! 🎉<br>
+            <span style="font-size: 0.9rem;">📥 المدخل: "${inputVal}" → 🧠 المعالجة: تجهيز رسالة ترحيب → 📤 المخرج: رسالة الترحيب</span>`;
+        }
+    });
+
+    // ========== 3. القطة والبيتزا ==========
+    let currentStep = 0;
+    const catChef = document.getElementById('catChef');
+    const pizzaBaseDiv = document.getElementById('pizzaBase');
+    const toppingsDivs = document.querySelectorAll('.topping-icon');
+    const stepMessageDiv = document.getElementById('stepMessage');
+    const progressBarDiv = document.getElementById('progressBar');
+    const step1 = document.getElementById('step1Btn');
+    const step2 = document.getElementById('step2Btn');
+    const step3 = document.getElementById('step3Btn');
+    const step4 = document.getElementById('step4Btn');
+    const resetPizza = document.getElementById('resetBtn');
+
+    function createSparkle(x, y) {
+        const container = document.getElementById('pizzaStage');
+        const spark = document.createElement('div');
+        spark.className = 'sparkle';
+        spark.innerHTML = ['✨','⭐','🌟','💫'][Math.floor(Math.random()*4)];
+        spark.style.position = 'absolute';
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+        container.appendChild(spark);
+        setTimeout(() => spark.remove(), 800);
+    }
+    
+    function playBeepSound() {
+        try {
+            let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 880;
+            gain.gain.value = 0.15;
+            osc.type = 'sine';
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.4);
+            osc.stop(audioCtx.currentTime + 0.4);
+        } catch(e) {}
+    }
+
+    function updatePizzaUI() {
+        let percent = (currentStep / 4) * 100;
+        progressBarDiv.style.width = percent + '%';
+        if(currentStep === 0) { catChef.innerHTML = '🐱👩‍🍳'; catChef.style.animation = ''; }
+        if(currentStep === 1) { catChef.innerHTML = '🐱🥣'; catChef.style.animation = 'bounce 0.4s ease'; }
+        if(currentStep === 2) { catChef.innerHTML = '🐱🍅'; catChef.style.animation = 'shake 0.3s'; }
+        if(currentStep === 3) { catChef.innerHTML = '🐱🧀'; catChef.style.animation = 'pulse 0.4s'; }
+        if(currentStep === 4) { 
+            catChef.innerHTML = '🐱🔥🍕'; 
+            catChef.style.animation = 'sizzle 0.8s infinite';
+            pizzaBaseDiv.style.background = '#e67e22';
+            pizzaBaseDiv.style.boxShadow = '0 0 15px rgba(255,80,0,0.5)';
+        } else { pizzaBaseDiv.style.background = '#d49436'; pizzaBaseDiv.style.boxShadow = 'none'; }
+        
+        if(currentStep >= 2) toppingsDivs[0].style.display = 'block';
+        else toppingsDivs[0].style.display = 'none';
+        if(currentStep >= 3) toppingsDivs[1].style.display = 'block';
+        else toppingsDivs[1].style.display = 'none';
+        if(currentStep >= 4) toppingsDivs[2].style.display = 'block';
+        else toppingsDivs[2].style.display = 'none';
+        
+        if(currentStep === 4) {
+            stepMessageDiv.innerHTML = '🎉🍕 مبروك! البيتزا جاهزة! القطة سعيدة جداً 🎉🍕 أنت نفذت الخوارزمية صح (الخطوات بالترتيب)!';
+            for(let i=0;i<6;i++) setTimeout(() => createSparkle(150 + Math.random()*200, 150 + Math.random()*150), i*80);
+        }
+        step1.disabled = (currentStep >= 1);
+        step2.disabled = (currentStep < 1 || currentStep >= 2);
+        step3.disabled = (currentStep < 2 || currentStep >= 3);
+        step4.disabled = (currentStep < 3 || currentStep >= 4);
+    }
+
+    function doStep(stepNum) {
+        if(stepNum === currentStep+1) {
+            currentStep = stepNum;
+            if(stepNum === 1) stepMessageDiv.innerHTML = '🥣 الخطوة 1: العجينة جاهزة! القطة عجنت كويس 💪';
+            else if(stepNum === 2) stepMessageDiv.innerHTML = '🍅 الخطوة 2: صلصة الطماطم الحمراء على الوجه!';
+            else if(stepNum === 3) stepMessageDiv.innerHTML = '🧀 الخطوة 3: الجبن المبشور كتير عشان يبقى زي المطاعم!';
+            else if(stepNum === 4) stepMessageDiv.innerHTML = '🔥 الخطوة 4: البيتزا دخلت الفرن و بقيت جاهزة!';
+            playBeepSound();
+            createSparkle(200, 200);
+            updatePizzaUI();
+        } else {
+            stepMessageDiv.innerHTML = `⚠️ لازم ننفذ الخطوة ${currentStep+1} بالترتيب! الخوارزمية محتاجة ترتيب زى البرمجة بالضبط ⚠️`;
+        }
+    }
+
+    step1.addEventListener('click', () => doStep(1));
+    step2.addEventListener('click', () => doStep(2));
+    step3.addEventListener('click', () => doStep(3));
+    step4.addEventListener('click', () => doStep(4));
+    resetPizza.addEventListener('click', () => {
+        currentStep = 0;
+        updatePizzaUI();
+        stepMessageDiv.innerHTML = '✨ تم عمل بيتزا جديدة! ابدأ من الخطوة 1 بالترتيب ✨';
+        pizzaBaseDiv.style.background = '#d49436';
+        catChef.innerHTML = '🐱👩‍🍳';
+        catChef.style.animation = '';
+        progressBarDiv.style.width = '0%';
+        playBeepSound();
+    });
+    updatePizzaUI();
+    catChef.addEventListener('click', () => { stepMessageDiv.innerHTML = "🐱 القطة بتقول: اتبع الخطوات بالترتيب عشان البيتزا تنجح! زي الخوارزمية!"; });
+
+    // ========== 4. التحديات ==========
+    document.getElementById('showSolutionBtn').addEventListener('click', () => {
+        let solutionDiv = document.getElementById('solutionArea');
+        if(solutionDiv.style.display === 'none' || solutionDiv.style.display === '') {
+            solutionDiv.style.display = 'block';
+        } else {
+            solutionDiv.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('lemonSolutionBtn').addEventListener('click', () => {
+        let lemonDiv = document.getElementById('lemonSolutionArea');
+        if(lemonDiv.style.display === 'none' || lemonDiv.style.display === '') {
+            lemonDiv.style.display = 'block';
+        } else {
+            lemonDiv.style.display = 'none';
+        }
+    });
+
+    // ========== 5. محاكي سكراتش مع Event و Sound ==========
+    let catRight = 30;
+    const catSprite = document.getElementById('scratchCatSprite');
+    const speechBubble = document.getElementById('scratchSpeech');
+    
+function playMeowSound() {
+    try {
+        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let osc = audioCtx.createOscillator();
+        let gain = audioCtx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        // ترددات تحاكي مواء القطة
+        osc.frequency.value = 880;  // تردد عالي أولاً
+        osc.type = 'sine';
+        
+        // نغير التردد عشان يبان شبه مواء
+        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.15);
+        osc.frequency.exponentialRampToValueAtTime(660, audioCtx.currentTime + 0.3);
+        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.45);
+        
+        gain.gain.value = 0.25;
+        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.6);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.6);
+    } catch(e) {
+        console.log("Audio context not allowed");
+    }
+}
+    function showMsg(msg) { 
+        speechBubble.innerText = msg; 
+        speechBubble.style.opacity = '1'; 
+        setTimeout(() => speechBubble.style.opacity = '0', 1300); 
+    }
+    
+    // العلم الأخضر (Event واضح)
+    document.getElementById('greenFlagEvent').addEventListener('click', () => {
+        showMsg("🏁 برنامجي بدأ! القطة جاهزة للأوامر 🐱✨");
+        playMeowSound();
+        catRight = 30;
+        catSprite.style.right = catRight+'%';
+    });
+    
+    document.getElementById('moveBlock').addEventListener('click', () => { 
+        catRight = Math.min(85, catRight+10); 
+        catSprite.style.right = catRight+'%'; 
+        showMsg("تحرك 20 خطوة!"); 
+        catSprite.style.transform = "scaleX(-1)"; 
+        setTimeout(() => catSprite.style.transform = "scaleX(1)", 200);
+        playBeepSound();
+    });
+    
+    document.getElementById('sayBlock').addEventListener('click', () => { 
+        showMsg("أنا مبرمج! 😎💻"); 
+        playBeepSound();
+    });
+    
+    document.getElementById('eventBlockDemo').addEventListener('click', () => { 
+        showMsg("حدث: تم الضغط على مفتاح المسافة! 🚀"); 
+        playBeepSound();
+    });
+    
+    document.getElementById('resetCatStage').addEventListener('click', () => { 
+        catRight = 30; 
+        catSprite.style.right = catRight+'%'; 
+        showMsg("تم إرجاع القط إلى البداية!"); 
+        playBeepSound();
+    });
+    
+    // زر الصوت
+    document.getElementById('soundBlock').addEventListener('click', () => {
+        showMsg("مياو مياو! 🐱🔊");
+        playMeowSound();
+        catSprite.style.animation = 'shake 0.3s';
+        setTimeout(() => catSprite.style.animation = '', 300);
+    });
+    
+    catSprite.addEventListener('click', () => { 
+        showMsg("أنا قط سكراتش! جرب الأزرار جنبي 🎮");
+        playMeowSound();
+    });
+
+    // ========== 6. الواجب ==========
+    document.getElementById('submitHomework').addEventListener('click', () => {
+        let report = document.getElementById('homeworkText').value;
+        let feedback = document.getElementById('homeworkFeedback');
+        if(report.trim().length < 30) {
+            feedback.style.display = 'block';
+            feedback.innerHTML = "📝 حاول تكتب شرح أطول! اذكر تعريف الكمبيوتر وأمثلة للمدخلات (كيبورد/ماوس) والمخرجات (شاشة/سماعات).";
+        } else {
+            feedback.style.display = 'block';
+            feedback.innerHTML = "✅ تسلم إيدك! التقرير رائع جداً ❤️ أنت مبرمج صغير محترف. متنساش الرسمة الجميلة! 🎨";
+        }
+    });
+</script>
+</body>
+</html>
