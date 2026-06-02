@@ -1139,29 +1139,10 @@
     
 function playMeowSound() {
     try {
-        let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let osc = audioCtx.createOscillator();
-        let gain = audioCtx.createGain();
-        
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        // ترددات تحاكي مواء القطة
-        osc.frequency.value = 880;  // تردد عالي أولاً
-        osc.type = 'sine';
-        
-        // نغير التردد عشان يبان شبه مواء
-        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.15);
-        osc.frequency.exponentialRampToValueAtTime(660, audioCtx.currentTime + 0.3);
-        osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.45);
-        
-        gain.gain.value = 0.25;
-        gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 0.6);
-        
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.6);
+        let audio = new Audio('cat_meaw.wav');
+        audio.play();
     } catch(e) {
-        console.log("Audio context not allowed");
+        console.log("Audio error");
     }
 }
     function showMsg(msg) { 
