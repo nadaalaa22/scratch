@@ -555,6 +555,79 @@
         }
         .green-flag:active { transform: translateY(2px); box-shadow: 0 1px 0 #1b5e20; }
 
+        /* قسم جديد - كيفية تشغيل سكراتش */
+        .how-to-use-section {
+            background: linear-gradient(145deg, #e6f7f0, #d1fae5);
+            border-radius: 60px;
+            padding: 35px;
+            margin-bottom: 40px;
+            border: 3px solid #10b981;
+        }
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .setup-card {
+            background: white;
+            border-radius: 50px;
+            padding: 25px;
+            transition: transform 0.2s;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .setup-card:hover {
+            transform: translateY(-8px);
+        }
+        .setup-icon {
+            font-size: 3rem;
+            background: #f0fdf4;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 40px;
+            margin: 0 auto 15px;
+        }
+        .setup-card h3 {
+            font-size: 1.7rem;
+            color: #065f46;
+            margin-bottom: 15px;
+        }
+        .setup-steps {
+            text-align: right;
+            padding-right: 20px;
+            margin: 20px 0;
+        }
+        .setup-steps li {
+            margin: 12px 0;
+            font-size: 1rem;
+        }
+        .link-btn {
+            display: inline-block;
+            background: #059669;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 8px;
+            transition: 0.1s;
+            box-shadow: 0 3px 0 #064e3b;
+        }
+        .link-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #064e3b;
+        }
+        .warning-note {
+            background: #fef9c3;
+            border-radius: 40px;
+            padding: 15px;
+            margin-top: 20px;
+            border-right: 8px solid #eab308;
+            text-align: right;
+        }
+
         .homework {
             background: linear-gradient(145deg, #fff0df, #ffe4c4);
             border: 4px dashed #f97316;
@@ -578,17 +651,13 @@
             .binary-bit { width: 55px; height: 55px; font-size: 1.3rem; }
             .interface-grid { grid-template-columns: 1fr; }
             .binary-value { font-size: 1.2rem; letter-spacing: 2px; }
+            .setup-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- هيدر -->
-    <div class="hero">
-      
-        <p>تعالوا نعرف الكمبيوتر، المدخلات والمخرجات، الخوارزميات، ونتعلم سكراتش! 🐱💻🍕</p>
-        <div style="font-size: 2rem; margin-top: 15px;">⌨️🖥️🎧🖱️🐱⌚📱</div>
-    </div>
+   
 
     <!-- ========== 1. شرح الكمبيوتر ========== -->
     <div class="card">
@@ -773,7 +842,7 @@
     <!-- القطة والبيتزا -->
     <div class="pizza-section">
         <h2 class="card-title">🍕🐱 تطبيق عملي: القطة تطبق خوارزمية البيتزا 🐱🍕</h2>
-        <p style="text-align: center;">القطة "لبى" عايزة تعمل بيتزا. ساعدها تنفذ الخطوات بالترتيب عشان البيتزا تنجح!</p>
+        <p style="text-align: center;">القطة "مومو" عايزة تعمل بيتزا. ساعدها تنفذ الخطوات بالترتيب عشان البيتزا تنجح!</p>
         
         <div class="pizza-stage" id="pizzaStage">
             <div class="cat-pizza-area">
@@ -809,7 +878,7 @@
 
     <!-- التحديات -->
     <div class="challenge-section">
-        <h2 class="card-title">🏆 تحدي العقول الصغيرة 🏆</h2>
+        <h2 class="card-title">🏆 تحدي 🏆</h2>
         <div class="challenge-question">
             <h3 style="font-size: 1.5rem;">🤔 المشكلة: "عايز أجهز حقيبتي للمدرسة بكفاءة"</h3>
             <p style="font-size: 1.1rem; margin-top: 15px;">المطلوب: اكتب خطوات (خوارزمية) منظمة عشان تجهز حقيبتك المدرسية. فكر شوية، وبعدين اضغط على "إظهار الحل" عشان تشوف الحل النموذجي.</p>
@@ -855,6 +924,58 @@
         </div>
     </div>
 
+    <!-- ========== قسم جديد: كيفية تشغيل سكراتش على جهازك ========== -->
+    <div class="how-to-use-section">
+        <h2 class="card-title">🚀 كيف تشغل سكراتش على جهازك؟ (خطوة بخطوة) 🚀</h2>
+        <p style="font-size: 1.2rem; text-align: center;">عندك طريقتين ممتعتين عشان تبدأ البرمجة: <strong>أونلاين بدون تحميل</strong> أو <strong>تحميل البرنامج على جهازك</strong>. اختر الطريقة اللي تناسبك!</p>
+        
+        <div class="setup-grid">
+            <!-- الطريقة الأولى: أونلاين -->
+            <div class="setup-card">
+                <div class="setup-icon"><i class="fas fa-globe"></i></div>
+                <h3>🌐 الطريقة الأولى: أونلاين (Online)</h3>
+                <p style="margin-bottom: 10px;">من خلال متصفح الإنترنت، بدون أي تحميل أو تثبيت! كل اللي محتاجه جهاز متصل بالإنترنت.</p>
+                <ul class="setup-steps">
+                    <li><strong>📌 الخطوة 1:</strong> افتح متصفح الإنترنت (Chrome - Edge - Safari).</li>
+                    <li><strong>📌 الخطوة 2:</strong> اضغط على الرابط المباشر لموقع سكراتش الرسمي:</li>
+                </ul>
+                <div>
+                    <a href="https://scratch.mit.edu/projects/editor" target="_blank" class="link-btn"><i class="fas fa-external-link-alt"></i> افتح محرر سكراتش أونلاين</a>
+                </div>
+                <ul class="setup-steps">
+                    <li><strong>📌 الخطوة 3:</strong> ابدأ مباشرة في البرمجة! 🎉</li>
+                    <li><strong>💡 مميزات الطريقة:</strong> سريعة، لا تحتاج مساحة تخزين، وتحديثاتها تلقائية.</li>
+                </ul>
+            </div>
+            
+            <!-- الطريقة الثانية: تحميل على الجهاز -->
+            <div class="setup-card">
+                <div class="setup-icon"><i class="fas fa-download"></i></div>
+                <h3>💾 الطريقة الثانية: تحميل البرنامج (Desktop)</h3>
+                <p style="margin-bottom: 10px;">تنزيل سكراتش على الكمبيوتر وتشغيله بدون إنترنت. مناسب لو النت ضعيف أو عايز تستخدمه في أي وقت.</p>
+                <ul class="setup-steps">
+                    <li><strong>📌 الخطوة 1:</strong> افتح موقع سكراتش الرسمي: <a href="https://scratch.mit.edu/download" target="_blank" style="color:#059669;">Scratch Download</a></li>
+                    <li><strong>📌 الخطوة 2:</strong> اختر نظام التشغيل الخاص بجهازك (Windows، macOS، ChromeOS، أو Android).</li>
+                    <li><strong>📌 الخطوة 3:</strong> اضغط على زر "Download" (تنزيل) وانتظر اكتمال التحميل.</li>
+                    <li><strong>📌 الخطوة 4:</strong> افتح ملف التثبيت واتبع التعليمات (Next -> Next -> Install).</li>
+                    <li><strong>📌 الخطوة 5:</strong> بعد التثبيت، افتح البرنامج من سطح المكتب وابدأ البرمجة ✨</li>
+                </ul>
+                <div>
+                    <a href="https://scratch.mit.edu/download" target="_blank" class="link-btn"><i class="fas fa-download"></i> صفحة تحميل سكراتش الرسمية</a>
+                </div>
+                <div class="warning-note">
+                    <i class="fas fa-shield-alt"></i> <strong>تنبيه مهم:</strong> حمل سكراتش من الموقع الرسمي فقط عشان تكون آمن! <br>
+                    الرابط الرسمي: <a href="https://scratch.mit.edu/download" target="_blank" style="font-weight: bold;">scratch.mit.edu/download</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="message-box" style="background: #d1fae5; color: #065f46; border-right-color: #059669;">
+            🎯 <strong>نصيحة :</strong> لو دي أول مرة لك، ابدأ بالنسخة الأونلاين! هتكون أسهل ومافيش تعقيدات تثبيت. ولو عجبك الموضوع، ممكن تحمل النسخة على جهازك عشان تشتغل بدون نت.
+        </div>
+       
+    </div>
+
     <!-- شرح واجهة سكراتش -->
     <div class="scratch-interface-section">
         <h2 class="card-title">🎮 تعالوا نتعرف على واجهة سكراتش (Scratch Interface) 🎮</h2>
@@ -876,7 +997,7 @@
                 <div class="interface-icon">🐱🧸🎮</div>
                 <h3>الكائنات (Sprites)</h3>
                 <div class="eng-name">Sprites Area</div>
-                <p class="interface-desc">هي الشخصيات اللي بنبرمجها، زي القط، الكرة، أي حرف نتحكم فيه. كل كائن ليه لبنات خاصة بيه!</p>
+                <p class="interface-desc">هي الشخصيات اللي بنبرمجها، زي القط، الكرة، أي حرف نتحكم فيه. كل كائن ليه بلوكات خاصة بيه!</p>
                 <div class="visual-item" style="display: inline-flex; background: #fed7aa;">
                     <div class="color-badge" style="background: #f59e0b;"></div>
                     <span>قائمة الشخصيات</span>
@@ -885,7 +1006,7 @@
             
             <div class="interface-card blocks-card">
                 <div class="interface-icon">🧩🎨📦</div>
-                <h3>منطقة اللبنات (Blocks Palette)</h3>
+                <h3>منطقة البلوكات (Blocks Palette)</h3>
                 <div class="eng-name">Blocks Palette</div>
                 <p class="interface-desc">هنا بنلاقي كل المكعبات (الأوامر) متقسمة بألوان: حركة (أزرق)، مظهر (بنفسجي)، أحداث (أصفر)، تحكم (برتقالي) وغيرهم!</p>
                 <div class="visual-item" style="display: inline-flex; background: #fecaca;">
@@ -898,7 +1019,7 @@
                 <div class="interface-icon">💻📝🔨</div>
                 <h3>منطقة السكريبت (Code/Scripts Area)</h3>
                 <div class="eng-name">Code Area (Scripts Area)</div>
-                <p class="interface-desc">هنا بنركب اللبنات جنب بعض عشان نكون الكود (البرنامج). زي تركيب المكعبات لتكوين شكل جميل!</p>
+                <p class="interface-desc">هنا بنركب البلوكات جنب بعض عشان نكون الكود (البرنامج). زي تركيب المكعبات لتكوين شكل جميل!</p>
                 <div class="visual-item" style="display: inline-flex; background: #e9d5ff;">
                     <div class="color-badge" style="background: #8b5cf6;"></div>
                     <span>مكان تركيب الأوامر</span>
@@ -909,16 +1030,16 @@
         <div class="interface-visual">
             <p><strong>🎨 شكل واجهة سكراتش بالمختصر:</strong></p>
             <div class="visual-map">
-                <div class="visual-item"><span>📦</span> منطقة اللبنات<br><span style="font-size: 0.7rem;">(Blocks)</span></div>
+                <div class="visual-item"><span>📦</span> منطقة البلوكات<br><span style="font-size: 0.7rem;">(Blocks)</span></div>
                 <div class="visual-item"><span>💻</span> منطقة السكريبت<br><span style="font-size: 0.7rem;">(Code)</span></div>
                 <div class="visual-item"><span>🎬</span> المسرح<br><span style="font-size: 0.7rem;">(Stage)</span></div>
                 <div class="visual-item"><span>🐱</span> الكائنات<br><span style="font-size: 0.7rem;">(Sprites)</span></div>
             </div>
-            <p style="margin-top: 12px; font-size: 0.9rem;">💡 <strong>تذكر:</strong> اللبنات الزرقاء = حركة (Motion) | البنفسجية = مظهر (Looks) | الصفراء = أحداث (Events) | البرتقالية = تحكم (Control)</p>
+            <p style="margin-top: 12px; font-size: 0.9rem;">💡 <strong>تذكر:</strong> البلوكات الزرقاء = حركة (Motion) | البنفسجية = مظهر (Looks) | الصفراء = أحداث (Events) | البرتقالية = تحكم (Control)</p>
         </div>
         
         <div class="message-box" style="background: #e0f2fe; margin-top: 20px;">
-            ⭐ <strong>نشاط سريع:</strong> افتح برنامج سكراتش على الكمبيوتر، وشوف بنفسك كل جزء في مكانه! المسرح في الناحية اليمين، ومنطقة اللبنات على الشمال.
+            ⭐ <strong>نشاط سريع:</strong> افتح برنامج سكراتش على الكمبيوتر، وشوف بنفسك كل جزء في مكانه! المسرح في الناحية اليمين، ومنطقة البلوكات على الشمال.
         </div>
     </div>
 
@@ -943,11 +1064,10 @@
             <div style="margin-top: 15px; text-align: center;">
                 <div class="block-btn blue" id="moveBlock">🚶 تحرك 20 خطوة (Motion)</div>
                 <div class="block-btn purple" id="sayBlock">💬 قول "أنا مبرمج" (Looks)</div>
-                <div class="block-btn orange" id="eventBlockDemo">🎤 عند نقر المسافة (Events)</div>
                 <div class="block-btn green" id="resetCatStage">🔄 إرجاع القط</div>
                 <div class="block-btn red" id="soundBlock">🔊 مواء (Sound)</div>
             </div>
-            <p style="margin-top: 15px;"><strong>تذكير بالشرح:</strong> لبنة <span class="block-btn orange" style="display: inline-block; padding: 4px 12px;">الأحداث (Events)</span> بتحدد متى يبدأ الكود، ولبنة <span class="block-btn blue">الحركة (Motion)</span> بتخلي الشخصية تمشي، ولبنة <span class="block-btn purple">المظهر (Looks)</span> بتخليها تتكلم، ولبنة <span class="block-btn red">الصوت (Sound)</span> بتخليها تعمل مواء.</p>
+            <p style="margin-top: 15px;"><strong>تذكير بالشرح:</strong> بلوكة <span class="block-btn orange" style="display: inline-block; padding: 4px 12px;">الأحداث (Events)</span> بتحدد متى يبدأ الكود، وبلوكة <span class="block-btn blue">الحركة (Motion)</span> بتخلي الشخصية تمشي، وبلوكة <span class="block-btn purple">المظهر (Looks)</span> بتخليها تتكلم، وبلوكة <span class="block-btn red">الصوت (Sound)</span> بتخليها تعمل مواء.</p>
         </div>
     </div>
 
@@ -956,30 +1076,23 @@
         <h2 style="font-size: 1.8rem;">📚 واجب المنزل 📚</h2>
         <p><strong>✏️ المطلوب: كتابة تقرير مختصر وجميل عن الكمبيوتر وشرح المدخلات والمخرجات بطريقة بسيطة.</strong></p>
        
-        <div id="homeworkFeedback" class="message-box" style="background: #c8e6d9; margin-top: 15px; display: none;"></div>
-        <p style="margin-top: 15px; text-align: center;"><i class="fas fa-star" style="color: gold;"></i> نصيحة: ارسم رسمة كيبورد وشاشة جنب التقرير عشان تبان مبدع!</p>
     </div>
 </div>
 
 
 <script>
-    // ========== 1. لعبة الباينري (مطابقة تماماً) ==========
+    // ========== 1. لعبة الباينري ==========
     const bits = document.querySelectorAll('.binary-bit');
     const binarySpan = document.getElementById('binaryCodeDisplay');
     const decimalSpan = document.getElementById('decimalValue');
     const fullByteSpan = document.getElementById('fullByteDisplay');
     
-    // هنجمع الأرقام بالترتيب من اليمين للشمال (عشان تظهر زي ما الطفل شايفها)
     function updateBinary() {
         let code = '';
-        // نجمع الأزرار من أول واحد (اللي في أقصى اليمين بصرياً)
         bits.forEach(btn => code += btn.getAttribute('data-bit'));
-        // الرقم الثنائي
         binarySpan.innerText = code;
-        // الرقم العشري
         let dec = parseInt(code, 2);
         decimalSpan.innerText = dec;
-        // البايت كامل
         let fullByte = code.padStart(8, '0');
         fullByteSpan.innerText = fullByte;
     }
@@ -1012,7 +1125,6 @@
     // ========== 3. القطة والبيتزا ==========
     let currentStep = 0;
     const catChef = document.getElementById('catChef');
-    const pizzaBaseDiv = document.getElementById('pizzaBase');
     const toppingsDivs = document.querySelectorAll('.topping-icon');
     const stepMessageDiv = document.getElementById('stepMessage');
     const progressBarDiv = document.getElementById('progressBar');
@@ -1021,6 +1133,7 @@
     const step3 = document.getElementById('step3Btn');
     const step4 = document.getElementById('step4Btn');
     const resetPizza = document.getElementById('resetBtn');
+    const pizzaBaseDiv = document.getElementById('pizzaBase');
 
     function createSparkle(x, y) {
         const container = document.getElementById('pizzaStage');
@@ -1137,7 +1250,10 @@
     const catSprite = document.getElementById('scratchCatSprite');
     const speechBubble = document.getElementById('scratchSpeech');
     
-function playMeowSound() {
+
+
+   
+	function playMeowSound() {
     try {
         let audio = new Audio('cat_meaw.wav');
         audio.play();
@@ -1145,13 +1261,13 @@ function playMeowSound() {
         console.log("Audio error");
     }
 }
+    
     function showMsg(msg) { 
         speechBubble.innerText = msg; 
         speechBubble.style.opacity = '1'; 
         setTimeout(() => speechBubble.style.opacity = '0', 1300); 
     }
     
-    // العلم الأخضر (Event واضح)
     document.getElementById('greenFlagEvent').addEventListener('click', () => {
         showMsg("🏁 برنامجي بدأ! القطة جاهزة للأوامر 🐱✨");
         playMeowSound();
@@ -1173,10 +1289,14 @@ function playMeowSound() {
         playBeepSound();
     });
     
-    document.getElementById('eventBlockDemo').addEventListener('click', () => { 
-        showMsg("حدث: تم الضغط على مفتاح المسافة! 🚀"); 
-        playBeepSound();
-    });
+    // تم إزالة زر eventBlockDemo لأنه غير موجود في الـ HTML الجديد، لكننا سنبقي الكود تحسباً
+    let eventBlockDemo = document.getElementById('eventBlockDemo');
+    if(eventBlockDemo) {
+        eventBlockDemo.addEventListener('click', () => { 
+            showMsg("حدث: تم الضغط على مفتاح المسافة! 🚀"); 
+            playBeepSound();
+        });
+    }
     
     document.getElementById('resetCatStage').addEventListener('click', () => { 
         catRight = 30; 
@@ -1185,10 +1305,9 @@ function playMeowSound() {
         playBeepSound();
     });
     
-    // زر الصوت
     document.getElementById('soundBlock').addEventListener('click', () => {
         showMsg("مياو مياو! 🐱🔊");
-        playMeowSound();
+        playMeowSound(); // استخدام الصوت الجديد اللي بينطق مياو
         catSprite.style.animation = 'shake 0.3s';
         setTimeout(() => catSprite.style.animation = '', 300);
     });
@@ -1198,18 +1317,7 @@ function playMeowSound() {
         playMeowSound();
     });
 
-    // ========== 6. الواجب ==========
-    document.getElementById('submitHomework').addEventListener('click', () => {
-        let report = document.getElementById('homeworkText').value;
-        let feedback = document.getElementById('homeworkFeedback');
-        if(report.trim().length < 30) {
-            feedback.style.display = 'block';
-            feedback.innerHTML = "📝 حاول تكتب شرح أطول! اذكر تعريف الكمبيوتر وأمثلة للمدخلات (كيبورد/ماوس) والمخرجات (شاشة/سماعات).";
-        } else {
-            feedback.style.display = 'block';
-            feedback.innerHTML = "✅ تسلم إيدك! التقرير رائع جداً ❤️ أنت مبرمج صغير محترف. متنساش الرسمة الجميلة! 🎨";
-        }
-    });
+    
 </script>
 </body>
 </html>
