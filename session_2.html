@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 2 | Scratch - Variables & Operations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #e8f0ff 0%, #f9f0ff 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        @keyframes float {
+            0%,100%{ transform: translateY(0); }
+            50%{ transform: translateY(-8px); }
+        }
+        @keyframes shakeCalc {
+            0%,100%{ transform: rotate(0deg); }
+            25%{ transform: rotate(5deg); }
+            75%{ transform: rotate(-5deg); }
+        }
+        .hero {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 70px;
+            padding: 35px;
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: float 4s ease-in-out infinite;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+        }
+        .card {
+            background: white;
+            border-radius: 60px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+            border: 2px solid #c7d2fe;
+        }
+        .card:hover {
+            transform: scale(1.01);
+        }
+        .card-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #4f46e5, #ec489a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .algorithm-box {
+            background: #f0f4ff;
+            border-radius: 50px;
+            padding: 25px;
+            margin: 20px 0;
+            border-right: 10px solid #4f46e5;
+        }
+        .algorithm-steps {
+            list-style-type: none;
+            padding-right: 0;
+        }
+        .algorithm-steps li {
+            margin: 20px 0;
+            font-size: 1.05rem;
+            background: white;
+            padding: 15px;
+            border-radius: 30px;
+        }
+        .step-number {
+            background: #4f46e5;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 12px;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 30px;
+            font-family: monospace;
+            direction: ltr;
+            text-align: left;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+        .code-block-ar {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 30px;
+            font-family: monospace;
+            text-align: right;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        .variable-card {
+            background: linear-gradient(145deg, #fef3c7, #fffbeb);
+            border-radius: 40px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #f59e0b;
+        }
+        .sprite-drawing {
+            background: #e0e7ff;
+            border-radius: 40px;
+            padding: 20px;
+            text-align: center;
+        }
+        .sprite-example {
+            display: inline-block;
+            background: white;
+            border-radius: 30px;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            width: 120px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .sprite-example:hover {
+            transform: scale(1.05);
+            background: #f3e8ff;
+        }
+        .sprite-example i {
+            font-size: 2.5rem;
+        }
+        .operators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .operator-card {
+            background: #dcfce7;
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #22c55e;
+        }
+        .block-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 6px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            font-family: monospace;
+        }
+        .block-btn:active { transform: translateY(2px); box-shadow: 0 1px 0; }
+        .green-block { background: #4caf50; color: white; }
+        .blue-block { background: #2196f3; color: white; }
+        .orange-block { background: #ff9800; color: white; }
+        .purple-block { background: #9c27b0; color: white; }
+        .yellow-block { background: #f4d03f; color: #5d3a1a; }
+        
+        .scratch-sim {
+            background: #e0e7ff;
+            border-radius: 50px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+        .scratch-stage {
+            background: #fff9e6;
+            min-height: 320px;
+            border-radius: 50px;
+            margin-top: 20px;
+            border: 4px solid #ffb74d;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .custom-sprite {
+            background: #f3e8ff;
+            border-radius: 30px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100px;
+        }
+        .custom-sprite:hover {
+            transform: scale(1.1);
+            background: #e9d5ff;
+        }
+        .custom-sprite i {
+            font-size: 2.5rem;
+        }
+        .result-area {
+            background: white;
+            border-radius: 30px;
+            padding: 15px;
+            min-width: 220px;
+            text-align: center;
+            border: 2px solid #4f46e5;
+        }
+        .link-btn {
+            display: inline-block;
+            background: #4f46e5;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px;
+            transition: 0.2s;
+            box-shadow: 0 4px 0 #2e1065;
+        }
+        .link-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #2e1065;
+        }
+        .homework-section {
+            background: linear-gradient(145deg, #fff0df, #ffe4c4);
+            border: 4px dashed #f97316;
+            border-radius: 60px;
+            padding: 35px;
+            margin-top: 20px;
+        }
+        .message-box {
+            background: #fff3cd;
+            border-radius: 40px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 15px;
+            border-right: 8px solid #ff6b35;
+        }
+        .english-term {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            direction: ltr;
+            display: inline-block;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 40px 40px 0 0;
+        }
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 1.8rem; }
+            .sprite-example { width: 80px; }
+            .custom-sprite { width: 70px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>🧮 Session 2: Variables & Math Operations 🧮</h1>
+        <p>المتغيرات | العمليات الحسابية | الخوارزميات | برمجة الآلة الحاسبة</p>
+    </div>
+
+    <!-- ========== 1. خوارزمية واضحة ومفصلة ========== -->
+    <div class="card">
+        <h2 class="card-title">📝 الخوارزمية (Algorithm) - آلة حاسبة بسيطة</h2>
+        <p><strong>الخوارزمية</strong> هي مجموعة خطوات مرتبة بالترتيب عشان نحل مشكلة. خلينا نشوف خطوات عمل آلة حاسبة لجمع رقمين:</p>
+        
+        <div class="algorithm-box">
+            <ul class="algorithm-steps">
+                <li>
+                    <span class="step-number">1</span>
+                    <strong>Start / البداية:</strong> اضغط على العلم الأخضر 🏁 (<span class="english-term">when green flag clicked</span>)
+                </li>
+                <li>
+                    <span class="step-number">2</span>
+                    <strong>Ask for first number:</strong> استخدم بلوك <span class="english-term">ask [Enter first number] and wait</span> (من فئة Sensing) عشان نخلي المستخدم يدخل الرقم الأول.
+                </li>
+                <li>
+                    <span class="step-number">3</span>
+                    <strong>Store in variable:</strong> خزن القيمة اللي دخلها المستخدم في متغير اسمه <span class="english-term">num1</span> باستخدام بلوك <span class="english-term">set [num1] to (answer)</span> (من فئة Variables).
+                </li>
+                <li>
+                    <span class="step-number">4</span>
+                    <strong>Ask for second number:</strong> كرر الخطوة 2 عشان تاخد الرقم الثاني، وخزنه في متغير <span class="english-term">num2</span>.
+                </li>
+                <li>
+                    <span class="step-number">5</span>
+                    <strong>Calculate / المعالجة:</strong> استخدم بلوك العمليات الحسابية <span class="english-term">( + )</span> من فئة <span class="english-term">Operators</span> (لونها أخضر) لحساب <span class="english-term">num1 + num2</span> وخزن الناتج في متغير <span class="english-term">result</span>.
+                    <div class="code-block" style="margin-top: 8px;">set [result] to ((num1) + (num2))</div>
+                </li>
+                <li>
+                    <span class="step-number">6</span>
+                    <strong>Output / المخرجات:</strong> استخدم بلوك <span class="english-term">say (join [The sum is: ] (result)) for 2 seconds</span> (من فئة Looks) عشان تعرض النتيجة على المسرح.
+                </li>
+                <li>
+                    <span class="step-number">7</span>
+                    <strong>End / النهاية:</strong> البرنامج يخلص والقطة تقول النتيجة 🎉
+                </li>
+            </ul>
+            <div class="message-box" style="background:#e0e7ff; margin-top: 15px;">
+                💡 <strong>ملاحظة مهمة:</strong> لو غيرنا ترتيب الخطوات (مثلاً حسبنا قبل ما نخزن الأرقام) مش هتشتغل الآلة الحاسبة. الخوارزمية محتاجة ترتيب دقيق!
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 2. شرح المتغيرات وطرق التخزين (مفصل) ========== -->
+    <div class="card">
+        <h2 class="card-title">📦 Variables (المتغيرات) – صناديق التخزين في البرمجة</h2>
+        <p><strong>المتغير (Variable)</strong> زي صندوق صغير بنحط فيه قيمة مؤقتة (رقم، نص، إلخ) عشان نستخدمها بعدين. كل متغير ليه <strong>اسم</strong> و <strong>قيمة</strong>.</p>
+        
+        <div class="variable-card">
+            <h3><i class="fas fa-boxes"></i> إزاي نعمل متغير في سكراتش؟</h3>
+            <ol style="padding-right: 25px; margin-top: 15px;">
+                <li>روح على قسم <span class="english-term">Variables</span> (لونه برتقالي).</li>
+                <li>اضغط على <span class="english-term">Make a Variable</span>.</li>
+                <li>اكتب اسم المتغير (مثلاً: <strong>num1</strong>، <strong>num2</strong>، <strong>result</strong>).</li>
+                <li>اختار <span class="english-term">For all sprites</span> عشان كل الكائنات تشوفه، أو <span class="english-term">For this sprite only</span> عشان يبقى خاص بكائن واحد.</li>
+                <li>اضغط OK، هتلاقي بلوكات جديدة ظهرت:</li>
+            </ol>
+            <div class="code-block" style="margin-top: 15px;">
+                set [num1 v] to (0)      // يخزن قيمة جديدة في المتغير<br>
+                change [num1 v] by (1)   // يزيد أو ينقص قيمة المتغير<br>
+                show variable [num1 v]   // يظهر قيمة المتغير على المسرح<br>
+                hide variable [num1 v]   // يخفي قيمة المتغير
+            </div>
+            <p style="margin-top: 15px;"><strong>📌 تخزين القيم (Storage):</strong> بنستخدم <span class="english-term">set [variable] to (value)</span> عشان نحط قيمة معينة. والقيمة ممكن تكون:</p>
+            <ul>
+                <li>رقم ثابت: <span class="english-term">set [num1] to (5)</span></li>
+                <li>إجابة المستخدم: <span class="english-term">set [num1] to (answer)</span> (بعد بلوك ask)</li>
+                <li>ناتج عملية حسابية: <span class="english-term">set [result] to ((num1) + (num2))</span></li>
+                <li>نص: <span class="english-term">set [name] to [Ahmed]</span></li>
+            </ul>
+        </div>
+        
+        <div class="message-box" style="background:#dcfce7;">
+            🧠 <strong>تذكر:</strong> المتغيرات بتخزن قيمة واحدة بس في المرة الواحدة. لو خزنت قيمة جديدة، القيمة القديمة بتتمسح. زي ما تحط ورقة جديدة في صندوق، الورقة القديمة تروح.
+        </div>
+    </div>
+
+    <!-- ========== 3. العمليات الحسابية (Operators) بالإنجليزية ========== -->
+    <div class="card">
+        <h2 class="card-title">🧮 Operators – العمليات الحسابية في Scratch</h2>
+        <p>بلوكات <span class="english-term">Operators</span> (لونها أخضر فاتح 🟢) هي اللي بتخلينا ننفذ العمليات الحسابية.</p>
+        
+        <div class="operators-grid">
+            <div class="operator-card">
+                <i class="fas fa-plus" style="font-size: 2rem; color: #22c55e;"></i>
+                <h3>Addition (+)</h3>
+                <p><span class="english-term">(number1) + (number2)</span></p>
+                <div class="block-btn green-block">(5) + (3)</div>
+                <p>النتيجة: 8</p>
+            </div>
+            <div class="operator-card">
+                <i class="fas fa-minus" style="font-size: 2rem; color: #22c55e;"></i>
+                <h3>Subtraction (-)</h3>
+                <p><span class="english-term">(number1) - (number2)</span></p>
+                <div class="block-btn green-block">(10) - (4)</div>
+                <p>النتيجة: 6</p>
+            </div>
+            <div class="operator-card">
+                <i class="fas fa-times" style="font-size: 2rem; color: #22c55e;"></i>
+                <h3>Multiplication (*)</h3>
+                <p><span class="english-term">(number1) * (number2)</span></p>
+                <div class="block-btn green-block">(7) * (6)</div>
+                <p>النتيجة: 42</p>
+            </div>
+            <div class="operator-card">
+                <i class="fas fa-divide" style="font-size: 2rem; color: #22c55e;"></i>
+                <h3>Division (/)</h3>
+                <p><span class="english-term">(number1) / (number2)</span></p>
+                <div class="block-btn green-block">(20) / (4)</div>
+                <p>النتيجة: 5</p>
+            </div>
+        </div>
+        
+        <div class="message-box" style="background:#fef9c3;">
+            💻 <strong>ملاحظة:</strong> في سكراتش، علامة الضرب هي <code>*</code> وعلامة القسمة هي <code>/</code>. وممكن تستخدم المتغيرات جوه البلوكات دي، مثال: <span class="english-term">((num1) + (num2))</span>
+        </div>
+    </div>
+
+    <!-- ========== 4. بلوكات مهمة بالانجليزي (Ask, Set, When Sprite Clicked) ========== -->
+    <div class="card">
+        <h2 class="card-title">🎮 Important Scratch Blocks (Ask, Set, When Sprite Clicked)</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
+            <div style="background: #fef3c7; border-radius: 40px; padding: 20px;">
+                <i class="fas fa-question-circle" style="font-size: 2rem; color: #f59e0b;"></i>
+                <h3>📢 <span class="english-term">ask [ ] and wait</span></h3>
+                <p>من فئة <span class="english-term">Sensing</span> (لونه أزرق فاتح). بيعرض سؤال للمستخدم ويستنى يكتب إجابته.</p>
+                <div class="code-block" style="background:#2d1b4e;">ask [Enter first number:] and wait</div>
+                <p>الإجابة بتتخزن في بلوك <span class="english-term">answer</span></p>
+                <p><strong>مثال:</strong> بعد ما المستخدم يكتب رقم، نقدر نخزنه في متغير: <span class="english-term">set [num1] to (answer)</span></p>
+            </div>
+            
+            <div style="background: #dcfce7; border-radius: 40px; padding: 20px;">
+                <i class="fas fa-box" style="font-size: 2rem; color: #22c55e;"></i>
+                <h3>📦 <span class="english-term">set [variable] to [ ]</span></h3>
+                <p>من فئة <span class="english-term">Variables</span> (لونه برتقالي). بيخزن قيمة جديدة في المتغير.</p>
+                <div class="code-block" style="background:#2d1b4e;">set [num1] to (5)</div>
+                <div class="code-block" style="background:#2d1b4e;">set [num2] to (answer)</div>
+                <div class="code-block" style="background:#2d1b4e;">set [result] to ((num1) + (num2))</div>
+            </div>
+            
+            <div style="background: #e0e7ff; border-radius: 40px; padding: 20px;">
+                <i class="fas fa-mouse-pointer" style="font-size: 2rem; color: #4f46e5;"></i>
+                <h3>🐱 <span class="english-term">when this sprite clicked</span></h3>
+                <p>من فئة <span class="english-term">Events</span> (لونه أصفر). بينفذ الأوامر اللي تحته لما المستخدم يضغط على الكائن (Sprite).</p>
+                <div class="code-block" style="background:#2d1b4e;">when this sprite clicked</div>
+                <p>مثلاً: نضغط على شكل علامة "+" فتشتغل عملية الجمع.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 5. رسم Custom Sprite (كائنات مخصصة) ========== -->
+    <div class="card">
+        <h2 class="card-title">🎨 How to Draw a Custom Sprite (كائن مخصص)</h2>
+        <p>هنرسم 4 كائنات لكل عملية حسابية (➕➖✖️➗) ونستخدم بلوك <span class="english-term">when this sprite clicked</span> عشان ننفذ العملية.</p>
+        
+        <div class="sprite-drawing">
+            <h3>📌 خطوات الرسم في Scratch:</h3>
+            <ol style="text-align: right; padding-right: 25px;">
+                <li>افتح Scratch Editor.</li>
+                <li>في منطقة Sprites، اضغط على <strong>Choose a Sprite</strong> → <strong>Paint</strong> (أو أيقونة الفرشاة).</li>
+                <li>استخدم أداة <strong>Text (T)</strong> عشان تكتب علامة + أو - أو × أو ÷.</li>
+                <li>غير اللون والخط عشان الشكل يبان جميل.</li>
+                <li>امسح الخلفية (اجعلها شفافة) عشان الكائن يظهر من غير مربع أبيض.</li>
+                <li>سمي الكائن باسم مناسب (مثل "AddButton", "SubtractButton").</li>
+                <li>كرر الخطوات لبقية العمليات.</li>
+            </ol>
+            
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 25px;">
+                <div class="sprite-example">
+                    <i class="fas fa-plus-circle" style="color: #22c55e;"></i>
+                    <p><strong>➕ Add</strong></p>
+                    <small>ارسم دائرة خضراء و +</small>
+                </div>
+                <div class="sprite-example">
+                    <i class="fas fa-minus-circle" style="color: #ef4444;"></i>
+                    <p><strong>➖ Subtract</strong></p>
+                    <small>ارسم دائرة حمراء و -</small>
+                </div>
+                <div class="sprite-example">
+                    <i class="fas fa-times-circle" style="color: #f59e0b;"></i>
+                    <p><strong>✖️ Multiply</strong></p>
+                    <small>ارسم دائرة برتقالية و ×</small>
+                </div>
+                <div class="sprite-example">
+                    <i class="fas fa-divide" style="color: #8b5cf6;"></i>
+                    <p><strong>➗ Divide</strong></p>
+                    <small>ارسم دائرة بنفسجية و ÷</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 6. محاكي تفاعلي (يستخدم المصطلحات الإنجليزية) ========== -->
+    <div class="card">
+        <h2 class="card-title">🐱 Interactive Simulator – Try it Yourself!</h2>
+        <p>اضغط على أيقونة العملية الحسابية عشان تشوف إزاي بلوكات <span class="english-term">ask</span> و <span class="english-term">set variable</span> و <span class="english-term">operators</span> بتشتغل مع بعض.</p>
+        
+        <div class="scratch-sim">
+            <div class="scratch-stage" id="interactiveStage">
+                <div class="custom-sprite" id="spriteAdd">
+                    <i class="fas fa-plus-circle"></i>
+                    <div>➕ Add</div>
+                </div>
+                <div class="custom-sprite" id="spriteSub">
+                    <i class="fas fa-minus-circle"></i>
+                    <div>➖ Subtract</div>
+                </div>
+                <div class="custom-sprite" id="spriteMul">
+                    <i class="fas fa-times-circle"></i>
+                    <div>✖️ Multiply</div>
+                </div>
+                <div class="custom-sprite" id="spriteDiv">
+                    <i class="fas fa-divide"></i>
+                    <div>➗ Divide</div>
+                </div>
+                <div class="result-area" id="simResult">
+                    <strong>📊 Result:</strong><br>
+                    <span id="resultValue">---</span>
+                </div>
+            </div>
+            
+            <div class="code-block" style="margin-top: 15px;">
+                <strong>🧩 Example code for Add button (when this sprite clicked):</strong><br>
+                ask [Enter first number:] and wait<br>
+                set [num1] to (answer)<br>
+                ask [Enter second number:] and wait<br>
+                set [num2] to (answer)<br>
+                set [result] to ((num1) + (num2))<br>
+                say (join [Sum = ] (result)) for 2 seconds
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 7. المشروع العملي + الواجب المتحدي ========== -->
+    <div class="card">
+        <h2 class="card-title">📐 Project: Calculator using Sprites + Variables</h2>
+        
+        <div style="background: linear-gradient(145deg, #dcfce7, #bbf7d0); border-radius: 50px; padding: 25px;">
+            <h3 style="color:#166534;">🎯 Task (Project Requirements):</h3>
+            <ul style="padding-right: 25px; margin-top: 15px;">
+                <li>🔹 Create 4 Sprites (➕, ➖, ✖️, ➗) using Paint.</li>
+                <li>🔹 Create 3 Variables: <span class="english-term">num1</span>, <span class="english-term">num2</span>, <span class="english-term">result</span>.</li>
+                <li>🔹 For each sprite, use <span class="english-term">when this sprite clicked</span> to start the operation.</li>
+                <li>🔹 Use <span class="english-term">ask [ ] and wait</span> to get two numbers from the user.</li>
+                <li>🔹 Store numbers using <span class="english-term">set [variable] to (answer)</span>.</li>
+                <li>🔹 Use the <span class="english-term">Operators (+, -, *, /)</span> to calculate.</li>
+                <li>🔹 Show the result using <span class="english-term">say</span> block.</li>
+            </ul>
+        </div>
+        
+        <div class="code-block" style="margin: 20px 0;">
+            <strong>💻 Full example for Addition sprite:</strong><br><br>
+            when this sprite clicked<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ask [Enter first number:] and wait<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;set [num1] to (answer)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;ask [Enter second number:] and wait<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;set [num2] to (answer)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;set [result] to ((num1) + (num2))<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;say (join [The sum is: ] (result)) for 2 seconds
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="https://scratch.mit.edu/projects/editor" target="_blank" class="link-btn"><i class="fas fa-external-link-alt"></i> Open Scratch Editor</a>
+            <a href="https://scratch.mit.edu/download" target="_blank" class="link-btn" style="background: #059669;"><i class="fas fa-download"></i> Download Scratch</a>
+        </div>
+    </div>
+
+    <!-- ========== 8. الواجب المنزلي (تحدي مختلف) ========== -->
+    <div class="homework-section">
+        <h2 style="font-size: 1.8rem;">📚 Homework Challenge 📚</h2>
+        <p><strong>⭐ مشروع مختلف وممتع:</strong> صمم برنامج على Scratch يستقبل <strong>رقمين</strong> من المستخدم، ثم <strong>يحسب ويعرض جميع العمليات الأربعة (جمع، طرح، ضرب، قسمة) في نفس الوقت!</strong></p>
+        
+        <div style="background: white; border-radius: 40px; padding: 20px; margin: 20px 0;">
+            <h3><i class="fas fa-tasks"></i> المطلوب بالتفصيل:</h3>
+            <ul style="padding-right: 25px; margin-top: 15px;">
+                <li>✅ استخدام <span class="english-term">ask and wait</span> مرتين لأخذ الرقم الأول والثاني.</li>
+                <li>✅ إنشاء 4 متغيرات: <span class="english-term">num1, num2, sum, difference, product, quotient</span> (أو result واحد لكل عملية).</li>
+                <li>✅ حساب <strong>المجموع</strong> (sum)، <strong>الفرق</strong> (difference)، <strong>الضرب</strong> (product)، و<strong>القسمة</strong> (quotient).</li>
+                <li>✅ عرض النتائج الأربعة في رسالة واحدة أو كل رسالة على حدة.</li>
+                <li>✅ (تحدي إضافي) إذا كان الرقم الثاني = 0، أظهر رسالة "لا يمكن القسمة على صفر" بدلاً من القسمة.</li>
+            </ul>
+            <div class="code-block" style="margin-top: 15px;">
+                <strong>💡 نموذج لبداية الكود (لعملية الجمع فقط، أكمل الباقي بنفسك):</strong><br>
+                when green flag clicked<br>
+                ask [Enter first number:] and wait<br>
+                set [num1] to (answer)<br>
+                ask [Enter second number:] and wait<br>
+                set [num2] to (answer)<br>
+                set [sum] to ((num1) + (num2))<br>
+                say (join [Sum = ] (sum)) for 2 seconds<br>
+                // الآن قم بعمل الطرح والضرب والقسمة بنفس الطريقة
+            </div>
+        </div>
+        
+       
+      
+    </div>
+    
+   
+</div>
+
+<script>
+    // ========== المحاكي التفاعلي (Simulator) ==========
+    const resultSpan = document.getElementById('resultValue');
+    
+    function askAndCalculate(operation, opSymbol, calcFunction, isDivision = false) {
+        let num1 = prompt(`🐱 Enter first number for ${opSymbol} operation:`);
+        if (num1 === null) return;
+        let num2 = prompt(`🐱 Enter second number for ${opSymbol} operation:`);
+        if (num2 === null) return;
+        
+        let n1 = parseFloat(num1);
+        let n2 = parseFloat(num2);
+        
+        if (isNaN(n1) || isNaN(n2)) {
+            resultSpan.innerHTML = "❌ Error: Please enter valid numbers!";
+            return;
+        }
+        
+        if (isDivision && n2 === 0) {
+            resultSpan.innerHTML = "⚠️ Cannot divide by zero!";
+            return;
+        }
+        
+        let result = calcFunction(n1, n2);
+        resultSpan.innerHTML = `${n1} ${opSymbol} ${n2} = ${result}`;
+        
+        // Speak result
+        if ('speechSynthesis' in window) {
+            let utterance = new SpeechSynthesisUtterance(`Result of ${opSymbol} is ${result}`);
+            utterance.lang = 'en-US';
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+        
+        // Animate clicked sprite
+        let clickedSprite = event.target.closest('.custom-sprite');
+        if (clickedSprite) {
+            clickedSprite.style.transform = 'scale(1.2)';
+            setTimeout(() => clickedSprite.style.transform = 'scale(1)', 200);
+        }
+    }
+    
+    document.getElementById('spriteAdd').addEventListener('click', (e) => {
+        askAndCalculate('addition', '+', (a,b) => a + b, false);
+    });
+    
+    document.getElementById('spriteSub').addEventListener('click', (e) => {
+        askAndCalculate('subtraction', '-', (a,b) => a - b, false);
+    });
+    
+    document.getElementById('spriteMul').addEventListener('click', (e) => {
+        askAndCalculate('multiplication', '×', (a,b) => a * b, false);
+    });
+    
+    document.getElementById('spriteDiv').addEventListener('click', (e) => {
+        askAndCalculate('division', '÷', (a,b) => a / b, true);
+    });
+    
+    // ========== Submit Homework ==========
+    document.getElementById('submitHomeworkBtn').addEventListener('click', () => {
+        let feedbackDiv = document.getElementById('homeworkFeedback');
+        feedbackDiv.style.display = 'block';
+        feedbackDiv.innerHTML = "✅ ✅ Homework received! ✅ ✅<br>🎉 Great job! You are now a Scratch coder.<br>💡 Don't forget to share your project link or a screenshot of your code.<br>💪 Keep practicing — next challenge: make a calculator that also multiplies and divides!";
+        feedbackDiv.style.background = "#d1fae5";
+        feedbackDiv.style.borderRightColor = "#10b981";
+        
+        if ('speechSynthesis' in window) {
+            let utterance = new SpeechSynthesisUtterance("Homework submitted successfully. Well done!");
+            utterance.lang = 'en-US';
+            window.speechSynthesis.speak(utterance);
+        }
+    });
+</script>
+</body>
+</html>
