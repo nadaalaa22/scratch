@@ -3,664 +3,1222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Session 2 | Scratch - Variables & Operations</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<title>Session 2 - Movement and Direction in Scratch 🐱</title>    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --scratch-blue: #4c97ff; --scratch-blue-dark: #1f5bb5;
+            --scratch-orange: #ffab19; --scratch-orange-dark: #c27d00;
+            --scratch-green: #59c059; --scratch-green-dark: #2f6b2f;
+            --scratch-purple: #aa6fe5; --scratch-purple-dark: #6b2e9e;
+            --scratch-motion: #4c97ff; --scratch-control: #ffab19; --scratch-events: #ffbf00;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Tajawal', 'Comic Neue', sans-serif;
-            background: linear-gradient(145deg, #e8f0ff 0%, #f9f0ff 100%);
-            min-height: 100vh;
+            background: linear-gradient(145deg, #fdf4e3 0%, #fff0f5 50%, #e8f4ff 100%);
+            min-height: 100vh; overflow-x: hidden;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        @keyframes float {
-            0%,100%{ transform: translateY(0); }
-            50%{ transform: translateY(-8px); }
-        }
-        @keyframes shakeCalc {
-            0%,100%{ transform: rotate(0deg); }
-            25%{ transform: rotate(5deg); }
-            75%{ transform: rotate(-5deg); }
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        @keyframes bounce { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-15px); } }
+        @keyframes shake { 0%,100%{ transform: rotate(0deg); } 25%{ transform: rotate(5deg); } 75%{ transform: rotate(-5deg); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes popIn { 0%{ transform: scale(0); opacity: 0; } 80%{ transform: scale(1.1); } 100%{ transform: scale(1); opacity: 1; } }
+        @keyframes slideInRight { 0%{ transform: translateX(50px); opacity: 0; } 100%{ transform: translateX(0); opacity: 1; } }
+        @keyframes sparkle { 0%,100%{ opacity: 1; transform: scale(1); } 50%{ opacity: 0.5; transform: scale(1.3); } }
+        @keyframes confetti-fall { 0%{ transform: translateY(-100vh) rotate(0deg); opacity: 1; } 100%{ transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+        @keyframes fadeOut { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0); } }
+        @keyframes particle-float { 0% { transform: translate(0, 0) scale(1); opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; } }
+        @keyframes flashRed { 0%,100%{ background: #fff1dc; } 50%{ background: #fecaca; } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
         .hero {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            border-radius: 70px;
-            padding: 35px;
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-            animation: float 4s ease-in-out infinite;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ff6b35);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(255,107,53,0.3);
+            position: relative; overflow: hidden;
         }
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-        }
+        .hero::before { content: '🐱'; position: absolute; font-size: 8rem; opacity: 0.1; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🧭'; position: absolute; font-size: 6rem; opacity: 0.1; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.5rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; position: relative; z-index: 1; }
+        .hero p { font-size: 1.2rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+
         .card {
-            background: white;
-            border-radius: 60px;
-            padding: 30px;
-            margin-bottom: 40px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-            border: 2px solid #c7d2fe;
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); transition: all 0.3s ease;
+            border: 3px solid transparent; position: relative; overflow: hidden;
         }
-        .card:hover {
-            transform: scale(1.01);
-        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(0,0,0,0.12); border-color: #ffd966; }
         .card-title {
-            font-size: 2rem;
-            font-weight: 800;
-            background: linear-gradient(120deg, #4f46e5, #ec489a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 20px;
-            display: inline-block;
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #f97316, #ec489a, #8b5cf6);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px; display: inline-block; position: relative;
         }
-        .algorithm-box {
-            background: #f0f4ff;
-            border-radius: 50px;
-            padding: 25px;
-            margin: 20px 0;
-            border-right: 10px solid #4f46e5;
+        .card-title::after { content: ''; position: absolute; bottom: -5px; right: 0; width: 60%; height: 4px; background: linear-gradient(120deg, #f97316, #ec489a); border-radius: 10px; }
+
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.95rem;
+            margin: 4px; position: relative; cursor: default; user-select: none;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15); transition: transform 0.1s, box-shadow 0.1s;
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
         }
-        .algorithm-steps {
-            list-style-type: none;
-            padding-right: 0;
+        .scratch-block:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.15); }
+        .scratch-block.motion { background: var(--scratch-motion); }
+        .scratch-block.motion::before { content: ''; position: absolute; top: -6px; left: 12px; width: 28px; height: 8px; background: var(--scratch-motion); border-radius: 4px 4px 0 0; box-shadow: 0 -2px 0 rgba(0,0,0,0.1) inset; }
+        .scratch-block.motion::after { content: ''; position: absolute; bottom: -6px; left: 12px; width: 28px; height: 8px; background: var(--scratch-motion); border-radius: 0 0 4px 4px; box-shadow: 0 2px 0 rgba(0,0,0,0.1) inset; }
+        .scratch-block.control { background: var(--scratch-control); }
+        .scratch-block.control::before { content: ''; position: absolute; top: -6px; left: 12px; width: 28px; height: 8px; background: var(--scratch-control); border-radius: 4px 4px 0 0; }
+        .scratch-block.control::after { content: ''; position: absolute; bottom: -6px; left: 12px; width: 28px; height: 8px; background: var(--scratch-control); border-radius: 0 0 4px 4px; }
+        .scratch-block.events { background: var(--scratch-events); border-radius: 30px 4px 4px 4px; padding-top: 10px; }
+        .scratch-block.events::before { content: ''; position: absolute; top: -6px; left: 12px; width: 28px; height: 8px; background: var(--scratch-events); border-radius: 4px 4px 0 0; }
+        .scratch-block.pen { background: #0fbd8c; }
+        .scratch-block.pen::before { content: ''; position: absolute; top: -6px; left: 12px; width: 28px; height: 8px; background: #0fbd8c; border-radius: 4px 4px 0 0; }
+        .scratch-block.pen::after { content: ''; position: absolute; bottom: -6px; left: 12px; width: 28px; height: 8px; background: #0fbd8c; border-radius: 0 0 4px 4px; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; font-weight: bold; margin: 0 3px; display: inline-block; min-width: 25px; text-align: center; font-family: 'Courier New', monospace; font-size: 0.85rem; }
+
+        .blocks-showcase { background: linear-gradient(145deg, #f0f9ff, #e0f2fe); border-radius: 30px; padding: 25px; margin: 20px 0; text-align: center; border: 2px dashed #bae6fd; }
+        .blocks-showcase h3 { color: #0369a1; margin-bottom: 15px; font-size: 1.2rem; }
+
+        .compass-container { background: linear-gradient(145deg, #fef9e3, #fffbeb); border-radius: 40px; padding: 25px; text-align: center; margin: 20px 0; border: 3px solid #fcd34d; position: relative; }
+        .compass-visual { width: 220px; height: 220px; margin: 20px auto; position: relative; background: radial-gradient(circle, #fff 30%, #fef3c7 70%); border-radius: 50%; border: 5px solid #f59e0b; box-shadow: 0 10px 30px rgba(245,158,11,0.2), inset 0 5px 20px rgba(0,0,0,0.05); }
+        .compass-needle { position: absolute; top: 50%; left: 50%; width: 6px; height: 90px; background: linear-gradient(to top, #ef4444 50%, #3b82f6 50%); transform-origin: bottom center; transform: translate(-50%, -100%) rotate(0deg); border-radius: 3px; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 2; }
+        .compass-needle::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 12px solid #ef4444; }
+        .compass-center { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; background: #f59e0b; border-radius: 50%; transform: translate(-50%, -50%); z-index: 3; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 3px solid #fff; }
+        .compass-label { position: absolute; font-weight: 900; font-size: 1.3rem; color: #92400e; }
+        .compass-label.n { top: 8px; left: 50%; transform: translateX(-50%); }
+        .compass-label.e { right: 8px; top: 50%; transform: translateY(-50%); }
+        .compass-label.s { bottom: 8px; left: 50%; transform: translateX(-50%); }
+        .compass-label.w { left: 8px; top: 50%; transform: translateY(-50%); }
+        .compass-degrees { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
+        .compass-degrees span { position: absolute; font-size: 0.75rem; color: #d97706; font-weight: 700; }
+
+        .play-area { background: linear-gradient(145deg, #fff9e6, #fef3c7); border-radius: 40px; padding: 25px; margin-top: 20px; position: relative; border: 4px solid #ffb74d; overflow: hidden; }
+        .stage { background: linear-gradient(145deg, #f0e7d0, #e8dcc0); border-radius: 30px; height: 320px; position: relative; overflow: hidden; margin: 15px 0; border: 3px solid #d4c4a8; box-shadow: inset 0 5px 15px rgba(0,0,0,0.1); }
+        .stage-grid { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+
+        #arrowSprite { position: absolute; width: 50px; height: 50px; transition: left 0.2s ease-out, top 0.2s ease-out; cursor: pointer; user-select: none; z-index: 10; filter: drop-shadow(3px 5px 8px rgba(0,0,0,0.25)); }
+        #arrowSprite svg { width: 100%; height: 100%; transition: transform 0.3s ease-out; }
+        .trail-dot { position: absolute; width: 8px; height: 8px; background: rgba(255, 171, 25, 0.6); border-radius: 50%; pointer-events: none; animation: fadeOut 1s forwards; }
+        .edge-bounce-effect { animation: shake 0.3s ease; }
+
+        .controls-section { display: flex; flex-direction: column; gap: 15px; margin: 20px 0; }
+        .controls-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .ctrl-btn { border: none; color: white; padding: 12px 22px; border-radius: 50px; font-size: 1rem; font-weight: 800; cursor: pointer; transition: all 0.15s; box-shadow: 0 5px 0 rgba(0,0,0,0.2); font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px; position: relative; overflow: hidden; }
+        .ctrl-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s; }
+        .ctrl-btn:hover::before { left: 100%; }
+        .ctrl-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.blue { background: var(--scratch-blue); } .ctrl-btn.blue:active { background: var(--scratch-blue-dark); }
+        .ctrl-btn.orange { background: var(--scratch-orange); } .ctrl-btn.orange:active { background: var(--scratch-orange-dark); }
+        .ctrl-btn.green { background: var(--scratch-green); } .ctrl-btn.green:active { background: var(--scratch-green-dark); }
+        .ctrl-btn.purple { background: var(--scratch-purple); } .ctrl-btn.purple:active { background: var(--scratch-purple-dark); }
+        .ctrl-btn.red { background: #ef4444; } .ctrl-btn.red:active { background: #b91c1c; }
+        .ctrl-btn.large { padding: 15px 30px; font-size: 1.1rem; }
+
+        .keyboard-hint { background: #f3f4f6; border-radius: 20px; padding: 10px 20px; font-size: 0.9rem; color: #6b7280; display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; justify-content: center; }
+        .key { background: white; border: 2px solid #d1d5db; border-radius: 8px; padding: 4px 10px; font-weight: bold; font-size: 0.85rem; box-shadow: 0 3px 0 #d1d5db; }
+
+        .status-box { background: linear-gradient(145deg, #e0f2fe, #dbeafe); border-radius: 25px; padding: 15px; text-align: center; font-size: 1.1rem; font-weight: 800; border-right: 8px solid #3b82f6; margin: 15px 0; transition: all 0.3s; position: relative; overflow: hidden; }
+        .status-box.bounce { background: linear-gradient(145deg, #fef3c7, #fde68a); border-right-color: #f59e0b; animation: pulse 0.3s ease; }
+        .status-box.success { background: linear-gradient(145deg, #d1fae5, #a7f3d0); border-right-color: #10b981; }
+        .status-box.info { background: linear-gradient(145deg, #f3e8ff, #e9d5ff); border-right-color: #8b5cf6; }
+        .status-box.danger { background: linear-gradient(145deg, #fee2e2, #fecaca); border-right-color: #ef4444; }
+
+        .rotation-styles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin: 20px 0; }
+        .style-card { background: linear-gradient(145deg, #f9fafb, #f3f4f6); border-radius: 30px; padding: 20px; text-align: center; border: 3px solid transparent; transition: all 0.3s; cursor: pointer; position: relative; }
+        .style-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .style-card.active { border-color: #8b5cf6; background: linear-gradient(145deg, #f3e8ff, #ede9fe); }
+        .style-card.active::after { content: '✓'; position: absolute; top: 10px; left: 10px; background: #8b5cf6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; animation: popIn 0.3s ease; }
+        .style-icon { font-size: 3rem; margin-bottom: 10px; }
+
+        .game-container { background: linear-gradient(145deg, #fff1dc, #ffedd5); border-radius: 40px; padding: 25px; position: relative; border: 3px solid #fdba74; }
+        .game-stage { position: relative; height: 300px; background: linear-gradient(145deg, #fff7ed, #ffedd5); border-radius: 30px; margin: 15px 0; overflow: hidden; border: 3px solid #fed7aa; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05); }
+        .game-stage .stage-grid { background-size: 40px 40px; }
+        #gameCat { position: absolute; font-size: 3rem; transition: all 0.15s ease-out; z-index: 10; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
+        #gameStar { position: absolute; font-size: 2.8rem; z-index: 5; animation: sparkle 2s ease-in-out infinite; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6)); }
+        .star-glow { position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%); border-radius: 50%; animation: pulse 2s ease-in-out infinite; pointer-events: none; }
+        .obstacle { position: absolute; font-size: 2.2rem; z-index: 5; opacity: 0.9; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2)); }
+        .game-stats { display: flex; justify-content: space-around; margin: 15px 0; gap: 10px; flex-wrap: wrap; }
+        .stat-box { background: white; border-radius: 20px; padding: 10px 20px; font-weight: 800; box-shadow: 0 4px 10px rgba(0,0,0,0.05); min-width: 120px; text-align: center; }
+        .stat-box .label { font-size: 0.85rem; color: #6b7280; }
+        .stat-box .value { font-size: 1.3rem; color: #f97316; }
+        .win-message { display: none; background: linear-gradient(145deg, #d1fae5, #a7f3d0); border-radius: 30px; padding: 25px; text-align: center; margin-top: 20px; border: 3px solid #34d399; animation: popIn 0.5s ease; }
+        .win-message h3 { font-size: 1.8rem; color: #065f46; margin-bottom: 10px; }
+        .win-message p { font-size: 1.1rem; color: #047857; }
+        .lose-message { display: none; background: linear-gradient(145deg, #fee2e2, #fecaca); border-radius: 30px; padding: 25px; text-align: center; margin-top: 20px; border: 3px solid #ef4444; animation: popIn 0.5s ease; }
+        .lose-message h3 { font-size: 1.8rem; color: #991b1b; margin-bottom: 10px; }
+        .lose-message p { font-size: 1.1rem; color: #b91c1c; }
+
+        .square-demo { background: linear-gradient(145deg, #f0f9ff, #e0f2fe); border-radius: 30px; padding: 25px; margin: 20px 0; border: 3px solid #7dd3fc; }
+        .square-stage { position: relative; height: 280px; background: #fffbeb; border-radius: 25px; margin: 15px 0; overflow: hidden; border: 3px solid #fcd34d; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05); }
+        .square-stage .stage-grid { background-size: 35px 35px; }
+        #squareArrow { position: absolute; width: 40px; height: 40px; z-index: 10; transition: all 0.4s ease-out; filter: drop-shadow(2px 3px 5px rgba(0,0,0,0.2)); }
+        .square-line { position: absolute; height: 4px; background: #f97316; border-radius: 2px; transform-origin: left center; z-index: 5; opacity: 0; transition: opacity 0.3s; }
+        .square-line.visible { opacity: 1; }
+        .step-indicator { display: flex; justify-content: center; gap: 10px; margin: 15px 0; flex-wrap: wrap; }
+        .step-dot { width: 40px; height: 40px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #9ca3af; transition: all 0.3s; border: 3px solid transparent; }
+        .step-dot.active { background: #4c97ff; color: white; transform: scale(1.2); box-shadow: 0 5px 15px rgba(76, 151, 255, 0.4); }
+        .step-dot.done { background: #59c059; color: white; }
+
+        .challenge-section { background: linear-gradient(145deg, #f3e8ff, #e9d5ff); border-radius: 40px; padding: 30px; margin-bottom: 30px; margin-right:30px;margin-left:30px; border: 3px solid #c4b5fd; }
+        .challenge-card { background: white; border-radius: 30px; padding: 25px; margin: 15px 0; box-shadow: 0 8px 20px rgba(0,0,0,0.06); transition: all 0.3s; border: 2px solid transparent; }
+        .challenge-card:hover { border-color: #c4b5fd; transform: translateY(-3px); }
+        .challenge-card h3 { color: #7c3aed; font-size: 1.3rem; margin-bottom: 10px; }
+        .show-solution-btn { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 12px 28px; font-size: 1rem; border: none; border-radius: 50px; cursor: pointer; font-family: inherit; font-weight: 800; box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3); transition: all 0.2s; margin-top: 15px; }
+        .show-solution-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4); }
+        .show-solution-btn:active { transform: translateY(1px); }
+        .solution-area { background: linear-gradient(145deg, #ecfccb, #d9f99d); border-radius: 25px; padding: 25px; margin-top: 20px; display: none; border-right: 8px solid #65a30d; animation: slideInRight 0.4s ease; }
+        .solution-area h3 { color: #3f6212; margin-bottom: 15px; }
+        .solution-area ol { padding-right: 25px; color: #365314; font-weight: 600; line-height: 2; }
+
+        .homework { background: linear-gradient(145deg, #fff0df, #ffe4c4); border: 4px dashed #f97316; border-radius: 40px; padding: 35px; margin: 30px; position: relative; }
+        .homework::before { content: '📝'; position: absolute; top: -20px; left: 30px; font-size: 3rem; background: white; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .homework h2 { font-size: 1.8rem; color: #c2410c; margin-bottom: 15px; }
+        .homework ul { padding-right: 25px; margin-top: 15px; line-height: 2; color: #7c2d12; font-weight: 600; }
+        .bonus-box { background: linear-gradient(145deg, #d1fae5, #a7f3d0); border-radius: 25px; padding: 20px; margin-top: 20px; border: 2px solid #34d399; text-align: center; font-weight: 800; color: #065f46; animation: pulse 3s ease-in-out infinite; }
+
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+        .confetti { position: absolute; width: 10px; height: 10px; animation: confetti-fall 3s ease-out forwards; }
+        footer { text-align: center; margin-top: 40px; padding: 25px; background: linear-gradient(135deg, #6b21e5, #8b5cf6); color: white; border-radius: 40px 40px 0 0; font-weight: 700; font-size: 1.1rem; }
+        .tooltip { position: relative; }
+        .tooltip::after { content: attr(data-tip); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #1f2937; color: white; padding: 6px 12px; border-radius: 10px; font-size: 0.8rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.3s; margin-bottom: 8px; font-weight: normal; }
+        .tooltip:hover::after { opacity: 1; }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.6rem; } .hero p { font-size: 1rem; }
+            .card { padding: 20px; border-radius: 30px; } .card-title { font-size: 1.4rem; }
+            .stage { height: 260px; } .game-stage { height: 260px; }
+            .compass-visual { width: 170px; height: 170px; }
+            .ctrl-btn { padding: 10px 16px; font-size: 0.9rem; }
+            .rotation-styles { grid-template-columns: 1fr; }
         }
-        .algorithm-steps li {
-            margin: 20px 0;
-            font-size: 1.05rem;
-            background: white;
-            padding: 15px;
-            border-radius: 30px;
-        }
-        .step-number {
-            background: #4f46e5;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-left: 12px;
-        }
-        .code-block {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 30px;
-            font-family: monospace;
-            direction: ltr;
-            text-align: left;
-            margin: 15px 0;
-            overflow-x: auto;
-            font-size: 0.9rem;
-        }
-        .code-block-ar {
-            background: #1e293b;
-            color: #e2e8f0;
-            padding: 20px;
-            border-radius: 30px;
-            font-family: monospace;
-            text-align: right;
-            margin: 15px 0;
-            font-size: 0.9rem;
-        }
-        .variable-card {
-            background: linear-gradient(145deg, #fef3c7, #fffbeb);
-            border-radius: 40px;
-            padding: 25px;
-            margin: 20px 0;
-            border: 2px solid #f59e0b;
-        }
-        .sprite-drawing {
-            background: #e0e7ff;
-            border-radius: 40px;
-            padding: 20px;
-            text-align: center;
-        }
-        .sprite-example {
-            display: inline-block;
-            background: white;
-            border-radius: 30px;
-            padding: 15px;
-            margin: 10px;
-            text-align: center;
-            width: 120px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .sprite-example:hover {
-            transform: scale(1.05);
-            background: #f3e8ff;
-        }
-        .sprite-example i {
-            font-size: 2.5rem;
-        }
-        .operators-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .operator-card {
-            background: #dcfce7;
-            border-radius: 30px;
-            padding: 20px;
-            text-align: center;
-            border-bottom: 5px solid #22c55e;
-        }
-        .block-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 6px;
-            border-radius: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.1s;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.2);
-            font-size: 0.95rem;
-            font-family: monospace;
-        }
-        .block-btn:active { transform: translateY(2px); box-shadow: 0 1px 0; }
-        .green-block { background: #4caf50; color: white; }
-        .blue-block { background: #2196f3; color: white; }
-        .orange-block { background: #ff9800; color: white; }
-        .purple-block { background: #9c27b0; color: white; }
-        .yellow-block { background: #f4d03f; color: #5d3a1a; }
-        
-        .scratch-sim {
-            background: #e0e7ff;
-            border-radius: 50px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-        .scratch-stage {
-            background: #fff9e6;
-            min-height: 320px;
-            border-radius: 50px;
-            margin-top: 20px;
-            border: 4px solid #ffb74d;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-        .custom-sprite {
-            background: #f3e8ff;
-            border-radius: 30px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100px;
-        }
-        .custom-sprite:hover {
-            transform: scale(1.1);
-            background: #e9d5ff;
-        }
-        .custom-sprite i {
-            font-size: 2.5rem;
-        }
-        .result-area {
-            background: white;
-            border-radius: 30px;
-            padding: 15px;
-            min-width: 220px;
-            text-align: center;
-            border: 2px solid #4f46e5;
-        }
-        .link-btn {
-            display: inline-block;
-            background: #4f46e5;
-            color: white;
-            padding: 12px 28px;
-            border-radius: 60px;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 10px;
-            transition: 0.2s;
-            box-shadow: 0 4px 0 #2e1065;
-        }
-        .link-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #2e1065;
-        }
-        .homework-section {
-            background: linear-gradient(145deg, #fff0df, #ffe4c4);
-            border: 4px dashed #f97316;
-            border-radius: 60px;
-            padding: 35px;
-            margin-top: 20px;
-        }
-        .message-box {
-            background: #fff3cd;
-            border-radius: 40px;
-            padding: 15px;
-            text-align: center;
-            margin-top: 15px;
-            border-right: 8px solid #ff6b35;
-        }
-        .english-term {
-            background: #e2e8f0;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            direction: ltr;
-            display: inline-block;
-        }
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            background: #4f46e5;
-            color: white;
-            border-radius: 40px 40px 0 0;
-        }
-        @media (max-width: 700px) {
-            .hero h1 { font-size: 1.8rem; }
-            .sprite-example { width: 80px; }
-            .custom-sprite { width: 70px; }
-        }
+        .particle { position: absolute; pointer-events: none; animation: particle-float 1s ease-out forwards; }
     </style>
+<base target="_blank">
+<base target="_blank">
 </head>
 <body>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
 <div class="container">
-    <!-- Hero Section -->
+    <!-- ===== Hero ===== -->
     <div class="hero">
-        <h1>🧮 Session 2: Variables & Math Operations 🧮</h1>
-        <p>المتغيرات | العمليات الحسابية | الخوارزميات | برمجة الآلة الحاسبة</p>
-    </div>
+        <h1>🐱 الحركة والاتجاه في سكراتش 🧭</h1>
+ <p>تعلم كيف تحرك الشخصية وتغير اتجاهها !</p>    </div>
 
-    <!-- ========== 1. خوارزمية واضحة ومفصلة ========== -->
+    <!-- ===== شرح الاتجاهات ===== -->
     <div class="card">
-        <h2 class="card-title">📝 الخوارزمية (Algorithm) - آلة حاسبة بسيطة</h2>
-        <p><strong>الخوارزمية</strong> هي مجموعة خطوات مرتبة بالترتيب عشان نحل مشكلة. خلينا نشوف خطوات عمل آلة حاسبة لجمع رقمين:</p>
-        
-        <div class="algorithm-box">
-            <ul class="algorithm-steps">
-                <li>
-                    <span class="step-number">1</span>
-                    <strong>Start / البداية:</strong> اضغط على العلم الأخضر 🏁 (<span class="english-term">when green flag clicked</span>)
-                </li>
-                <li>
-                    <span class="step-number">2</span>
-                    <strong>Ask for first number:</strong> استخدم بلوك <span class="english-term">ask [Enter first number] and wait</span> (من فئة Sensing) عشان نخلي المستخدم يدخل الرقم الأول.
-                </li>
-                <li>
-                    <span class="step-number">3</span>
-                    <strong>Store in variable:</strong> خزن القيمة اللي دخلها المستخدم في متغير اسمه <span class="english-term">num1</span> باستخدام بلوك <span class="english-term">set [num1] to (answer)</span> (من فئة Variables).
-                </li>
-                <li>
-                    <span class="step-number">4</span>
-                    <strong>Ask for second number:</strong> كرر الخطوة 2 عشان تاخد الرقم الثاني، وخزنه في متغير <span class="english-term">num2</span>.
-                </li>
-                <li>
-                    <span class="step-number">5</span>
-                    <strong>Calculate / المعالجة:</strong> استخدم بلوك العمليات الحسابية <span class="english-term">( + )</span> من فئة <span class="english-term">Operators</span> (لونها أخضر) لحساب <span class="english-term">num1 + num2</span> وخزن الناتج في متغير <span class="english-term">result</span>.
-                    <div class="code-block" style="margin-top: 8px;">set [result] to ((num1) + (num2))</div>
-                </li>
-                <li>
-                    <span class="step-number">6</span>
-                    <strong>Output / المخرجات:</strong> استخدم بلوك <span class="english-term">say (join [The sum is: ] (result)) for 2 seconds</span> (من فئة Looks) عشان تعرض النتيجة على المسرح.
-                </li>
-                <li>
-                    <span class="step-number">7</span>
-                    <strong>End / النهاية:</strong> البرنامج يخلص والقطة تقول النتيجة 🎉
-                </li>
-            </ul>
-            <div class="message-box" style="background:#e0e7ff; margin-top: 15px;">
-                💡 <strong>ملاحظة مهمة:</strong> لو غيرنا ترتيب الخطوات (مثلاً حسبنا قبل ما نخزن الأرقام) مش هتشتغل الآلة الحاسبة. الخوارزمية محتاجة ترتيب دقيق!
+        <h2 class="card-title">🧭 الاتجاهات في سكراتش (زي البوصلة)</h2>
+        <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">
+            في سكراتش، كل شخصية ليها <strong>اتجاه</strong> بيتقاس بالدرجات: <br>
+            <span style="color: #ef4444;">0° = لفوق ↑</span> ، 
+            <span style="color: #3b82f6;">90° = ليمين →</span> ، 
+            <span style="color: #f59e0b;">180° = لتحت ↓</span> ، 
+            <span style="color: #8b5cf6;">-90° = لشمال ←</span> (أو 270°)
+        </p>
+
+        <div class="compass-container">
+            <h3 style="color: #92400e; margin-bottom: 10px;">🧭 البوصلة التفاعلية</h3>
+            <div class="compass-visual">
+                <div class="compass-label n">شمال</div>
+                <div class="compass-label e">شرق</div>
+                <div class="compass-label s">جنوب</div>
+                <div class="compass-label w">غرب</div>
+                <div class="compass-degrees">
+                    <span style="top: 35%; left: 50%; transform: translateX(-50%);">0°</span>
+                    <span style="top: 50%; right: 12%;">90°</span>
+                    <span style="bottom: 35%; left: 50%; transform: translateX(-50%);">180°</span>
+                    <span style="top: 50%; left: 12%;">270°</span>
+                </div>
+                <div class="compass-needle" id="compassNeedle"></div>
+                <div class="compass-center"></div>
+            </div>
+            <p style="color: #92400e; font-weight: 700; margin-top: 10px; font-size: 1.1rem;" id="compassText">الإتجاه الحالي: 90° (شرق →)</p>
+        </div>
+
+        <div class="blocks-showcase">
+            <h3>💡 أهم بلوكات الحركة (بالإنجليزي زي سكراتش):</h3>
+            <div style="margin-top: 15px;">
+                <div class="scratch-block motion">
+                    move <span class="scratch-block-input">10</span> steps
+                </div>
+                <div class="scratch-block motion">
+                    turn ↻ <span class="scratch-block-input">15</span> degrees
+                </div>
+                <div class="scratch-block motion">
+                    point in direction <span class="scratch-block-input">90</span>
+                </div>
+                <div class="scratch-block motion">
+                    if on edge, bounce
+                </div>
+                <div class="scratch-block motion">
+                    set rotation style [left-right]
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ========== 2. شرح المتغيرات وطرق التخزين (مفصل) ========== -->
+    <!-- ===== المحاكي التفاعلي بالسهم ===== -->
     <div class="card">
-        <h2 class="card-title">📦 Variables (المتغيرات) – صناديق التخزين في البرمجة</h2>
-        <p><strong>المتغير (Variable)</strong> زي صندوق صغير بنحط فيه قيمة مؤقتة (رقم، نص، إلخ) عشان نستخدمها بعدين. كل متغير ليه <strong>اسم</strong> و <strong>قيمة</strong>.</p>
-        
-        <div class="variable-card">
-            <h3><i class="fas fa-boxes"></i> إزاي نعمل متغير في سكراتش؟</h3>
-            <ol style="padding-right: 25px; margin-top: 15px;">
-                <li>روح على قسم <span class="english-term">Variables</span> (لونه برتقالي).</li>
-                <li>اضغط على <span class="english-term">Make a Variable</span>.</li>
-                <li>اكتب اسم المتغير (مثلاً: <strong>num1</strong>، <strong>num2</strong>، <strong>result</strong>).</li>
-                <li>اختار <span class="english-term">For all sprites</span> عشان كل الكائنات تشوفه، أو <span class="english-term">For this sprite only</span> عشان يبقى خاص بكائن واحد.</li>
-                <li>اضغط OK، هتلاقي بلوكات جديدة ظهرت:</li>
-            </ol>
-            <div class="code-block" style="margin-top: 15px;">
-                set [num1 v] to (0)      // يخزن قيمة جديدة في المتغير<br>
-                change [num1 v] by (1)   // يزيد أو ينقص قيمة المتغير<br>
-                show variable [num1 v]   // يظهر قيمة المتغير على المسرح<br>
-                hide variable [num1 v]   // يخفي قيمة المتغير
+        <h2 class="card-title">🎮 جرب بنفسك: حرك السهم!</h2>
+        <p style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 15px;">
+            السهم ده بيمثل الشخصية في سكراتش. شوف إزاي بيدور ويتحرك مع كل اتجاه. 
+            البلوكات بالإنجليزي زي سكراتش الحقيقي!
+        </p>
+
+        <div class="play-area">
+            <div class="stage" id="catStage">
+                <div class="stage-grid"></div>
+                <div id="arrowSprite">
+                    <svg viewBox="0 0 100 100" id="arrowSvg">
+                        <defs>
+                            <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#4c97ff"/>
+                                <stop offset="100%" style="stop-color:#1f5bb5"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon points="50,5 65,35 55,35 55,85 45,85 45,35 35,35" fill="url(#arrowGrad)" stroke="#1f5bb5" stroke-width="2"/>
+                        <circle cx="50" cy="60" r="8" fill="white" stroke="#1f5bb5" stroke-width="2"/>
+                    </svg>
+                </div>
             </div>
-            <p style="margin-top: 15px;"><strong>📌 تخزين القيم (Storage):</strong> بنستخدم <span class="english-term">set [variable] to (value)</span> عشان نحط قيمة معينة. والقيمة ممكن تكون:</p>
-            <ul>
-                <li>رقم ثابت: <span class="english-term">set [num1] to (5)</span></li>
-                <li>إجابة المستخدم: <span class="english-term">set [num1] to (answer)</span> (بعد بلوك ask)</li>
-                <li>ناتج عملية حسابية: <span class="english-term">set [result] to ((num1) + (num2))</span></li>
-                <li>نص: <span class="english-term">set [name] to [Ahmed]</span></li>
-            </ul>
-        </div>
-        
-        <div class="message-box" style="background:#dcfce7;">
-            🧠 <strong>تذكر:</strong> المتغيرات بتخزن قيمة واحدة بس في المرة الواحدة. لو خزنت قيمة جديدة، القيمة القديمة بتتمسح. زي ما تحط ورقة جديدة في صندوق، الورقة القديمة تروح.
+
+            <div class="status-box" id="catStatus">
+                🧭 الاتجاه: 90° (شرق →) | 🔄 نمط الدوران: all around
+            </div>
+
+            <div class="controls-section">
+                <div class="controls-row">
+                    <button class="ctrl-btn blue tooltip" id="pointUp" data-tip="اتجاه لفوق (0°)">
+                        ⬆️ point in direction (0)
+                    </button>
+                    <button class="ctrl-btn blue tooltip" id="pointRight" data-tip="اتجاه ليمين (90°)">
+                        ➡️ point in direction (90)
+                    </button>
+                    <button class="ctrl-btn blue tooltip" id="pointDown" data-tip="اتجاه لتحت (180°)">
+                        ⬇️ point in direction (180)
+                    </button>
+                    <button class="ctrl-btn blue tooltip" id="pointLeft" data-tip="اتجاه لشمال (-90°)">
+                        ⬅️ point in direction (-90)
+                    </button>
+                </div>
+
+                <div class="controls-row">
+                    <button class="ctrl-btn orange tooltip" id="turnLeftBtn" data-tip="دوران شمال 15°">
+                        ↩️ turn ↺ 15 degrees
+                    </button>
+                    <button class="ctrl-btn orange tooltip" id="turnRightBtn" data-tip="دوران يمين 15°">
+                        ↪️ turn ↻ 15 degrees
+                    </button>
+                    <button class="ctrl-btn green tooltip" id="moveStepsBtn" data-tip="تحرك 30 خطوة">
+                        🚶 move 30 steps
+                    </button>
+                    <button class="ctrl-btn purple tooltip" id="bounceBtn" data-tip="ارتد من الحافة">
+                        🌀 if on edge, bounce
+                    </button>
+                    <button class="ctrl-btn red tooltip" id="resetCatPos" data-tip="ارجع للبداية">
+                        🔄 reset position
+                    </button>
+                </div>
+
+                <div style="text-align: center;">
+                    <div class="keyboard-hint">
+                        <span>⌨️ أو استخدم لوحة المفاتيح:</span>
+                        <span class="key">↑</span>
+                        <span class="key">↓</span>
+                        <span class="key">←</span>
+                        <span class="key">→</span>
+                        <span>للحركة</span>
+                        <span class="key">R</span>
+                        <span>لإعادة التعيين</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-box info" style="margin-top: 15px; font-size: 1rem;">
+                ⭐ <strong>ملاحظة:</strong> "turn" بيزود درجات على الاتجاه الحالي، أما "point in direction" بتحدد زاوية محددة. جرب تتحرك بعد ما تغير الاتجاه!
+            </div>
         </div>
     </div>
 
-    <!-- ========== 3. العمليات الحسابية (Operators) بالإنجليزية ========== -->
+    <!-- ===== أنماط الدوران ===== -->
     <div class="card">
-        <h2 class="card-title">🧮 Operators – العمليات الحسابية في Scratch</h2>
-        <p>بلوكات <span class="english-term">Operators</span> (لونها أخضر فاتح 🟢) هي اللي بتخلينا ننفذ العمليات الحسابية.</p>
-        
-        <div class="operators-grid">
-            <div class="operator-card">
-                <i class="fas fa-plus" style="font-size: 2rem; color: #22c55e;"></i>
-                <h3>Addition (+)</h3>
-                <p><span class="english-term">(number1) + (number2)</span></p>
-                <div class="block-btn green-block">(5) + (3)</div>
-                <p>النتيجة: 8</p>
+        <h2 class="card-title">🔄 أنماط الدوران (إزاي السهم بيبان لما بيدور)</h2>
+        <p style="font-size: 1.05rem; margin-bottom: 20px;">
+            اختار نمط، وبعدين استخدم <strong>turn ↻ 15 degrees</strong> عشان تشوف الفرق.
+        </p>
+
+        <div class="rotation-styles">
+            <div class="style-card active" id="styleCardAllAround" onclick="setRotationStyle('all around')">
+                <div class="style-icon">🔄</div>
+                <div style="font-weight: 800; color: #7c3aed; margin-bottom: 8px;">all around</div>
+                <div style="font-size: 0.9rem; color: #6b7280;">الدوران الكامل</div>
+                <div style="margin-top: 10px;">
+                    <span class="scratch-block motion">set rotation style [all around]</span>
+                </div>
             </div>
-            <div class="operator-card">
-                <i class="fas fa-minus" style="font-size: 2rem; color: #22c55e;"></i>
-                <h3>Subtraction (-)</h3>
-                <p><span class="english-term">(number1) - (number2)</span></p>
-                <div class="block-btn green-block">(10) - (4)</div>
-                <p>النتيجة: 6</p>
+
+            <div class="style-card" id="styleCardLeftRight" onclick="setRotationStyle('left-right')">
+                <div class="style-icon">⬅️➡️</div>
+                <div style="font-weight: 800; color: #059669; margin-bottom: 8px;">left-right</div>
+                <div style="font-size: 0.9rem; color: #6b7280;">انعكاس يمين/شمال بس</div>
+                <div style="margin-top: 10px;">
+                    <span class="scratch-block motion">set rotation style [left-right]</span>
+                </div>
             </div>
-            <div class="operator-card">
-                <i class="fas fa-times" style="font-size: 2rem; color: #22c55e;"></i>
-                <h3>Multiplication (*)</h3>
-                <p><span class="english-term">(number1) * (number2)</span></p>
-                <div class="block-btn green-block">(7) * (6)</div>
-                <p>النتيجة: 42</p>
-            </div>
-            <div class="operator-card">
-                <i class="fas fa-divide" style="font-size: 2rem; color: #22c55e;"></i>
-                <h3>Division (/)</h3>
-                <p><span class="english-term">(number1) / (number2)</span></p>
-                <div class="block-btn green-block">(20) / (4)</div>
-                <p>النتيجة: 5</p>
+
+            <div class="style-card" id="styleCardNoRotate" onclick="setRotationStyle('don\'t rotate')">
+                <div class="style-icon">🚫</div>
+                <div style="font-weight: 800; color: #d97706; margin-bottom: 8px;">don't rotate</div>
+                <div style="font-size: 0.9rem; color: #6b7280;">ممنوع الدوران خالص</div>
+                <div style="margin-top: 10px;">
+                    <span class="scratch-block motion">set rotation style [don't rotate]</span>
+                </div>
             </div>
         </div>
-        
-        <div class="message-box" style="background:#fef9c3;">
-            💻 <strong>ملاحظة:</strong> في سكراتش، علامة الضرب هي <code>*</code> وعلامة القسمة هي <code>/</code>. وممكن تستخدم المتغيرات جوه البلوكات دي، مثال: <span class="english-term">((num1) + (num2))</span>
+
+        <div class="status-box info" id="styleMessage">
+            🔄 نمط الدوران الحالي: <strong>all around</strong> → السهم بيدور في كل الاتجاهات.
         </div>
     </div>
 
-    <!-- ========== 4. بلوكات مهمة بالانجليزي (Ask, Set, When Sprite Clicked) ========== -->
+    <!-- ===== لعبة النجمة (مع خسارة) ===== -->
     <div class="card">
-        <h2 class="card-title">🎮 Important Scratch Blocks (Ask, Set, When Sprite Clicked)</h2>
-        
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
-            <div style="background: #fef3c7; border-radius: 40px; padding: 20px;">
-                <i class="fas fa-question-circle" style="font-size: 2rem; color: #f59e0b;"></i>
-                <h3>📢 <span class="english-term">ask [ ] and wait</span></h3>
-                <p>من فئة <span class="english-term">Sensing</span> (لونه أزرق فاتح). بيعرض سؤال للمستخدم ويستنى يكتب إجابته.</p>
-                <div class="code-block" style="background:#2d1b4e;">ask [Enter first number:] and wait</div>
-                <p>الإجابة بتتخزن في بلوك <span class="english-term">answer</span></p>
-                <p><strong>مثال:</strong> بعد ما المستخدم يكتب رقم، نقدر نخزنه في متغير: <span class="english-term">set [num1] to (answer)</span></p>
+        <h2 class="card-title">⭐ تحدي: أوصل القطة للنجمة! ⭐</h2>
+        <p style="font-size: 1.05rem; margin-bottom: 15px;">
+            استخدم أزرار الاتجاهات عشان توصل القطة للنجمة الذهبية. <strong>خد بالك من العوائق!</strong> 🌵
+        </p>
+
+        <div class="game-container">
+            <div class="game-stats">
+                <div class="stat-box">
+                    <div class="label">⭐ النجوم</div>
+                    <div class="value" id="starsCount">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">👣 الخطوات</div>
+                    <div class="value" id="stepsCount">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="label">🎯 المسافة</div>
+                    <div class="value" id="distanceDisplay">--</div>
+                </div>
             </div>
-            
-            <div style="background: #dcfce7; border-radius: 40px; padding: 20px;">
-                <i class="fas fa-box" style="font-size: 2rem; color: #22c55e;"></i>
-                <h3>📦 <span class="english-term">set [variable] to [ ]</span></h3>
-                <p>من فئة <span class="english-term">Variables</span> (لونه برتقالي). بيخزن قيمة جديدة في المتغير.</p>
-                <div class="code-block" style="background:#2d1b4e;">set [num1] to (5)</div>
-                <div class="code-block" style="background:#2d1b4e;">set [num2] to (answer)</div>
-                <div class="code-block" style="background:#2d1b4e;">set [result] to ((num1) + (num2))</div>
+
+            <div class="game-stage" id="gameStage">
+                <div class="stage-grid"></div>
+                <div id="gameCat">🐱</div>
+                <div class="star-glow" id="starGlow"></div>
+                <div id="gameStar">⭐</div>
+                <div class="obstacle" id="obstacle1" style="left: 140px; top: 70px;">🌵</div>
+                <div class="obstacle" id="obstacle2" style="left: 280px; top: 150px;">🪨</div>
             </div>
-            
-            <div style="background: #e0e7ff; border-radius: 40px; padding: 20px;">
-                <i class="fas fa-mouse-pointer" style="font-size: 2rem; color: #4f46e5;"></i>
-                <h3>🐱 <span class="english-term">when this sprite clicked</span></h3>
-                <p>من فئة <span class="english-term">Events</span> (لونه أصفر). بينفذ الأوامر اللي تحته لما المستخدم يضغط على الكائن (Sprite).</p>
-                <div class="code-block" style="background:#2d1b4e;">when this sprite clicked</div>
-                <p>مثلاً: نضغط على شكل علامة "+" فتشتغل عملية الجمع.</p>
+
+            <div class="controls-row">
+                <button class="ctrl-btn blue" id="gameUp">⬆️ فوق</button>
+                <button class="ctrl-btn blue" id="gameDown">⬇️ تحت</button>
+                <button class="ctrl-btn blue" id="gameLeft">⬅️ شمال</button>
+                <button class="ctrl-btn blue" id="gameRight">➡️ يمين</button>
+                <button class="ctrl-btn red" id="gameResetStar">🔄 إعادة</button>
+            </div>
+
+            <div class="win-message" id="winStarMsg">
+                <h3>🎉 برافو! وصلت للنجمة! 🎉</h3>
+                <p>أنت كودر ممتاز! جرب توصل للنجمة التانية!</p>
+            </div>
+
+            <div class="lose-message" id="loseMsg">
+                <h3>💥 أووه! لمسة العائق! 💥</h3>
+                <p>القطة لمسة الزرعة أو الحجر! حاول تاني بحرص!</p>
             </div>
         </div>
     </div>
 
-    <!-- ========== 5. رسم Custom Sprite (كائنات مخصصة) ========== -->
+    <!-- ===== مثال رسم المربع التفاعلي ===== -->
     <div class="card">
-        <h2 class="card-title">🎨 How to Draw a Custom Sprite (كائن مخصص)</h2>
-        <p>هنرسم 4 كائنات لكل عملية حسابية (➕➖✖️➗) ونستخدم بلوك <span class="english-term">when this sprite clicked</span> عشان ننفذ العملية.</p>
-        
-        <div class="sprite-drawing">
-            <h3>📌 خطوات الرسم في Scratch:</h3>
-            <ol style="text-align: right; padding-right: 25px;">
-                <li>افتح Scratch Editor.</li>
-                <li>في منطقة Sprites، اضغط على <strong>Choose a Sprite</strong> → <strong>Paint</strong> (أو أيقونة الفرشاة).</li>
-                <li>استخدم أداة <strong>Text (T)</strong> عشان تكتب علامة + أو - أو × أو ÷.</li>
-                <li>غير اللون والخط عشان الشكل يبان جميل.</li>
-                <li>امسح الخلفية (اجعلها شفافة) عشان الكائن يظهر من غير مربع أبيض.</li>
-                <li>سمي الكائن باسم مناسب (مثل "AddButton", "SubtractButton").</li>
-                <li>كرر الخطوات لبقية العمليات.</li>
-            </ol>
-            
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 25px;">
-                <div class="sprite-example">
-                    <i class="fas fa-plus-circle" style="color: #22c55e;"></i>
-                    <p><strong>➕ Add</strong></p>
-                    <small>ارسم دائرة خضراء و +</small>
+        <h2 class="card-title">🧩 مثال تفاعلي: رسم مربع باستخدام سكراتش</h2>
+        <p style="font-size: 1.05rem; line-height: 1.8; margin-bottom: 15px;">
+            اضغط على الزر عشان تشوف السهم يرسم مربع خطوة بخطوة! كل خطوة بتوضح بلوك من بلوكات سكراتش.
+        </p>
+
+        <div class="square-demo">
+            <div class="step-indicator" id="stepIndicator">
+                <div class="step-dot" id="step1">1</div>
+                <div class="step-dot" id="step2">2</div>
+                <div class="step-dot" id="step3">3</div>
+                <div class="step-dot" id="step4">4</div>
+                <div class="step-dot" id="step5">5</div>
+                <div class="step-dot" id="step6">6</div>
+                <div class="step-dot" id="step7">7</div>
+                <div class="step-dot" id="step8">8</div>
+            </div>
+
+            <div class="square-stage" id="squareStage">
+                <div class="stage-grid"></div>
+                <div id="squareArrow">
+                    <svg viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="sqArrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#f97316"/>
+                                <stop offset="100%" style="stop-color:#ea580c"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon points="50,5 65,35 55,35 55,85 45,85 45,35 35,35" fill="url(#sqArrowGrad)" stroke="#c2410c" stroke-width="2"/>
+                        <circle cx="50" cy="60" r="8" fill="white" stroke="#c2410c" stroke-width="2"/>
+                    </svg>
                 </div>
-                <div class="sprite-example">
-                    <i class="fas fa-minus-circle" style="color: #ef4444;"></i>
-                    <p><strong>➖ Subtract</strong></p>
-                    <small>ارسم دائرة حمراء و -</small>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <div id="currentBlock" style="min-height: 50px; margin-bottom: 15px; font-size: 1.1rem; font-weight: 700; color: #0369a1;">
+                    اضغط "ابدأ الرسم" عشان تشوف الخطوات!
                 </div>
-                <div class="sprite-example">
-                    <i class="fas fa-times-circle" style="color: #f59e0b;"></i>
-                    <p><strong>✖️ Multiply</strong></p>
-                    <small>ارسم دائرة برتقالية و ×</small>
+                <button class="ctrl-btn green large" id="startSquareBtn" onclick="startSquareDemo()">
+                    ▶️ ابدأ رسم المربع
+                </button>
+                <button class="ctrl-btn red" id="resetSquareBtn" onclick="resetSquareDemo()" style="margin-right: 10px;">
+                    🔄 إعادة
+                </button>
+            </div>
+
+           
+        </div>
+
+           
+        </div>
+    </div>
+
+    <!-- ===== التحديات (مربع بس) ===== -->
+    <div class="challenge-section">
+        <h2 class="card-title">🏆 التحدي 🏆</h2>
+
+        <div class="challenge-card">
+            <h3>📐 رسم مربع باستخدام الاتجاهات</h3>
+            <p>اكتب الترتيب الصحيح للبلوكات (بالإنجليزي) عشان ترسم مربع.</p>
+            <button class="show-solution-btn" id="showSquareSolution" onclick="toggleSolution('square')">
+                إظهار الحل 🔍
+            </button>
+            <div class="solution-area" id="squareSolution">
+                <h3>✅ الطريقة الأولى: البسيطة (بدون repeat و wait)</h3>
+                <ol>
+                    <li><span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span></li>
+                    <li><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></li>
+                    <li><span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span></li>
+                    <li><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></li>
+                    <li><span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span></li>
+                    <li><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></li>
+                    <li><span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span></li>
+                    <li><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></li>
+                    <li><span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span></li>
+                </ol>
+                <div style="background: #fee2e2; border-radius: 15px; padding: 15px; margin: 15px 0; border-right: 5px solid #ef4444;">
+                    <p style="color: #991b1b; font-weight: 700; margin-bottom: 8px;">⚠️ عيوب الطريقة البسيطة:</p>
+                    <ul style="color: #b91c1c; padding-right: 20px; line-height: 1.8;">
+                        <li>الكود طويل ومكرر (8 بلوكات بدل 4)</li>
+                        <li>صعب التعديل – لو عايز تغير حجم المربع لازم تعدل في 4 أماكن</li>
+                        <li>صعب الفهم – المكرر مش واضح</li>
+                        <li>مفيش تأثير بصري – الرسم بيحصل فجأة من غير ما نشوف الخطوات</li>
+                    </ul>
                 </div>
-                <div class="sprite-example">
-                    <i class="fas fa-divide" style="color: #8b5cf6;"></i>
-                    <p><strong>➗ Divide</strong></p>
-                    <small>ارسم دائرة بنفسجية و ÷</small>
+				 <div style="background: linear-gradient(145deg, #fef3c7, #fde68a); border-radius: 25px; padding: 20px; margin-top: 20px; border-right: 6px solid #f59e0b;">
+                <p style="color: #92400e; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">💡 ليه الكود طويل كده؟</p>
+                <p style="color: #78350f; line-height: 1.8; margin-bottom: 12px;">
+                    شوفت إزاي كررنا <strong>move + turn</strong> 4 مرات؟ ده اسمه كود مكرر (Redundant Code). 
+                    في سكراتش فيه بلوك أحسن اسمه <span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span> 
+                    بيختصر الكود كله في 3 بلوكات بس!
+                </p>
+                <div style="background: white; border-radius: 15px; padding: 15px; margin: 10px 0;">
+                    <p style="color: #0369a1; font-weight: 700; margin-bottom: 8px;">✨ الطريقة المحسّنة بـ repeat:</p>
+                    <div style="margin: 8px 0;">
+                        <span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span>
+                    </div>
+                    <div style="margin: 8px 0;">
+                        <span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span>
+                    </div>
+                    <div style="margin: 8px 20px 0 0;">
+                        <span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span>
+                    </div>
+                    <div style="margin: 8px 20px 0 0;">
+                        <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span>
+                    </div>
+                </div>
+                <p style="color: #92400e; font-weight: 700; margin-top: 12px;">
+                    🎯 كده وفّرنا 5 بلوكات! ولو عايزين نغير حجم المربع، نغير رقم واحد بس!
+                </p>
+            </div>
+
+            <div style="background: linear-gradient(145deg, #f3e8ff, #e9d5ff); border-radius: 25px; padding: 20px; margin-top: 15px;margin-bottom: 15px; border-right: 6px solid #8b5cf6;">
+                <p style="color: #5b21b6; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">⏱️ إيه فايدة بلوك wait؟</p>
+                <p style="color: #4c1d95; line-height: 1.8;">
+                    لو حطينا <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span> 
+                    جوه repeat، كل خطوة هتتنفذ ونستنى 0.1 ثانية قبل اللي بعدها. 
+                    ده بيخلي الرسم يبان قدام عينينا خطوة بخطوة، مش فجأة!
+                    جرب في سكراتش: استخدم <span class="scratch-block control">repeat <span class="scratch-block-input">10</span></span> 
+                    جوه كل ضلع، وفيها <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span> 
+                    + <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span>.
+                </p>
+            </div>
+
+                <h3>✅ الطريقة المحسّنة: باستخدام repeat و wait</h3>
+                <ol>
+                    <li><span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span></li>
+                    <li><span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span></li>
+                    <li style="list-style: none; margin-right: 20px;">
+                        <span class="scratch-block control">repeat <span class="scratch-block-input">10</span></span>
+                    </li>
+                    <li style="list-style: none; margin-right: 40px;">
+                        <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+                    </li>
+                    <li style="list-style: none; margin-right: 40px;">
+                        <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span>
+                    </li>
+                    <li style="list-style: none; margin-right: 20px;">
+                        <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span>
+                    </li>
+                </ol>
+                <div style="background: #d1fae5; border-radius: 15px; padding: 15px; margin: 15px 0; border-right: 5px solid #10b981;">
+                    <p style="color: #065f46; font-weight: 700; margin-bottom: 8px;">🌟 مميزات الطريقة المحسّنة:</p>
+                    <ul style="color: #047857; padding-right: 20px; line-height: 1.8;">
+                        <li><strong>repeat 4:</strong> كود مختصر – 4 تكرارات بدل ما نكتب كل خطوة لوحدها</li>
+                        <li><strong>repeat 10 + move 10:</strong> بيقسم الخط الواحد لـ 10 حركات صغيرة، فالرسم بيبان تدريجياً</li>
+                        <li><strong>wait 0.1:</strong> بيثبت كل حركة 0.1 ثانية، فالعين تقدر تشوف الخط بيترسم خطوة بخطوة</li>
+                        <li>سهل التعديل – غير الرقم في مكان واحد بس</li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ========== 6. محاكي تفاعلي (يستخدم المصطلحات الإنجليزية) ========== -->
-    <div class="card">
-        <h2 class="card-title">🐱 Interactive Simulator – Try it Yourself!</h2>
-        <p>اضغط على أيقونة العملية الحسابية عشان تشوف إزاي بلوكات <span class="english-term">ask</span> و <span class="english-term">set variable</span> و <span class="english-term">operators</span> بتشتغل مع بعض.</p>
-        
-        <div class="scratch-sim">
-            <div class="scratch-stage" id="interactiveStage">
-                <div class="custom-sprite" id="spriteAdd">
-                    <i class="fas fa-plus-circle"></i>
-                    <div>➕ Add</div>
-                </div>
-                <div class="custom-sprite" id="spriteSub">
-                    <i class="fas fa-minus-circle"></i>
-                    <div>➖ Subtract</div>
-                </div>
-                <div class="custom-sprite" id="spriteMul">
-                    <i class="fas fa-times-circle"></i>
-                    <div>✖️ Multiply</div>
-                </div>
-                <div class="custom-sprite" id="spriteDiv">
-                    <i class="fas fa-divide"></i>
-                    <div>➗ Divide</div>
-                </div>
-                <div class="result-area" id="simResult">
-                    <strong>📊 Result:</strong><br>
-                    <span id="resultValue">---</span>
-                </div>
-            </div>
-            
-            <div class="code-block" style="margin-top: 15px;">
-                <strong>🧩 Example code for Add button (when this sprite clicked):</strong><br>
-                ask [Enter first number:] and wait<br>
-                set [num1] to (answer)<br>
-                ask [Enter second number:] and wait<br>
-                set [num2] to (answer)<br>
-                set [result] to ((num1) + (num2))<br>
-                say (join [Sum = ] (result)) for 2 seconds
-            </div>
+    <!-- ===== الواجب المنزلي ===== -->
+    <div class="homework">
+        <h2>📚 الواجب المنزلي 📚</h2>
+        <p style="font-size: 1.1rem; color: #7c2d12; font-weight: 700; margin-bottom: 15px;">
+            ✏️ المهمة: استخدم سكراتش (أونلاين أو على الجهاز)، واعمل مشروع فيه القطة ترسم <strong>مثلث</strong> متساوي الأضلاع.
+        </p>
+        <ul>
+            <li>افتح محرر سكراتش.</li>
+            <li>استخدم بلوكات الحركة: <strong>move, turn, point in direction</strong>.</li>
+            <li>استخدم بلوكات التحكم: <strong>repeat</strong> عشان الكود يبقى مختصر.</li>
+            <li>تذكر: زاوية المثلث الخارجية = <strong>120°</strong> (مش 90° زي المربع!).</li>
+            <li>جرب أنماط الدوران وشوف القطة بتبان إزاي.</li>
+        </ul>
+        <div class="bonus-box">
+            🌟 <strong>بونص:</strong> جرب رسم نجمة باستخدام repeat (5) و turn 144 degrees!
         </div>
     </div>
 
-    <!-- ========== 7. المشروع العملي + الواجب المتحدي ========== -->
-    <div class="card">
-        <h2 class="card-title">📐 Project: Calculator using Sprites + Variables</h2>
-        
-        <div style="background: linear-gradient(145deg, #dcfce7, #bbf7d0); border-radius: 50px; padding: 25px;">
-            <h3 style="color:#166534;">🎯 Task (Project Requirements):</h3>
-            <ul style="padding-right: 25px; margin-top: 15px;">
-                <li>🔹 Create 4 Sprites (➕, ➖, ✖️, ➗) using Paint.</li>
-                <li>🔹 Create 3 Variables: <span class="english-term">num1</span>, <span class="english-term">num2</span>, <span class="english-term">result</span>.</li>
-                <li>🔹 For each sprite, use <span class="english-term">when this sprite clicked</span> to start the operation.</li>
-                <li>🔹 Use <span class="english-term">ask [ ] and wait</span> to get two numbers from the user.</li>
-                <li>🔹 Store numbers using <span class="english-term">set [variable] to (answer)</span>.</li>
-                <li>🔹 Use the <span class="english-term">Operators (+, -, *, /)</span> to calculate.</li>
-                <li>🔹 Show the result using <span class="english-term">say</span> block.</li>
-            </ul>
-        </div>
-        
-        <div class="code-block" style="margin: 20px 0;">
-            <strong>💻 Full example for Addition sprite:</strong><br><br>
-            when this sprite clicked<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;ask [Enter first number:] and wait<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;set [num1] to (answer)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;ask [Enter second number:] and wait<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;set [num2] to (answer)<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;set [result] to ((num1) + (num2))<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;say (join [The sum is: ] (result)) for 2 seconds
-        </div>
-        
-        <div style="text-align: center;">
-            <a href="https://scratch.mit.edu/projects/editor" target="_blank" class="link-btn"><i class="fas fa-external-link-alt"></i> Open Scratch Editor</a>
-            <a href="https://scratch.mit.edu/download" target="_blank" class="link-btn" style="background: #059669;"><i class="fas fa-download"></i> Download Scratch</a>
-        </div>
-    </div>
-
-    <!-- ========== 8. الواجب المنزلي (تحدي مختلف) ========== -->
-    <div class="homework-section">
-        <h2 style="font-size: 1.8rem;">📚 Homework Challenge 📚</h2>
-        <p><strong>⭐ مشروع مختلف وممتع:</strong> صمم برنامج على Scratch يستقبل <strong>رقمين</strong> من المستخدم، ثم <strong>يحسب ويعرض جميع العمليات الأربعة (جمع، طرح، ضرب، قسمة) في نفس الوقت!</strong></p>
-        
-        <div style="background: white; border-radius: 40px; padding: 20px; margin: 20px 0;">
-            <h3><i class="fas fa-tasks"></i> المطلوب بالتفصيل:</h3>
-            <ul style="padding-right: 25px; margin-top: 15px;">
-                <li>✅ استخدام <span class="english-term">ask and wait</span> مرتين لأخذ الرقم الأول والثاني.</li>
-                <li>✅ إنشاء 4 متغيرات: <span class="english-term">num1, num2, sum, difference, product, quotient</span> (أو result واحد لكل عملية).</li>
-                <li>✅ حساب <strong>المجموع</strong> (sum)، <strong>الفرق</strong> (difference)، <strong>الضرب</strong> (product)، و<strong>القسمة</strong> (quotient).</li>
-                <li>✅ عرض النتائج الأربعة في رسالة واحدة أو كل رسالة على حدة.</li>
-                <li>✅ (تحدي إضافي) إذا كان الرقم الثاني = 0، أظهر رسالة "لا يمكن القسمة على صفر" بدلاً من القسمة.</li>
-            </ul>
-            <div class="code-block" style="margin-top: 15px;">
-                <strong>💡 نموذج لبداية الكود (لعملية الجمع فقط، أكمل الباقي بنفسك):</strong><br>
-                when green flag clicked<br>
-                ask [Enter first number:] and wait<br>
-                set [num1] to (answer)<br>
-                ask [Enter second number:] and wait<br>
-                set [num2] to (answer)<br>
-                set [sum] to ((num1) + (num2))<br>
-                say (join [Sum = ] (sum)) for 2 seconds<br>
-                // الآن قم بعمل الطرح والضرب والقسمة بنفس الطريقة
-            </div>
-        </div>
-        
-       
-      
-    </div>
-    
    
 </div>
 
 <script>
-    // ========== المحاكي التفاعلي (Simulator) ==========
-    const resultSpan = document.getElementById('resultValue');
-    
-    function askAndCalculate(operation, opSymbol, calcFunction, isDivision = false) {
-        let num1 = prompt(`🐱 Enter first number for ${opSymbol} operation:`);
-        if (num1 === null) return;
-        let num2 = prompt(`🐱 Enter second number for ${opSymbol} operation:`);
-        if (num2 === null) return;
-        
-        let n1 = parseFloat(num1);
-        let n2 = parseFloat(num2);
-        
-        if (isNaN(n1) || isNaN(n2)) {
-            resultSpan.innerHTML = "❌ Error: Please enter valid numbers!";
-            return;
+// ===== نظام الصوت =====
+class SoundManager {
+    constructor() {
+        this.ctx = null;
+        this.init();
+    }
+
+    init() {
+        try {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch(e) {}
+    }
+
+    playTone(freq, type, duration, volume = 0.1) {
+        if (!this.ctx) return;
+        try {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.frequency.value = freq;
+            osc.type = type;
+            gain.gain.value = volume;
+            gain.gain.exponentialRampToValueAtTime(0.00001, this.ctx.currentTime + duration);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+        } catch(e) {}
+    }
+
+    click() { this.playTone(880, 'sine', 0.15, 0.08); }
+    move() { this.playTone(523, 'triangle', 0.2, 0.06); }
+    turn() { this.playTone(659, 'sine', 0.15, 0.06); }
+    bounce() { this.playTone(220, 'square', 0.3, 0.05); }
+    win() { 
+        [523, 659, 784, 1047].forEach((f, i) => {
+            setTimeout(() => this.playTone(f, 'sine', 0.4, 0.1), i * 150);
+        });
+    }
+    lose() {
+        [300, 250, 200].forEach((f, i) => {
+            setTimeout(() => this.playTone(f, 'sawtooth', 0.4, 0.06), i * 200);
+        });
+    }
+    reset() { this.playTone(440, 'sine', 0.3, 0.06); }
+    error() { this.playTone(150, 'sawtooth', 0.3, 0.05); }
+    draw() { this.playTone(600, 'sine', 0.2, 0.05); }
+}
+
+const sounds = new SoundManager();
+
+// ===== تأثيرات الجزيئات =====
+function createParticles(x, y, color, count = 8) {
+    const container = document.getElementById('catStage') || document.body;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        p.style.width = (6 + Math.random() * 8) + 'px';
+        p.style.height = p.style.width;
+        p.style.background = color;
+        p.style.borderRadius = '50%';
+        const angle = (Math.PI * 2 * i) / count;
+        const dist = 30 + Math.random() * 40;
+        p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+        container.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+    }
+}
+
+// ===== كونفيتي =====
+function launchConfetti() {
+    const container = document.getElementById('confettiContainer');
+    const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#f97316'];
+    for (let i = 0; i < 50; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + '%';
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.width = (8 + Math.random() * 8) + 'px';
+        c.style.height = (8 + Math.random() * 8) + 'px';
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        c.style.animationDuration = (2 + Math.random() * 2) + 's';
+        c.style.animationDelay = Math.random() * 1 + 's';
+        container.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+    }
+}
+
+// ===== المحاكي التفاعلي بالسهم =====
+const stage = document.getElementById('catStage');
+const arrowSprite = document.getElementById('arrowSprite');
+const arrowSvg = document.getElementById('arrowSvg');
+let dir = 90;
+let catX = 50, catY = 120;
+let rotationStyle = 'all around';
+
+function getStageBounds() {
+    return {
+        maxX: stage.clientWidth - 60,
+        maxY: stage.clientHeight - 60,
+        minX: 10,
+        minY: 10
+    };
+}
+
+function getDirName(d) {
+    let deg = ((d % 360) + 360) % 360;
+    if (deg === 0) return 'لفوق ↑';
+    if (deg === 90) return 'ليمين →';
+    if (deg === 180) return 'لتحت ↓';
+    if (deg === 270) return 'لشمال ←';
+    return deg + '°';
+}
+
+// FIXED: Scratch coordinate system
+// Scratch: 0=up (y decreases), 90=right (x increases), 180=down (y increases), 270=left (x decreases)
+// CSS: x+ = right, y+ = down
+// SVG arrow points UP at 0° rotation
+// So rotation = dir (direct mapping!)
+// dx = steps * sin(dir_rad), dy = -steps * cos(dir_rad)
+function applyRotation() {
+    if (!arrowSvg) return;
+    let rotation = 0;
+    let scaleX = 1;
+
+    if (rotationStyle === 'all around') {
+        rotation = dir;
+    } else if (rotationStyle === 'left-right') {
+        let normalized = ((dir % 360) + 360) % 360;
+        if (normalized > 90 && normalized < 270) {
+            scaleX = -1;
+            rotation = 0;
+        } else {
+            scaleX = 1;
+            rotation = 0;
         }
-        
-        if (isDivision && n2 === 0) {
-            resultSpan.innerHTML = "⚠️ Cannot divide by zero!";
-            return;
+    } else if (rotationStyle === "don't rotate") {
+        rotation = 0;
+        scaleX = 1;
+    }
+
+    arrowSvg.style.transform = `rotate(${rotation}deg) scaleX(${scaleX})`;
+}
+
+function addTrail() {
+    if (!arrowSprite) return;
+    const dot = document.createElement('div');
+    dot.className = 'trail-dot';
+    dot.style.left = (catX + 20) + 'px';
+    dot.style.top = (catY + 20) + 'px';
+    stage.appendChild(dot);
+    setTimeout(() => dot.remove(), 1000);
+}
+
+function updateCatUI() {
+    if (!arrowSprite || !stage) return;
+    const bounds = getStageBounds();
+    catX = Math.min(bounds.maxX, Math.max(bounds.minX, catX));
+    catY = Math.min(bounds.maxY, Math.max(bounds.minY, catY));
+    arrowSprite.style.left = catX + 'px';
+    arrowSprite.style.top = catY + 'px';
+    applyRotation();
+
+    const msg = document.getElementById('catStatus');
+    if (msg) {
+        msg.innerHTML = `🧭 الاتجاه: ${Math.round(dir)}° (${getDirName(dir)}) | 🔄 نمط الدوران: ${rotationStyle}`;
+    }
+
+    const needle = document.getElementById('compassNeedle');
+    if (needle) {
+        needle.style.transform = `translate(-50%, -100%) rotate(${dir}deg)`;
+    }
+    const compassText = document.getElementById('compassText');
+    if (compassText) {
+        compassText.textContent = `الإتجاه الحالي: ${Math.round(dir)}° (${getDirName(dir)})`;
+    }
+}
+
+// FIXED moveSteps: Scratch to CSS coordinate conversion
+// Scratch: 0° = up (y-), 90° = right (x+), 180° = down (y+), 270° = left (x-)
+// CSS: x+ = right, y+ = down
+// dx = steps * sin(dir), dy = -steps * cos(dir)
+function moveSteps(steps) {
+    const bounds = getStageBounds();
+
+    let rad = dir * Math.PI / 180;
+    let dx = steps * Math.sin(rad);
+    let dy = -steps * Math.cos(rad);
+
+    let newX = catX + dx;
+    let newY = catY + dy;
+
+    let bounced = false;
+
+    if (newX < bounds.minX) { newX = bounds.minX; dir = -dir; bounced = true; }
+    if (newX > bounds.maxX) { newX = bounds.maxX; dir = -dir; bounced = true; }
+    if (newY < bounds.minY) { newY = bounds.minY; dir = 180 - dir; bounced = true; }
+    if (newY > bounds.maxY) { newY = bounds.maxY; dir = 180 - dir; bounced = true; }
+
+    catX = newX;
+    catY = newY;
+
+    if (bounced) {
+        sounds.bounce();
+        arrowSprite.classList.add('edge-bounce-effect');
+        setTimeout(() => arrowSprite.classList.remove('edge-bounce-effect'), 300);
+        const msg = document.getElementById('catStatus');
+        if (msg) {
+            msg.classList.add('bounce');
+            msg.innerHTML = `💥 ارتداد! الاتجاه الجديد: ${Math.round(dir)}° (${getDirName(dir)})`;
+            setTimeout(() => msg.classList.remove('bounce'), 300);
         }
-        
-        let result = calcFunction(n1, n2);
-        resultSpan.innerHTML = `${n1} ${opSymbol} ${n2} = ${result}`;
-        
-        // Speak result
-        if ('speechSynthesis' in window) {
-            let utterance = new SpeechSynthesisUtterance(`Result of ${opSymbol} is ${result}`);
-            utterance.lang = 'en-US';
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(utterance);
+        createParticles(catX + 25, catY + 25, '#f59e0b', 6);
+    } else {
+        sounds.move();
+        addTrail();
+    }
+
+    updateCatUI();
+}
+
+function bounceEdge() {
+    const bounds = getStageBounds();
+    let bounced = false;
+
+    if (catX <= bounds.minX + 5) { catX = bounds.minX + 5; dir = -dir; bounced = true; }
+    if (catX >= bounds.maxX - 5) { catX = bounds.maxX - 5; dir = -dir; bounced = true; }
+    if (catY <= bounds.minY + 5) { catY = bounds.minY + 5; dir = 180 - dir; bounced = true; }
+    if (catY >= bounds.maxY - 5) { catY = bounds.maxY - 5; dir = 180 - dir; bounced = true; }
+
+    if (bounced) {
+        sounds.bounce();
+        const msg = document.getElementById('catStatus');
+        if (msg) {
+            msg.classList.add('bounce');
+            msg.innerHTML = `🌀 ارتداد من الحافة! الاتجاه: ${Math.round(dir)}°`;
+            setTimeout(() => msg.classList.remove('bounce'), 300);
         }
-        
-        // Animate clicked sprite
-        let clickedSprite = event.target.closest('.custom-sprite');
-        if (clickedSprite) {
-            clickedSprite.style.transform = 'scale(1.2)';
-            setTimeout(() => clickedSprite.style.transform = 'scale(1)', 200);
+        createParticles(catX + 25, catY + 25, '#8b5cf6', 8);
+    } else {
+        sounds.error();
+        const msg = document.getElementById('catStatus');
+        if (msg) {
+            msg.innerHTML = `⚠️ السهم مش عند الحافة! حركه الأول.`;
         }
     }
-    
-    document.getElementById('spriteAdd').addEventListener('click', (e) => {
-        askAndCalculate('addition', '+', (a,b) => a + b, false);
-    });
-    
-    document.getElementById('spriteSub').addEventListener('click', (e) => {
-        askAndCalculate('subtraction', '-', (a,b) => a - b, false);
-    });
-    
-    document.getElementById('spriteMul').addEventListener('click', (e) => {
-        askAndCalculate('multiplication', '×', (a,b) => a * b, false);
-    });
-    
-    document.getElementById('spriteDiv').addEventListener('click', (e) => {
-        askAndCalculate('division', '÷', (a,b) => a / b, true);
-    });
-    
-    // ========== Submit Homework ==========
-    document.getElementById('submitHomeworkBtn').addEventListener('click', () => {
-        let feedbackDiv = document.getElementById('homeworkFeedback');
-        feedbackDiv.style.display = 'block';
-        feedbackDiv.innerHTML = "✅ ✅ Homework received! ✅ ✅<br>🎉 Great job! You are now a Scratch coder.<br>💡 Don't forget to share your project link or a screenshot of your code.<br>💪 Keep practicing — next challenge: make a calculator that also multiplies and divides!";
-        feedbackDiv.style.background = "#d1fae5";
-        feedbackDiv.style.borderRightColor = "#10b981";
-        
-        if ('speechSynthesis' in window) {
-            let utterance = new SpeechSynthesisUtterance("Homework submitted successfully. Well done!");
-            utterance.lang = 'en-US';
-            window.speechSynthesis.speak(utterance);
+    updateCatUI();
+}
+
+function setRotationStyle(style) {
+    rotationStyle = style;
+    sounds.click();
+
+    document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+    if (style === 'all around') document.getElementById('styleCardAllAround').classList.add('active');
+    if (style === 'left-right') document.getElementById('styleCardLeftRight').classList.add('active');
+    if (style === "don't rotate") document.getElementById('styleCardNoRotate').classList.add('active');
+
+    const msg = document.getElementById('styleMessage');
+    if (msg) {
+        let desc = '';
+        if (style === 'all around') desc = 'السهم بيدور في كل الاتجاهات.';
+        else if (style === 'left-right') desc = 'السهم بينقلب يمين/شمال بس.';
+        else desc = 'السهم هيفضل شكله ثابت.';
+        msg.innerHTML = `🔄 نمط الدوران الحالي: <strong>${style}</strong> → ${desc}`;
+    }
+    updateCatUI();
+}
+
+// ربط الأزرار
+document.getElementById('pointUp')?.addEventListener('click', () => { dir = 0; sounds.click(); updateCatUI(); });
+document.getElementById('pointRight')?.addEventListener('click', () => { dir = 90; sounds.click(); updateCatUI(); });
+document.getElementById('pointDown')?.addEventListener('click', () => { dir = 180; sounds.click(); updateCatUI(); });
+document.getElementById('pointLeft')?.addEventListener('click', () => { dir = -90; sounds.click(); updateCatUI(); });
+document.getElementById('turnLeftBtn')?.addEventListener('click', () => { dir -= 15; sounds.turn(); updateCatUI(); });
+document.getElementById('turnRightBtn')?.addEventListener('click', () => { dir += 15; sounds.turn(); updateCatUI(); });
+document.getElementById('moveStepsBtn')?.addEventListener('click', () => moveSteps(30));
+document.getElementById('bounceBtn')?.addEventListener('click', () => bounceEdge());
+document.getElementById('resetCatPos')?.addEventListener('click', () => { 
+    catX = 50; catY = 120; dir = 90; rotationStyle = 'all around';
+    sounds.reset();
+    document.querySelectorAll('.trail-dot').forEach(d => d.remove());
+    updateCatUI();
+    setRotationStyle('all around');
+});
+
+// Keyboard controls
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    switch(e.key) {
+        case 'ArrowUp': dir = 0; moveSteps(20); e.preventDefault(); break;
+        case 'ArrowDown': dir = 180; moveSteps(20); e.preventDefault(); break;
+        case 'ArrowLeft': dir = -90; moveSteps(20); e.preventDefault(); break;
+        case 'ArrowRight': dir = 90; moveSteps(20); e.preventDefault(); break;
+        case 'r': case 'R': 
+            catX = 50; catY = 120; dir = 90; sounds.reset(); updateCatUI(); 
+            break;
+    }
+});
+
+// ===== لعبة النجمة =====
+let gameCatX = 20, gameCatY = 100;
+let gameStars = 0, gameSteps = 0;
+let gameWon = false;
+let gameLost = false;
+const gameCatElem = document.getElementById('gameCat');
+const starElem = document.getElementById('gameStar');
+const starGlow = document.getElementById('starGlow');
+const winDivStar = document.getElementById('winStarMsg');
+const loseDiv = document.getElementById('loseMsg');
+const gameStage = document.getElementById('gameStage');
+
+function getGameBounds() {
+    return {
+        maxX: gameStage.clientWidth - 60,
+        maxY: gameStage.clientHeight - 60,
+        minX: 5,
+        minY: 5
+    };
+}
+
+function getObstacles() {
+    const obs1 = document.getElementById('obstacle1');
+    const obs2 = document.getElementById('obstacle2');
+    return [
+        { el: obs1, x: parseInt(obs1.style.left), y: parseInt(obs1.style.top), w: 40, h: 40 },
+        { el: obs2, x: parseInt(obs2.style.left), y: parseInt(obs2.style.top), w: 40, h: 40 }
+    ];
+}
+
+function checkObstacleCollision(x, y) {
+    const obstacles = getObstacles();
+    for (let obs of obstacles) {
+        if (x + 30 > obs.x && x < obs.x + obs.w &&
+            y + 30 > obs.y && y < obs.y + obs.h) {
+            return true;
         }
+    }
+    return false;
+}
+
+function updateStarPosition() {
+    if (!starElem || !gameStage) return;
+    const bounds = getGameBounds();
+    let sx, sy;
+    let attempts = 0;
+    do {
+        sx = 50 + Math.random() * (bounds.maxX - 100);
+        sy = 50 + Math.random() * (bounds.maxY - 100);
+        attempts++;
+    } while ((Math.hypot(sx - gameCatX, sy - gameCatY) < 100 || checkObstacleCollision(sx, sy)) && attempts < 50);
+
+    starElem.style.left = sx + 'px';
+    starElem.style.top = sy + 'px';
+    if (starGlow) {
+        starGlow.style.left = (sx - 15) + 'px';
+        starGlow.style.top = (sy - 15) + 'px';
+    }
+}
+
+function updateGameUI() {
+    if (!gameCatElem || !starElem) return;
+    const bounds = getGameBounds();
+    gameCatX = Math.min(bounds.maxX, Math.max(bounds.minX, gameCatX));
+    gameCatY = Math.min(bounds.maxY, Math.max(bounds.minY, gameCatY));
+    gameCatElem.style.left = gameCatX + 'px';
+    gameCatElem.style.top = gameCatY + 'px';
+
+    const catRect = gameCatElem.getBoundingClientRect();
+    const starRect = starElem.getBoundingClientRect();
+    const dist = Math.hypot(starRect.left - catRect.left, starRect.top - catRect.top);
+
+    document.getElementById('distanceDisplay').textContent = Math.round(dist) + 'px';
+
+    if (dist < 50 && !gameWon && !gameLost) {
+        gameWon = true;
+        gameStars++;
+        document.getElementById('starsCount').textContent = gameStars;
+        sounds.win();
+        launchConfetti();
+        winDivStar.style.display = 'block';
+        gameCatElem.style.animation = 'bounce 0.5s ease';
+
+        setTimeout(() => {
+            winDivStar.style.display = 'none';
+            gameWon = false;
+            updateStarPosition();
+            gameCatElem.style.animation = '';
+        }, 2000);
+    }
+}
+
+function moveGame(dx, dy) {
+    if (gameWon || gameLost) return;
+
+    let newX = gameCatX + dx;
+    let newY = gameCatY + dy;
+
+    if (checkObstacleCollision(newX, newY)) {
+        gameLost = true;
+        sounds.lose();
+        loseDiv.style.display = 'block';
+        gameStage.style.animation = 'flashRed 0.5s ease 3';
+
+        setTimeout(() => {
+            loseDiv.style.display = 'none';
+            gameLost = false;
+            gameStage.style.animation = '';
+            gameCatX = 20;
+            gameCatY = 100;
+            updateGameUI();
+        }, 2000);
+        return;
+    }
+
+    gameCatX = newX;
+    gameCatY = newY;
+    gameSteps++;
+    document.getElementById('stepsCount').textContent = gameSteps;
+    sounds.move();
+    updateGameUI();
+}
+
+function resetGame() {
+    gameCatX = 20;
+    gameCatY = 100;
+    gameSteps = 0;
+    gameStars = 0;
+    gameWon = false;
+    gameLost = false;
+    document.getElementById('stepsCount').textContent = '0';
+    document.getElementById('starsCount').textContent = '0';
+    winDivStar.style.display = 'none';
+    loseDiv.style.display = 'none';
+    sounds.reset();
+    updateStarPosition();
+    updateGameUI();
+}
+
+document.getElementById('gameUp')?.addEventListener('click', () => moveGame(0, -25));
+document.getElementById('gameDown')?.addEventListener('click', () => moveGame(0, 25));
+document.getElementById('gameLeft')?.addEventListener('click', () => moveGame(-25, 0));
+document.getElementById('gameRight')?.addEventListener('click', () => moveGame(25, 0));
+document.getElementById('gameResetStar')?.addEventListener('click', resetGame);
+
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    switch(e.key) {
+        case 'w': case 'W': moveGame(0, -25); e.preventDefault(); break;
+        case 's': case 'S': moveGame(0, 25); e.preventDefault(); break;
+        case 'a': case 'A': moveGame(-25, 0); e.preventDefault(); break;
+        case 'd': case 'D': moveGame(25, 0); e.preventDefault(); break;
+    }
+});
+
+// ===== مثال رسم المربع التفاعلي =====
+let squareRunning = false;
+const squareArrow = document.getElementById('squareArrow');
+const squareStage = document.getElementById('squareStage');
+
+// FIXED: Steps for square drawing with correct Scratch directions
+const squareSteps = [
+    { x: 60, y: 60, dir: 90, block: 'point in direction (90)', desc: 'حددنا الاتجاه: 90° (يمين)' },
+    { x: 60, y: 60, dir: 90, block: 'move 100 steps', desc: 'تحركنا 100 خطوة → (الحافة العلوية)', draw: true, toX: 160, toY: 60 },
+    { x: 160, y: 60, dir: 90, block: 'turn ↻ 90 degrees', desc: 'دورنا 90° ↻' },
+    { x: 160, y: 60, dir: 180, block: 'move 100 steps', desc: 'تحركنا 100 خطوة ↓ (الحافة اليمنى)', draw: true, toX: 160, toY: 160 },
+    { x: 160, y: 160, dir: 180, block: 'turn ↻ 90 degrees', desc: 'دورنا 90° ↻' },
+    { x: 160, y: 160, dir: -90, block: 'move 100 steps', desc: 'تحركنا 100 خطوة ← (الحافة السفلية)', draw: true, toX: 60, toY: 160 },
+    { x: 60, y: 160, dir: -90, block: 'turn ↻ 90 degrees', desc: 'دورنا 90° ↻' },
+    { x: 60, y: 160, dir: 0, block: 'move 100 steps', desc: 'تحركنا 100 خطوة ↑ (الحافة اليسرى)', draw: true, toX: 60, toY: 60 },
+];
+
+function drawLineOnStage(x1, y1, x2, y2, delay) {
+    setTimeout(() => {
+        const line = document.createElement('div');
+        line.className = 'square-line';
+        const length = Math.hypot(x2 - x1, y2 - y1);
+        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+        line.style.left = x1 + 20 + 'px';
+        line.style.top = y1 + 20 + 'px';
+        line.style.width = '0px';
+        line.style.transform = `rotate(${angle}deg)`;
+        squareStage.appendChild(line);
+
+        setTimeout(() => {
+            line.classList.add('visible');
+            line.style.width = length + 'px';
+        }, 50);
+
+        sounds.draw();
+    }, delay);
+}
+
+function startSquareDemo() {
+    if (squareRunning) return;
+    squareRunning = true;
+    document.getElementById('startSquareBtn').disabled = true;
+    document.getElementById('startSquareBtn').style.opacity = '0.5';
+
+    document.querySelectorAll('.square-line').forEach(l => l.remove());
+
+    let delay = 0;
+    squareSteps.forEach((step, i) => {
+        setTimeout(() => {
+            document.querySelectorAll('.step-dot').forEach((d, idx) => {
+                d.classList.remove('active');
+                if (idx < i) d.classList.add('done');
+                else d.classList.remove('done');
+            });
+            document.getElementById('step' + (i + 1)).classList.add('active');
+
+            squareArrow.style.left = step.x + 'px';
+            squareArrow.style.top = step.y + 'px';
+            const svg = squareArrow.querySelector('svg');
+            svg.style.transform = `rotate(${step.dir}deg)`;
+
+            document.getElementById('currentBlock').innerHTML = 
+                `<span class="scratch-block motion">${step.block}</span><br><span style="color: #92400e; font-size: 1rem;">${step.desc}</span>`;
+
+            sounds.click();
+
+            if (step.draw) {
+                drawLineOnStage(step.x, step.y, step.toX, step.toY, 400);
+            }
+
+            if (i === squareSteps.length - 1) {
+                setTimeout(() => {
+                    document.getElementById('currentBlock').innerHTML = 
+                        '<span style="color: #059669;">✅ خلاص! رسمنا مربع كامل!</span>';
+                    sounds.win();
+                    document.querySelectorAll('.step-dot').forEach(d => d.classList.add('done'));
+                    squareRunning = false;
+                    document.getElementById('startSquareBtn').disabled = false;
+                    document.getElementById('startSquareBtn').style.opacity = '1';
+                }, 1000);
+            }
+        }, delay);
+        delay += step.draw ? 1200 : 800;
     });
+}
+
+function resetSquareDemo() {
+    squareRunning = false;
+    document.getElementById('startSquareBtn').disabled = false;
+    document.getElementById('startSquareBtn').style.opacity = '1';
+    document.querySelectorAll('.square-line').forEach(l => l.remove());
+    document.querySelectorAll('.step-dot').forEach(d => {
+        d.classList.remove('active', 'done');
+    });
+    squareArrow.style.left = '60px';
+    squareArrow.style.top = '60px';
+    const svg = squareArrow.querySelector('svg');
+    svg.style.transform = 'rotate(90deg)';
+    document.getElementById('currentBlock').textContent = 'اضغط "ابدأ الرسم" عشان تشوف الخطوات!';
+    sounds.reset();
+}
+
+// ===== حلول التحديات =====
+function toggleSolution(type) {
+    sounds.click();
+    const sol = document.getElementById(type + 'Solution');
+    if (!sol) return;
+    if (sol.style.display === 'none' || sol.style.display === '') {
+        sol.style.display = 'block';
+        document.getElementById('show' + type.charAt(0).toUpperCase() + type.slice(1) + 'Solution').textContent = 'إخفاء الحل 👁️';
+    } else {
+        sol.style.display = 'none';
+        document.getElementById('show' + type.charAt(0).toUpperCase() + type.slice(1) + 'Solution').textContent = 'إظهار الحل 🔍';
+    }
+}
+
+// ===== Initialization =====
+window.addEventListener('resize', () => {
+    updateCatUI();
+    updateGameUI();
+});
+
+document.addEventListener('click', () => {
+    if (sounds.ctx && sounds.ctx.state === 'suspended') {
+        sounds.ctx.resume();
+    }
+}, { once: true });
+
+setTimeout(() => {
+    updateCatUI();
+    updateStarPosition();
+    updateGameUI();
+}, 100);
+
+document.querySelectorAll('.scratch-block').forEach(block => {
+    block.addEventListener('mouseenter', () => {
+        block.style.transform = 'translateY(-3px) scale(1.05)';
+    });
+    block.addEventListener('mouseleave', () => {
+        block.style.transform = '';
+    });
+});
+
+document.querySelectorAll('.ctrl-btn, .show-solution-btn, .style-card').forEach(btn => {
+    btn.addEventListener('click', () => sounds.click());
+});
 </script>
+
 </body>
 </html>
