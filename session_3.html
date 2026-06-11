@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 3 - Repeat, Edge Bounce & Keyboard Events 🔁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #f0fdf4 0%, #ecfdf5 50%, #eef2ff 100%);
+            min-height: 100vh; overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-blue: #4c97ff; --scratch-blue-dark: #1f5bb5;
+            --scratch-orange: #ffab19; --scratch-orange-dark: #c27d00;
+            --scratch-green: #59c059; --scratch-green-dark: #2f6b2f;
+            --scratch-purple: #aa6fe5; --scratch-purple-dark: #6b2e9e;
+            --scratch-motion: #4c97ff; --scratch-control: #ffab19; --scratch-events: #ffbf00;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #059669, #10b981, #34d399);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(5,150,105,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🔁'; position: absolute; font-size: 8rem; opacity: 0.1; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '⚡'; position: absolute; font-size: 6rem; opacity: 0.1; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.5rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.2rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(0,0,0,0.12); border-color: #a7f3d0; }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #059669, #10b981, #8b5cf6);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px; display: inline-block;
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: 'Courier New', monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15); transition: 0.1s;
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: var(--scratch-motion); }
+        .scratch-block.control { background: var(--scratch-control); }
+        .scratch-block.events { background: var(--scratch-events); border-radius: 30px 4px 4px 4px; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .demo-stage {
+            background: linear-gradient(145deg, #f9fafb, #f3f4f6); border-radius: 30px;
+            height: 300px; position: relative; overflow: hidden; margin: 20px 0; border: 3px solid #d1d5db;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .stage-grid { position: absolute; top:0; left:0; right:0; bottom:0; background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px); background-size: 30px 30px; pointer-events: none; }
+        .ctrl-btn {
+            border: none; color: white; padding: 12px 22px; border-radius: 50px; font-size: 1rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 5px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .status-box { background: #e0f2fe; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #0284c7; margin: 15px 0; }
+        .comparison-grid { display: flex; flex-wrap: wrap; gap: 20px; margin: 20px 0; }
+        .code-card { flex:1; background: #fef9e3; border-radius: 30px; padding: 20px; border: 2px solid #fcd34d; }
+        .bad-code { background: #fee2e2; border-color: #ef4444; }
+        .good-code { background: #d1fae5; border-color: #10b981; }
+        .square-line { position: absolute; height: 4px; background: #f97316; border-radius: 2px; transform-origin: left center; opacity: 0; transition: opacity 0.3s, width 0.3s ease; }
+        .square-line.visible { opacity: 1; }
+        .key-indicator { background: #f3f4f6; border-radius: 20px; padding: 10px; text-align: center; font-family: monospace; font-size: 1.2rem; }
+        @media (max-width: 768px) { .hero h1 { font-size: 1.6rem; } .code-card { min-width: 100%; } }
+        .confetti-container { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+        .confetti { position: absolute; width: 10px; height: 10px; animation: confetti-fall 3s ease-out forwards; }
+        @keyframes confetti-fall { 0%{ transform: translateY(-100vh) rotate(0deg); opacity:1; } 100%{ transform: translateY(100vh) rotate(720deg); opacity:0; } }
+        .homework { background: linear-gradient(145deg, #fff0df, #ffe4c4); border: 4px dashed #f97316; border-radius: 40px; padding: 35px; margin: 30px 0; position: relative; }
+        .bonus-box { background: #d1fae5; border-radius: 25px; padding: 15px; margin-top: 20px; text-align:center; font-weight: 800; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #10b981; color: white; border-radius: 40px 40px 0 0; }
+        .explanation-icon { font-size: 2rem; margin-left: 10px; vertical-align: middle; }
+    </style>
+</head>
+<body>
+<div class="confetti-container" id="confettiContainer"></div>
+<div class="container">
+    <div class="hero">
+        <h1>✨ التكرار، الارتداد، والأحداث التفاعلية ✨</h1>
+      
+    </div>
+
+    <!-- ========== 1. مراجعة سريعة ========== -->
+    <div class="card">
+        <h2 class="card-title">📋 مراجعة سريعة: الحركة والاتجاه</h2>
+        <p style="line-height:1.8">تذكر: الاتجاه 0° لأعلى، 90° لليمين، 180° لأسفل، -90° لليسار. استخدمنا <span class="scratch-block motion">move steps</span> و <span class="scratch-block motion">turn degrees</span>. لكن طريقة رسم المربع كانت تحتوي على تكرار زائد! 🔄 لنرى العيوب ونحسنها.</p>
+        <div style="background:#fef9c3; border-radius:30px; padding:15px; text-align:center; margin-top:15px;">
+            <span class="scratch-block motion">point in direction 90</span> <span class="scratch-block motion">move 100 steps</span> <span class="scratch-block motion">turn ↻ 90°</span> 
+        </div>
+    </div>
+
+    <!-- ========== 2. تحدّي المربع وعيوبه + التحسين بـ repeat و wait ========== -->
+    <div class="card">
+        <h2 class="card-title">📐 تحدّي المربع: إيه عيوب الطريقة التقليدية؟</h2>
+        <div class="comparison-grid">
+            <div class="code-card bad-code">
+                <h3 style="color:#991b1b">❌ الطريقة الطويلة (8 بلوكات)</h3>
+                <div><span class="scratch-block motion">point in direction 90</span></div>
+                <div><span class="scratch-block motion">move 100 steps</span><span class="scratch-block motion">turn ↻ 90°</span></div>
+                <div><span class="scratch-block motion">move 100 steps</span><span class="scratch-block motion">turn ↻ 90°</span></div>
+                <div><span class="scratch-block motion">move 100 steps</span><span class="scratch-block motion">turn ↻ 90°</span></div>
+                <div><span class="scratch-block motion">move 100 steps</span><span class="scratch-block motion">turn ↻ 90°</span></div>
+                <div style="background:#fee2e2; border-radius:15px; padding:10px; margin-top:15px;">
+                    <p style="color:#b91c1c; font-weight:700">⚠️ العيوب:</p>
+                    <ul style="padding-right:20px; color:#991b1b">
+                        <li>الكود طويل ومكرر (8 بلوكات بدل 4)</li>
+                        <li>صعب التعديل – تغيير حجم المربع يحتاج 4 تعديلات</li>
+                        <li>مفيش تأثير بصري – الرسم بيظهر فجأة</li>
+                        <li>صعب الفهم والصيانة</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="code-card good-code">
+                <h3 style="color:#065f46">✅ الطريقة الذكية باستخدام <span class="scratch-block control">repeat</span></h3>
+                <div><span class="scratch-block motion">point in direction 90</span></div>
+                <div><span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span></div>
+                <div style="margin-right:25px"><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></div>
+                <div style="margin-right:25px"><span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span></div>
+                <div class="status-box" style="background:#d1fae5; margin-top:15px; font-size:0.9rem;">🎯 كود مختصر، لو غيرت الرقم في move مرة واحدة بس يتغير كل الأضلاع!</div>
+            </div>
+        </div>
+        <div style="background: linear-gradient(145deg, #fef3c7, #fde68a); border-radius: 25px; padding: 20px; margin: 20px 0;">
+            <p style="color:#92400e; font-weight:800">💡 إيه هو بلوك <span class="scratch-block control">repeat</span>؟</p>
+            <p>بلوك التكرار بيخلينا ننفذ مجموعة أوامر عدد محدد من المرات. بدل ما نكتب نفس الأمر 4 مرات، نكتبه مرة واحدة داخل repeat 4. وفرنا وقت وجعلنا الكود أنظف!</p>
+            <p style="margin-top:10px">✨ وبلوك <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span> بيوقف التنفيذ لفترة قصيرة، عشان نشوف كل خطوة بعينينا والرسم يظهر تدريجياً مش فجأة!</p>
+        </div>
+
+        <!-- عرض تفاعلي للمربع المحسن -->
+        <h3>🎬 جرب بنفسك: رسم مربع متحرك (repeat + wait)</h3>
+        <div class="demo-stage" id="squareStageDemo" style="height: 300px;">
+            <div class="stage-grid"></div>
+            <div id="squareArrowDemo" style="position: absolute; width: 45px; height: 45px; transition: left 0.2s, top 0.2s;">
+                <svg viewBox="0 0 100 100"><polygon points="50,5 65,35 55,35 55,85 45,85 45,35 35,35" fill="#f97316" stroke="#c2410c" stroke-width="2"/><circle cx="50" cy="60" r="8" fill="white"/></svg>
+            </div>
+        </div>
+        <div id="squareCodeStatus" class="status-box" style="background:#fef9e3;">⏳ أنتظر الضغط على زر الرسم</div>
+        <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+            <button class="ctrl-btn green" id="drawOptimizedSquareBtn">🔁 ارسم المربع (repeat + wait)</button>
+            <button class="ctrl-btn orange" id="resetSquareDemoBtn">🔄 إعادة تعيين</button>
+        </div>
+        <div class="status-box" style="margin-top:15px; background:#e0e7ff;">
+            📌 الكود المستخدم: <span class="scratch-block control">repeat 4</span> وداخله <span class="scratch-block control">repeat 10</span> فيه <span class="scratch-block motion">move 10 steps</span> و <span class="scratch-block control">wait 0.1 secs</span>، ثم <span class="scratch-block motion">turn 90°</span>. الرسم يظهر تدريجياً!
+        </div>
+    </div>
+
+    <!-- ========== 3. بلوكات الأحداث (شرح منفصل) ========== -->
+    <div class="card">
+        <h2 class="card-title">🎬 بلوكات الأحداث: when green flag clicked & when any key pressed</h2>
+        <div style="display: flex; flex-wrap: wrap; gap: 25px;">
+            <div style="flex:1; background:#fef9c3; border-radius:30px; padding:20px;">
+                <h3><span class="scratch-block events">when green flag clicked</span></h3>
+                <p>بلوك البداية الأهم في سكراتش. عند الضغط على العلم الأخضر، يبدأ الكود. يُستخدم عادة لضبط الإعدادات الأولية (مثل وضع نمط الدوران، تحديد الموضع، إلخ).</p>
+                <button class="ctrl-btn green" id="greenFlagBtn"><i class="fas fa-flag-checkered"></i> اضغط العلم الأخضر (محاكاة)</button>
+                <div id="greenFlagMsg" class="status-box" style="margin-top:15px; background:white;">🚩 انتظر الضغط على العلم الأخضر...</div>
+            </div>
+            <div style="flex:1; background:#e0e7ff; border-radius:30px; padding:20px;">
+                <h3><span class="scratch-block events">when any key pressed</span></h3>
+                <p>نفذ الأوامر عند الضغط على <strong>أي</strong> زر من لوحة المفاتيح. جرب تضغط أي حرف أو رقم أو سهم.</p>
+                <div id="keyPressDemo" class="key-indicator">💡 اضغط أي مفتاح على الكيبورد...</div>
+                <div id="lastKeyMsg" class="status-box" style="margin-top:15px;">⌨️ آخر مفتاح: --</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 4. شرح بلوك if on edge bounce (منفصل) ========== -->
+    <div class="card">
+        <h2 class="card-title">🪀 بلوك if on edge bounce (الارتداد عند الحافة)</h2>
+        <p style="line-height:1.8">هذا البلوك يجعل الشخصية ترتد تلقائياً عندما تلامس حافة المسرح. يُستخدم عادة مع الحركة المستمرة أو عند تحريك الشخصية خطوة بخطوة لضمان عدم خروجها من المسرح.</p>
+        <div style="background: #e0f2fe; border-radius: 25px; padding: 20px; margin: 20px 0;">
+            <p style="font-weight:800; color:#0369a1;">🧩 شكل البلوك في سكراتش:</p>
+            <div class="blocks-showcase" style="background:#f1f5f9; border-radius:20px; padding:15px; text-align:center;">
+                <span class="scratch-block motion">if on edge, bounce</span>
+            </div>
+            <p class="status-box" style="margin-top:15px; background:#fef9c3;">✨ كيف يعمل؟ عندما تصل الشخصية إلى أي حافة (يمين، يسار، أعلى، أسفل)، يتغير اتجاهها انعكاساً (مثل كرة ترتد من الحائط).</p>
+        </div>
+        <div style="background: linear-gradient(145deg, #dcfce7, #bbf7d0); border-radius: 20px; padding: 15px; margin-top: 10px;">
+            <i class="fas fa-lightbulb explanation-icon"></i> <strong>معلومة مهمة:</strong> لضمان ارتداد طبيعي بدون انقلاب الشخصية، نستخدم <span class="scratch-block motion">set rotation style [left-right]</span>. بهذا الشكل ترتد الشخصية ولكن تبقى معكوسة بشكل لطيف (يمين/شمال) بدل أن تنقلب رأساً على عقب.
+        </div>
+    </div>
+
+    <!-- ========== 5. التحدي الرئيسي (مشروع متكامل) ========== -->
+    <div class="card">
+        <h2 class="card-title">🏆 التحدي: شخصية تتحرك بالمسافة وترتد عند الحافة (مع left‑right rotation)</h2>
+        <p style="line-height:1.8">الآن حان دورك لتطبيق ما تعلمته في مشروع حقيقي على سكراتش. المطلوب:</p>
+        <ul style="padding-right: 25px; line-height: 2; font-weight: 600; color: #065f46; margin: 15px 0;">
+            <li>🔹 اختر أي شخصية (قطة مثلاً).</li>
+            <li>🔹 استخدم بلوك <span class="scratch-block events">when green flag clicked</span> لضبط نمط الدوران على <span class="scratch-block motion">set rotation style [left-right]</span> ووضعها في نقطة بداية مناسبة.</li>
+            <li>🔹 استخدم بلوك <span class="scratch-block events">when [space v] key pressed</span> لتحريك الشخصية <span class="scratch-block motion">move 10 steps</span> ثم <span class="scratch-block motion">if on edge, bounce</span>.</li>
+            <li>🔹 جرب تغيير عدد الخطوات إلى 20 أو 5 ولاحظ الفرق.</li>
+            <li>🔹 أضف تأثيراً إضافياً: عند الضغط على أي مفتاح آخر (مثلاً مفتاح "b") تجعل الشخصية تقول "مرحباً!".</li>
+        </ul>
+        <div style="background: #fef9c3; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <p style="font-weight:800; color:#92400e;">🧩 الكود النموذجي المطلوب (كما سيظهر في سكراتش):</p>
+            <div style="background:#f1f5f9; border-radius:20px; padding:15px;">
+                <div><span class="scratch-block events">when green flag clicked</span></div>
+                <div style="margin-right:25px;"><span class="scratch-block motion">set rotation style [left-right v]</span></div>
+                <div style="margin-top:12px;"><span class="scratch-block events">when [space v] key pressed</span></div>
+                <div style="margin-right:25px;"><span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span></div>
+                <div style="margin-right:25px;"><span class="scratch-block motion">if on edge, bounce</span></div>
+            </div>
+        </div>
+    </div>
+
+   
+
+</div>
+
+<script>
+    // Confetti helper
+    function launchConfetti() {
+        const container = document.getElementById('confettiContainer');
+        for(let i=0;i<40;i++) {
+            let c = document.createElement('div'); c.className = 'confetti';
+            c.style.left = Math.random()*100+'%'; c.style.backgroundColor = `hsl(${Math.random()*360}, 70%, 60%)`;
+            c.style.width = 8+Math.random()*8+'px'; c.style.height = c.style.width;
+            container.appendChild(c); setTimeout(()=>c.remove(),3000);
+        }
+    }
+
+    // Square demo with repeat and wait
+    let squareDemoRunning = false;
+    const sqArrow = document.getElementById('squareArrowDemo');
+    const sqStage = document.getElementById('squareStageDemo');
+    let sqX = 40, sqY = 40, sqDir = 90;
+    function resetSquareVisual() {
+        sqX = 40; sqY = 40; sqDir = 90;
+        sqArrow.style.left = sqX+'px'; sqArrow.style.top = sqY+'px';
+        const svg = sqArrow.querySelector('svg'); if(svg) svg.style.transform = `rotate(${sqDir}deg)`;
+        document.querySelectorAll('.square-line').forEach(l=>l.remove());
+        document.getElementById('squareCodeStatus').innerHTML = '🟢 تم إعادة التعيين. اضغط "ارسم المربع" لبدء الرسم المتدرج.';
+    }
+    function drawLine(x1,y1,x2,y2) {
+        const line = document.createElement('div'); line.className = 'square-line';
+        const length = Math.hypot(x2-x1, y2-y1);
+        const angle = Math.atan2(y2-y1, x2-x1)*180/Math.PI;
+        line.style.left = (x1+20)+'px'; line.style.top = (y1+20)+'px';
+        line.style.width = '0px'; line.style.transform = `rotate(${angle}deg)`;
+        sqStage.appendChild(line);
+        setTimeout(()=>{ line.classList.add('visible'); line.style.width = length+'px'; }, 20);
+    }
+    async function startOptimizedSquare() {
+        if(squareDemoRunning) return;
+        squareDemoRunning = true;
+        resetSquareVisual();
+        document.querySelectorAll('.square-line').forEach(l=>l.remove());
+        let x = 40, y = 40, dir = 90;
+        const sideLength = 80;
+        const stepsPerSide = 10;
+        const movePerStep = sideLength / stepsPerSide;
+        const waitTime = 0.08;
+        function updateSprite() { sqArrow.style.left = x+'px'; sqArrow.style.top = y+'px'; const svg = sqArrow.querySelector('svg'); if(svg) svg.style.transform = `rotate(${dir}deg)`; }
+        updateSprite();
+        document.getElementById('squareCodeStatus').innerHTML = '🔁 بدء الرسم باستخدام repeat 4 و repeat 10 ...';
+        for(let side=0; side<4; side++) {
+            for(let step=0; step<stepsPerSide; step++) {
+                let rad = dir * Math.PI/180;
+                let dx = movePerStep * Math.sin(rad);
+                let dy = -movePerStep * Math.cos(rad);
+                let newX = x + dx, newY = y + dy;
+                drawLine(x, y, newX, newY);
+                x = newX; y = newY;
+                updateSprite();
+                await new Promise(r => setTimeout(r, waitTime*1000));
+            }
+            dir += 90;
+            updateSprite();
+            await new Promise(r => setTimeout(r, 150));
+        }
+        document.getElementById('squareCodeStatus').innerHTML = '✅ اكتمل رسم المربع المحسن! شوف الكود المختصر والحركة التدريجية.';
+        squareDemoRunning = false;
+        launchConfetti();
+    }
+    document.getElementById('drawOptimizedSquareBtn').addEventListener('click', startOptimizedSquare);
+    document.getElementById('resetSquareDemoBtn').addEventListener('click', ()=>{ if(!squareDemoRunning) resetSquareVisual(); });
+
+    // Green flag simulation
+    let greenFlagCounter = 0;
+    document.getElementById('greenFlagBtn').addEventListener('click',()=>{
+        greenFlagCounter++;
+        const msgDiv = document.getElementById('greenFlagMsg');
+        msgDiv.innerHTML = `🚩 تم الضغط على العلم الأخضر ${greenFlagCounter} مرة! 🔁 يمكن وضع كود إعادة ضبط أو بدء الحركة هنا. مثلاً: ضبط نمط الدوران left-right.`;
+        msgDiv.style.background = '#d1fae5';
+        launchConfetti();
+        setTimeout(()=> msgDiv.style.background = 'white', 800);
+    });
+
+    // when any key pressed simulation
+    const lastKeySpan = document.getElementById('lastKeyMsg');
+    document.addEventListener('keydown', (e) => {
+        if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        lastKeySpan.innerHTML = `⌨️ تم الضغط على مفتاح: <strong>${e.key}</strong> (محاكاة لـ when any key pressed) 🎉`;
+        lastKeySpan.style.background = '#fef9c3';
+        setTimeout(()=> lastKeySpan.style.background = '', 500);
+        const demoKeyDiv = document.getElementById('keyPressDemo');
+        demoKeyDiv.innerHTML = `✨ ضغطت: ${e.key} ✨`;
+        setTimeout(()=> demoKeyDiv.innerHTML = '💡 اضغط أي مفتاح على الكيبورد...', 1000);
+        launchConfetti();
+        // تذكير بمفتاح المسافة
+        if(e.code === 'Space') {
+            const spaceMsg = document.createElement('div');
+            spaceMsg.className = 'status-box';
+            spaceMsg.style.position = 'fixed'; spaceMsg.style.bottom = '20px'; spaceMsg.style.left = '20px'; spaceMsg.style.zIndex = '1000';
+            spaceMsg.innerHTML = '⭐ ممتاز! هذا هو مفتاح المسافة الذي ستستخدمه في التحدي لتحريك الشخصية 10 خطوات مع if on edge bounce.';
+            document.body.appendChild(spaceMsg);
+            setTimeout(()=> spaceMsg.remove(), 3000);
+        }
+    });
+    resetSquareVisual();
+</script>
+</body>
+</html>
