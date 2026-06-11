@@ -252,9 +252,7 @@
                 <div class="scratch-block motion">
                     point in direction <span class="scratch-block-input">90</span>
                 </div>
-                <div class="scratch-block motion">
-                    if on edge, bounce
-                </div>
+
                 <div class="scratch-block motion">
                     set rotation style [left-right]
                 </div>
@@ -317,9 +315,7 @@
                     <button class="ctrl-btn green tooltip" id="moveStepsBtn" data-tip="تحرك 30 خطوة">
                         🚶 move 30 steps
                     </button>
-                    <button class="ctrl-btn purple tooltip" id="bounceBtn" data-tip="ارتد من الحافة">
-                        🌀 if on edge, bounce
-                    </button>
+                  
                     <button class="ctrl-btn red tooltip" id="resetCatPos" data-tip="ارجع للبداية">
                         🔄 reset position
                     </button>
@@ -503,7 +499,7 @@
                 إظهار الحل 🔍
             </button>
             <div class="solution-area" id="squareSolution">
-                <h3>✅ الطريقة الأولى: البسيطة (بدون repeat و wait)</h3>
+                <h3>✅ الطريقة الأولى: البسيطة</h3>
                 <ol>
                     <li><span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span></li>
                     <li><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></li>
@@ -515,102 +511,12 @@
                     <li><span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span></li>
                     <li><span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span></li>
                 </ol>
-                <div style="background: #fee2e2; border-radius: 15px; padding: 15px; margin: 15px 0; border-right: 5px solid #ef4444;">
-                    <p style="color: #991b1b; font-weight: 700; margin-bottom: 8px;">⚠️ عيوب الطريقة البسيطة:</p>
-                    <ul style="color: #b91c1c; padding-right: 20px; line-height: 1.8;">
-                        <li>الكود طويل ومكرر (8 بلوكات بدل 4)</li>
-                        <li>صعب التعديل – لو عايز تغير حجم المربع لازم تعدل في 4 أماكن</li>
-                        <li>صعب الفهم – المكرر مش واضح</li>
-                        <li>مفيش تأثير بصري – الرسم بيحصل فجأة من غير ما نشوف الخطوات</li>
-                    </ul>
-                </div>
-				 <div style="background: linear-gradient(145deg, #fef3c7, #fde68a); border-radius: 25px; padding: 20px; margin-top: 20px; border-right: 6px solid #f59e0b;">
-                <p style="color: #92400e; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">💡 ليه الكود طويل كده؟</p>
-                <p style="color: #78350f; line-height: 1.8; margin-bottom: 12px;">
-                    شوفت إزاي كررنا <strong>move + turn</strong> 4 مرات؟ ده اسمه كود مكرر (Redundant Code). 
-                    في سكراتش فيه بلوك أحسن اسمه <span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span> 
-                    بيختصر الكود كله في 3 بلوكات بس!
-                </p>
-                <div style="background: white; border-radius: 15px; padding: 15px; margin: 10px 0;">
-                    <p style="color: #0369a1; font-weight: 700; margin-bottom: 8px;">✨ الطريقة المحسّنة بـ repeat:</p>
-                    <div style="margin: 8px 0;">
-                        <span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span>
-                    </div>
-                    <div style="margin: 8px 0;">
-                        <span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span>
-                    </div>
-                    <div style="margin: 8px 20px 0 0;">
-                        <span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span>
-                    </div>
-                    <div style="margin: 8px 20px 0 0;">
-                        <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span>
-                    </div>
-                </div>
-                <p style="color: #92400e; font-weight: 700; margin-top: 12px;">
-                    🎯 كده وفّرنا 5 بلوكات! ولو عايزين نغير حجم المربع، نغير رقم واحد بس!
-                </p>
-            </div>
-
-            <div style="background: linear-gradient(145deg, #f3e8ff, #e9d5ff); border-radius: 25px; padding: 20px; margin-top: 15px;margin-bottom: 15px; border-right: 6px solid #8b5cf6;">
-                <p style="color: #5b21b6; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">⏱️ إيه فايدة بلوك wait؟</p>
-                <p style="color: #4c1d95; line-height: 1.8;">
-                    لو حطينا <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span> 
-                    جوه repeat، كل خطوة هتتنفذ ونستنى 0.1 ثانية قبل اللي بعدها. 
-                    ده بيخلي الرسم يبان قدام عينينا خطوة بخطوة، مش فجأة!
-                    جرب في سكراتش: استخدم <span class="scratch-block control">repeat <span class="scratch-block-input">10</span></span> 
-                    جوه كل ضلع، وفيها <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span> 
-                    + <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span>.
-                </p>
-            </div>
-
-                <h3>✅ الطريقة المحسّنة: باستخدام repeat و wait</h3>
-                <ol>
-                    <li><span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span></li>
-                    <li><span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span></li>
-                    <li style="list-style: none; margin-right: 20px;">
-                        <span class="scratch-block control">repeat <span class="scratch-block-input">10</span></span>
-                    </li>
-                    <li style="list-style: none; margin-right: 40px;">
-                        <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
-                    </li>
-                    <li style="list-style: none; margin-right: 40px;">
-                        <span class="scratch-block control">wait <span class="scratch-block-input">0.1</span> seconds</span>
-                    </li>
-                    <li style="list-style: none; margin-right: 20px;">
-                        <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span>
-                    </li>
-                </ol>
-                <div style="background: #d1fae5; border-radius: 15px; padding: 15px; margin: 15px 0; border-right: 5px solid #10b981;">
-                    <p style="color: #065f46; font-weight: 700; margin-bottom: 8px;">🌟 مميزات الطريقة المحسّنة:</p>
-                    <ul style="color: #047857; padding-right: 20px; line-height: 1.8;">
-                        <li><strong>repeat 4:</strong> كود مختصر – 4 تكرارات بدل ما نكتب كل خطوة لوحدها</li>
-                        <li><strong>repeat 10 + move 10:</strong> بيقسم الخط الواحد لـ 10 حركات صغيرة، فالرسم بيبان تدريجياً</li>
-                        <li><strong>wait 0.1:</strong> بيثبت كل حركة 0.1 ثانية، فالعين تقدر تشوف الخط بيترسم خطوة بخطوة</li>
-                        <li>سهل التعديل – غير الرقم في مكان واحد بس</li>
-                    </ul>
-                </div>
+              
             </div>
         </div>
     </div>
 
-    <!-- ===== الواجب المنزلي ===== -->
-    <div class="homework">
-        <h2>📚 الواجب المنزلي 📚</h2>
-        <p style="font-size: 1.1rem; color: #7c2d12; font-weight: 700; margin-bottom: 15px;">
-            ✏️ المهمة: استخدم سكراتش (أونلاين أو على الجهاز)، واعمل مشروع فيه القطة ترسم <strong>مثلث</strong> متساوي الأضلاع.
-        </p>
-        <ul>
-            <li>افتح محرر سكراتش.</li>
-            <li>استخدم بلوكات الحركة: <strong>move, turn, point in direction</strong>.</li>
-            <li>استخدم بلوكات التحكم: <strong>repeat</strong> عشان الكود يبقى مختصر.</li>
-            <li>تذكر: زاوية المثلث الخارجية = <strong>120°</strong> (مش 90° زي المربع!).</li>
-            <li>جرب أنماط الدوران وشوف القطة بتبان إزاي.</li>
-        </ul>
-        <div class="bonus-box">
-            🌟 <strong>بونص:</strong> جرب رسم نجمة باستخدام repeat (5) و turn 144 degrees!
-        </div>
-    </div>
-
+   
    
 </div>
 
