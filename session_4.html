@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 4 - Looks in Scratch: Say, Size, Costumes & Movement 🎭</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #fdf2f8 0%, #fce7f3 50%, #fefce8 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-looks: #9966ff;
+            --scratch-events: #ffbf00;
+            --scratch-motion: #4c97ff;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        .hero {
+            background: linear-gradient(135deg, #d946ef, #f97316, #f59e0b);
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(217,70,239,0.3);
+            animation: floatHero 4s ease-in-out infinite;
+        }
+        .hero h1 { font-size: 2.5rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.2rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #fbcfe8; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #d946ef, #f97316);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .demo-stage {
+            background: linear-gradient(145deg, #e0e7ff, #c7d2fe);
+            border-radius: 30px;
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 4px solid #a5b4fc;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .stage-grid {
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+        #gameCharacter {
+            position: absolute;
+            font-size: 3rem;
+            transition: left 0.08s linear, top 0.08s linear, font-size 0.1s ease;
+            cursor: pointer;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+            z-index: 10;
+        }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.orange { background: #f97316; }
+        .ctrl-btn.blue { background: #3b82f6; }
+        .status-box {
+            background: #f3e8ff; border-radius: 25px; padding: 15px; text-align: center;
+            font-weight: 800; border-right: 6px solid #c084fc; margin: 15px 0;
+        }
+        .homework {
+            background: linear-gradient(145deg, #fff0df, #ffe4c4);
+            border: 4px dashed #f97316; border-radius: 40px; padding: 35px; margin: 30px 0;
+        }
+        footer {
+            text-align: center; margin-top: 20px; padding: 20px;
+            background: #d946ef; color: white; border-radius: 40px 40px 0 0;
+        }
+        .speech-bubble {
+            position: absolute; background: white; border-radius: 20px; padding: 8px 18px;
+            font-weight: bold; color: #333; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            top: -50px; left: 50%; transform: translateX(-50%);
+            animation: popIn 0.3s ease;
+            z-index: 20; white-space: nowrap;
+        }
+        @keyframes popIn {
+            0% { transform: translateX(-50%) scale(0); opacity: 0; }
+            80% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+        .key-hint {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #334155;
+        }
+        .key {
+            display: inline-block;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 4px 12px;
+            margin: 0 4px;
+            font-family: monospace;
+            font-size: 1rem;
+            box-shadow: 0 2px 0 #cbd5e1;
+        }
+        .video-link-box {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #f97316;
+            text-align: center;
+        }
+        .video-link-box a {
+            display: inline-block;
+            background: #f97316;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .video-link-box a:hover {
+            background: #ea580c;
+            transform: scale(1.02);
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.6rem; }
+            .speech-bubble { font-size: 0.8rem; white-space: normal; width: 140px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🎭 بلوكات المظاهر (Looks) في سكراتش</h1>
+    </div>
+
+    <!-- شرح بلوكات المظاهر الأساسية -->
+    <div class="card">
+        <h2 class="card-title">👗 بلوكات المظاهر الأساسية</h2>
+        <p style="line-height:1.8">بلوكات <strong>Looks</strong> تتحكم في شكل الشخصية، حجمها، ملابسها (Costumes)، والخلفية (Backdrop). إليك أهمها:</p>
+        <div style="text-align: center; margin: 20px 0;">
+            <span class="scratch-block looks">say <span class="scratch-block-input">Hello!</span> for <span class="scratch-block-input">2</span> seconds</span>
+            <span class="scratch-block looks">switch costume to <span class="scratch-block-input">costume2</span></span>
+            <span class="scratch-block looks">next costume</span>
+            <span class="scratch-block looks">change size by <span class="scratch-block-input">10</span></span>
+            <span class="scratch-block looks">set size to <span class="scratch-block-input">100</span>%</span>
+            <span class="scratch-block looks">switch backdrop to <span class="scratch-block-input">backdrop2</span></span>
+        </div>
+        <div class="status-box">
+            💡 <strong>معلومة:</strong> كل شخصية ممكن يكون عندها أكتر من <strong>Costume</strong> (زي لبس مختلف)، والمسرح (Stage) عنده <strong>Backdrops</strong> (خلفيات). التبديل بينهم بيحرّك الشخصية أو يغير الجو!        </div>
+    </div>
+
+    <!-- شرح الكستوم والتبديل -->
+    <div class="card">
+        <h2 class="card-title">🔄 الأزياء (Costumes) - تغيير شكل الشخصية أثناء الحركة</h2>
+        <p>في سكراتش، يمكنك رسم أكثر من زي للشخصية. نستخدم بلوك <span class="scratch-block looks">switch costume to [ ... ]</span> لتغيير الشكل. مثلاً: زي "واقف" وزي "جري". عندما نضغط على أحد الأسهم، نغير الزي لمدة قصيرة ثم نعيده، فيبدو أن الشخصية تجري!</p>
+        <div class="status-box" style="background:#fef9c3;">
+            🎨 <strong>مثال:</strong> شخصية رجل عنده كوستوم "واقف" 🧑 و "جري" 🏃. عند الضغط على سهم الحركة، نغير إلى "جري" لمدة 0.2 ثانية ثم نعود إلى "واقف".
+        </div>
+    </div>
+
+    <!-- شرح تغيير الحجم -->
+    <div class="card">
+        <h2 class="card-title">📏 تغيير الحجم (Change Size)</h2>
+        <p>يمكنك تكبير أو تصغير الشخصية باستخدام <span class="scratch-block looks">change size by <span class="scratch-block-input">10</span></span> أو <span class="scratch-block looks">set size to <span class="scratch-block-input">50</span>%</span>. في لعبتنا التفاعلية، الضغط على السهم <strong>الأيمن</strong> يزيد الحجم، والضغط على السهم <strong>الأيسر</strong> ينقص الحجم.</p>
+    </div>
+
+    <!-- اللعبة التفاعلية: شخصية رجل يركض -->
+    <div class="card">
+        <h2 class="card-title">🎮 لعبة تفاعلية: تحرك، اِجري، وكبّر أو صغّر حجمك!</h2>
+        <p>الشخصية (رجل) ستبدأ بقول "مرحباً!". استخدم أسهم لوحة المفاتيح:</p>
+        <ul style="padding-right: 25px; line-height: 2; margin: 10px 0;">
+            <li>⬅️ <strong>السهم الأيسر:</strong> يتحرك يساراً + يصغر حجمه + يركض</li>
+            <li>➡️ <strong>السهم الأيمن:</strong> يتحرك يميناً + يكبر حجمه + يركض</li>
+            <li>⬆️ <strong>السهم الأعلى:</strong> يتحرك لأعلى + يركض (بدون تغيير الحجم)</li>
+            <li>⬇️ <strong>السهم الأسفل:</strong> يتحرك لأسفل + يركض (بدون تغيير الحجم)</li>
+        </ul>
+        <p><strong>كل ضغطة زر تجعل الشخصية تغير شكلها (Costume) للحظة وكأنها تجري!</strong></p>
+        
+        <div class="demo-stage" id="gameStage">
+            <div class="stage-grid"></div>
+            <div id="gameCharacter">🧑</div>
+        </div>
+        
+        <div class="status-box" id="gameStatus">
+            🧑 الحجم الحالي: 100% | الموقع: (150, 150)
+        </div>
+        
+        <div class="key-hint">
+            ⌨️ <strong>جرب بنفسك:</strong> اضغط على أسهم لوحة المفاتيح ← → ↑ ↓
+            <br>
+            <span class="key">←</span> <span class="key">→</span> <span class="key">↑</span> <span class="key">↓</span>
+            <br>
+            (زر <span class="key">R</span> لإعادة التعيين)
+        </div>
+    </div>
+
+    <!-- شرح الكود المستخدم في سكراتش -->
+    <div class="card">
+        <h2 class="card-title">📝 كيف ننفذ هذه اللعبة في سكراتش الحقيقي؟</h2>
+        <p>سنستخدم <strong>بلوكات الأحداث (Events)</strong> بدون أي جمل شرطية (if). كل زر له بلوك خاص به. إليك الكود لشخصية الرجل:</p>
+        <div style="background: #f1f5f9; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <div style="margin-bottom: 15px;">
+                <span class="scratch-block events">when [right arrow v] key pressed</span>
+                <div style="margin-right: 25px;">
+                    <span class="scratch-block motion">change x by <span class="scratch-block-input">15</span></span><br>
+                    <span class="scratch-block looks">change size by <span class="scratch-block-input">5</span></span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">running</span></span><br>
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">normal</span></span>
+                </div>
+            </div>
+            <div>
+                <span class="scratch-block events">when [left arrow v] key pressed</span>
+                <div style="margin-right: 25px;">
+                    <span class="scratch-block motion">change x by <span class="scratch-block-input">-15</span></span><br>
+                    <span class="scratch-block looks">change size by <span class="scratch-block-input">-5</span></span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">running</span></span><br>
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">normal</span></span>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <span class="scratch-block events">when [up arrow v] key pressed</span>
+                <div style="margin-right: 25px;">
+                    <span class="scratch-block motion">change y by <span class="scratch-block-input">15</span></span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">running</span></span><br>
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">normal</span></span>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <span class="scratch-block events">when [down arrow v] key pressed</span>
+                <div style="margin-right: 25px;">
+                    <span class="scratch-block motion">change y by <span class="scratch-block-input">-15</span></span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">running</span></span><br>
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span><br>
+                    <span class="scratch-block looks">switch costume to <span class="scratch-block-input">normal</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجب منزلي مع رابط فيديو قابل للنقر -->
+    <div class="homework">
+        <h2 class="card-title" style="font-size:1.8rem;">📺 واجب المنزل – شاهد وتعلم</h2>
+        
+        <div class="video-link-box">
+            <label style="font-weight: 800; display: block; margin-bottom: 8px;">🎥 اضغط على الرابط لمشاهدة الفيديو المطلوب:</label>
+            <a href="https://www.youtube.com/watch?v=wvl1Y6C43o4" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-youtube"></i> شاهد الفيديو على يوتيوب
+            </a>
+        </div>
+        
+        <p style="margin-top: 15px;">بعد مشاهدة الفيديو، أجب في دفتر الإنجاز على الأسئلة التالية:</p>
+        
+        <ol style="padding-right: 30px; line-height: 2; margin-top: 15px;">
+            <li>ما الفرق بين <span class="scratch-block looks">say [ ] for 2 seconds</span> و <span class="scratch-block looks">say [ ]</span> (بدون وقت)؟</li>
+            <li>كيف يمكنك جعل الشخصية تكبر كلما ضغطت على السهم الأيمن ؟</li>
+            <li><strong>✨ ما هي ثلاثة أشياء جديدة تعلمتها من هذا الفيديو؟</strong></li>        </ol>
+        
+      
+    </div>
+
+</div>
+
+<script>
+    // Game logic without any "if" statements - pure event-driven
+    const character = document.getElementById('gameCharacter');
+    let posX = 150;
+    let posY = 150;
+    let currentSize = 100; // percentage
+    const stage = document.getElementById('gameStage');
+    
+    // Get stage boundaries (to keep character inside)
+    function getBounds() {
+        const stageRect = stage.getBoundingClientRect();
+        const charRect = character.getBoundingClientRect();
+        const stageWidth = stage.clientWidth;
+        const stageHeight = stage.clientHeight;
+        const charWidth = charRect.width;
+        const charHeight = charRect.height;
+        return {
+            minX: 10,
+            maxX: stageWidth - charWidth - 10,
+            minY: 10,
+            maxY: stageHeight - charHeight - 10
+        };
+    }
+    
+    // Update character position, size, and display status
+    function updateUI() {
+        const bounds = getBounds();
+        // Clamp position to boundaries
+        posX = Math.min(bounds.maxX, Math.max(bounds.minX, posX));
+        posY = Math.min(bounds.maxY, Math.max(bounds.minY, posY));
+        
+        character.style.left = posX + 'px';
+        character.style.top = posY + 'px';
+        
+        // Size: base font size 3rem at 100%
+        const baseRem = 3;
+        character.style.fontSize = (baseRem * currentSize / 100) + 'rem';
+        
+        document.getElementById('gameStatus').innerHTML = `🧑 الحجم الحالي: ${currentSize}% | الموقع: (${Math.round(posX)}, ${Math.round(posY)})`;
+    }
+    
+    // Temporary costume change (running effect)
+    let costumeTimeout = null;
+    function setRunningCostume() {
+        // Change character emoji to running man
+        if (character.textContent === '🧑') {
+            character.textContent = '🏃'; // running man emoji
+        } else if (character.textContent === '🏃') {
+            // already running, keep it
+        } else {
+            character.textContent = '🏃';
+        }
+        if (costumeTimeout) clearTimeout(costumeTimeout);
+        costumeTimeout = setTimeout(() => {
+            character.textContent = '🧑';
+        }, 200);
+    }
+    
+    // Movement functions (each key press triggers one action)
+    function moveRight() {
+        posX += 20;
+        currentSize = Math.min(200, currentSize + 5);
+        setRunningCostume();
+        updateUI();
+    }
+    
+    function moveLeft() {
+        posX -= 20;
+        currentSize = Math.max(40, currentSize - 5);
+        setRunningCostume();
+        updateUI();
+    }
+    
+    function moveUp() {
+        posY -= 20;
+        setRunningCostume();
+        updateUI();
+    }
+    
+    function moveDown() {
+        posY += 20;
+        setRunningCostume();
+        updateUI();
+    }
+    
+    function resetGame() {
+        posX = 150;
+        posY = 150;
+        currentSize = 100;
+        character.textContent = '🧑';
+        updateUI();
+        // Say hello again
+        showSpeech('مرحباً! 👋', 1500);
+    }
+    
+    function showSpeech(text, duration) {
+        const oldBubble = document.querySelector('#gameStage .speech-bubble');
+        if(oldBubble) oldBubble.remove();
+        const bubble = document.createElement('div');
+        bubble.className = 'speech-bubble';
+        bubble.textContent = text;
+        bubble.style.top = '-40px';
+        stage.appendChild(bubble);
+        setTimeout(() => bubble.remove(), duration);
+    }
+    
+    // Keyboard event listeners
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        switch(e.key) {
+            case 'ArrowRight': e.preventDefault(); moveRight(); break;
+            case 'ArrowLeft': e.preventDefault(); moveLeft(); break;
+            case 'ArrowUp': e.preventDefault(); moveUp(); break;
+            case 'ArrowDown': e.preventDefault(); moveDown(); break;
+            case 'r': case 'R': resetGame(); break;
+        }
+    });
+    
+    // Initialize
+    window.addEventListener('load', () => {
+        resetGame();
+        setTimeout(() => {
+            showSpeech('مرحباً! أنا جاهز للجري 🏃', 2000);
+        }, 500);
+    });
+    
+    window.addEventListener('resize', () => updateUI());
+</script>
+</body>
+</html>
