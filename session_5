@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 5 - Sound in Scratch: Play, Volume, Record & TTS 🎤</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 50%, #fdf2f8 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #ec4899, #f97316, #f59e0b);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(236,72,153,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🎵'; position: absolute; font-size: 8rem; opacity: 0.1; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🎤'; position: absolute; font-size: 6rem; opacity: 0.1; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.5rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.2rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #fbcfe8; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #ec4899, #f97316);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .demo-stage {
+            background: linear-gradient(145deg, #fce7f3, #fbcfe8);
+            border-radius: 30px;
+            height: 280px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 4px solid #f9a8d4;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .stage-grid {
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+        #soundCharacter {
+            position: absolute;
+            font-size: 4rem;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.2s ease;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+            z-index: 10;
+        }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.pink { background: #ec4899; }
+        .ctrl-btn.orange { background: #f97316; }
+        .ctrl-btn.blue { background: #3b82f6; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.red { background: #ef4444; }
+        .status-box {
+            background: #fce7f3; border-radius: 25px; padding: 15px; text-align: center;
+            font-weight: 800; border-right: 6px solid #ec4899; margin: 15px 0;
+        }
+        .homework {
+            background: linear-gradient(145deg, #fff0df, #ffe4c4);
+            border: 4px dashed #f97316; border-radius: 40px; padding: 35px; margin: 30px 0;
+        }
+        footer {
+            text-align: center; margin-top: 20px; padding: 20px;
+            background: #ec4899; color: white; border-radius: 40px 40px 0 0;
+        }
+        .speech-bubble {
+            position: absolute; background: white; border-radius: 20px; padding: 8px 18px;
+            font-weight: bold; color: #333; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            top: -50px; left: 50%; transform: translateX(-50%);
+            animation: popIn 0.3s ease;
+            z-index: 20; white-space: nowrap;
+        }
+        @keyframes popIn {
+            0% { transform: translateX(-50%) scale(0); opacity: 0; }
+            80% { transform: translateX(-50%) scale(1.1); }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
+        }
+        .video-link-box {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 2px solid #f97316;
+            text-align: center;
+        }
+        .video-link-box a {
+            display: inline-block;
+            background: #ec4899;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .video-link-box a:hover {
+            background: #db2777;
+            transform: scale(1.02);
+        }
+        .volume-bar {
+            background: #e5e7eb;
+            border-radius: 20px;
+            height: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .volume-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ec4899, #f97316);
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+        .recording-indicator {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            margin-left: 8px;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+        .tts-demo {
+            background: #f3e8ff;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 2px solid #c084fc;
+        }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.6rem; }
+            .speech-bubble { font-size: 0.8rem; white-space: normal; width: 140px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🎵 الصوت في سكراتش: تشغيل، تسجيل، وتحويل النص إلى صوت 🔊</h1>
+        <p>بلوكات الصوت الأساسية، تسجيل الأصوات المخصصة، وإضافة Text‑to‑Speech</p>
+    </div>
+
+    <!-- ===== شرح البلوكات المطلوبة ===== -->
+    <div class="card">
+        <h2 class="card-title">🎤 بلوكات الصوت الأساسية</h2>
+        <p style="line-height:1.8">في سكراتش، لديك هذه البلوكات للتحكم في الصوت:</p>
+        <div style="text-align: center; margin: 20px 0;">
+            <div><span class="scratch-block sound">play sound <span class="scratch-block-input">Meow</span> until done</span></div>
+            <div><span class="scratch-block sound">start sound <span class="scratch-block-input">Meow</span></span></div>
+            <div><span class="scratch-block sound">set volume to <span class="scratch-block-input">100</span>%</span></div>
+            <div><span class="scratch-block sound">change volume by <span class="scratch-block-input">-10</span></span></div>
+            <div><span class="scratch-block sound">stop all sounds</span></div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; margin: 15px 0;">
+            <div style="flex:1; background: #fce7f3; border-radius: 20px; padding: 15px;">
+                <h4 style="color: #be185d;">⏳ play sound ... until done</h4>
+                <p>يشغل الصوت وينتظر حتى ينتهي تماماً قبل تنفيذ الأوامر التالية.</p>
+            </div>
+            <div style="flex:1; background: #fef9c3; border-radius: 20px; padding: 15px;">
+                <h4 style="color: #b45309;">⚡ start sound ...</h4>
+                <p>يشغل الصوت ويستمر فوراً في تنفيذ الأوامر التالية دون انتظار.</p>
+            </div>
+            <div style="flex:1; background: #dbeafe; border-radius: 20px; padding: 15px;">
+                <h4 style="color: #1e40af;">🔊 set / change volume</h4>
+                <p>يضبط مستوى الصوت (من 0 إلى 100%) أو يغيره بقيمة معينة.</p>
+            </div>
+            <div style="flex:1; background: #fee2e2; border-radius: 20px; padding: 15px;">
+                <h4 style="color: #991b1b;">⏹️ stop all sounds</h4>
+                <p>يوقف كل الأصوات التي يتم تشغيلها فوراً.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== تجربة تفاعلية ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 جرب البلوكات بنفسك</h2>
+        <p>استخدم الأزرار لتجربة كل بلوك. الشخصية تتفاعل مع كل أمر صوتي.</p>
+        <div class="demo-stage" id="soundStage">
+            <div class="stage-grid"></div>
+            <div id="soundCharacter">🐱</div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="ctrl-btn pink" id="playUntilBtn">🔊 play sound until done</button>
+            <button class="ctrl-btn pink" id="startSoundBtn">⚡ start sound</button>
+            <button class="ctrl-btn orange" id="setVolume50Btn">🔊 set volume 50%</button>
+            <button class="ctrl-btn orange" id="changeVolumeBtn">🔊 change volume -10</button>
+            <button class="ctrl-btn red" id="stopAllBtn">⏹️ stop all sounds</button>
+        </div>
+        <div style="margin-top: 15px;">
+            <label style="font-weight: 800;">🔊 مستوى الصوت الحالي: <span id="volumeDisplay">70%</span></label>
+            <div class="volume-bar">
+                <div class="volume-fill" id="volumeFill" style="width: 70%;"></div>
+            </div>
+        </div>
+        <div class="status-box" id="soundStatus" style="margin-top:15px;">
+            🎵 جرب الأزرار لتجربة البلوكات المختلفة.
+        </div>
+    </div>
+
+    <!-- ===== تسجيل الأصوات المخصصة ===== -->
+    <div class="card">
+        <h2 class="card-title">🎙️ تسجيل الأصوات المخصصة (Record Sound)</h2>
+        <p>في سكراتش، يمكنك تسجيل صوتك مباشرة من الميكروفون وإضافته إلى مكتبة الأصوات.</p>
+        <div style="background: #f1f5f9; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <p style="font-weight: 800;">📌 خطوات التسجيل في سكراتش:</p>
+            <ol style="padding-right: 25px; line-height: 2;">
+                <li>اذهب إلى علامة التبويب <strong>الأصوات (Sounds)</strong>.</li>
+                <li>اضغط على زر <strong>تسجيل (Record)</strong> (أيقونة الميكروفون).</li>
+                <li>اسمح للمتصفح باستخدام الميكروفون.</li>
+                <li>اضغط على زر التسجيل الأحمر وابدأ بالتحدث.</li>
+                <li>عند الانتهاء، اضغط على إيقاف، ثم يمكنك تعديل الصوت وحفظه.</li>
+                <li>استخدم البلوك <span class="scratch-block sound">play sound <span class="scratch-block-input">[اسم الصوت]</span> until done</span> لتشغيله.</li>
+            </ol>
+        </div>
+       
+    </div>
+
+    <!-- ===== Text‑to‑Speech ===== -->
+    <div class="card">
+        <h2 class="card-title">🗣️ تحويل النص إلى كلام (Text‑to‑Speech) في سكراتش</h2>
+        <p>يمكنك إضافة إضافة (Extension) <strong>Text to Speech</strong> من مكتبة الإضافات في سكراتش. تتيح لك هذه الإضافة جعل الشخصية تتحدث بصوت مسموع.</p>
+        <div style="background: #f3e8ff; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <p style="font-weight: 800;">📌 كيفية إضافة Text‑to‑Speech:</p>
+            <ol style="padding-right: 25px; line-height: 2;">
+                <li>في محرر سكراتش، اضغط على زر <strong>الإضافات (Extensions)</strong> في الزاوية السفلية اليسرى.</li>
+                <li>اختر <strong>Text to Speech</strong> من القائمة.</li>
+                <li>ستظهر بلوكات جديدة في قسم "Text to Speech":</li>
+            </ol>
+            <div style="text-align: center; margin: 15px 0;">
+                <span class="scratch-block looks">speak <span class="scratch-block-input">Hello!</span></span>
+                <span class="scratch-block looks">set language to <span class="scratch-block-input">Spanish</span></span>
+                <span class="scratch-block looks">set voice to <span class="scratch-block-input">alto</span></span>
+            </div>
+        </div>
+        <!-- تجربة TTS في الصفحة باستخدام Web Speech API -->
+        <div class="tts-demo">
+            <p style="font-weight: 800;">🔊 جرب تحويل النص إلى كلام هنا (باستخدام المتصفح):</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 10px;">
+                <input type="text" id="ttsInput" value="مرحباً! أنا أتعلم الصوت في سكراتش" style="flex:1; padding: 10px; border-radius: 30px; border: 2px solid #c084fc; font-family: inherit; font-size: 1rem; min-width: 200px;">
+                <button class="ctrl-btn purple" id="ttsSpeakBtn">🔊 تكلم</button>
+                <button class="ctrl-btn orange" id="ttsStopBtn">⏹️ إيقاف</button>
+            </div>
+            <div style="margin-top: 10px;">
+                <label style="font-weight: 600;">اختر اللغة:</label>
+                <select id="ttsLanguage" style="padding: 6px 12px; border-radius: 20px; border: 2px solid #c084fc; font-family: inherit;">
+                    <option value="ar-SA">العربية (السعودية)</option>
+                    <option value="en-US">English (US)</option>
+                    <option value="fr-FR">Français</option>
+                    <option value="es-ES">Español</option>
+                </select>
+                <label style="font-weight: 600; margin-right: 10px;">الصوت:</label>
+                <select id="ttsVoice" style="padding: 6px 12px; border-radius: 20px; border: 2px solid #c084fc; font-family: inherit;">
+                    <option value="">افتراضي</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== مشروع مقترح ===== -->
+    <div class="card">
+        <h2 class="card-title">🏆 تحدِّي المشروع: آلة تسجيل وتشغيل تفاعلية</h2>
+        <p>استخدم كل ما تعلمته لإنشاء مشروع متكامل:</p>
+        <ul style="padding-right: 25px; line-height: 2; font-weight: 600; color: #831843; margin: 10px 0;">
+            <li>🎤 سجِّل 3 أصوات مختلفة باستخدام ميكروفون سكراتش.</li>
+            <li>🔊 أضف 3 أزرار على المسرح، كل زر يشغل صوتاً مختلفاً باستخدام <span class="scratch-block sound">play sound until done</span>.</li>
+            <li>📢 أضف زراً لتغيير مستوى الصوت (set volume) وآخر لخفضه (change volume).</li>
+            <li>🗣️ استخدم إضافة Text‑to‑Speech لجعل الشخصية تقول "مرحباً!" عند بدء البرنامج.</li>
+            <li>⏹️ أضف زر "إيقاف الكل" لوقف كل الأصوات.</li>
+        </ul>
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:15px;">
+            💡 <strong>فكرة إضافية:</strong> استخدم <span class="scratch-block looks">switch backdrop to [ ]</span> لتغيير الخلفية مع كل صوت مختلف.
+        </div>
+    </div>
+
+   
+</div>
+
+<script>
+    // ===== Sound Engine using Web Audio =====
+    let audioCtx = null;
+    let currentVolume = 70;
+    let isPlaying = false;
+    let currentOscillators = [];
+    let recordedBlob = null; // for simulated recording
+    
+    function initAudio() {
+        if (audioCtx) return;
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch(e) {}
+    }
+    
+    function playTone(freq, type, duration, volume = currentVolume/100) {
+        initAudio();
+        if (!audioCtx) return;
+        try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = freq;
+            osc.type = type || 'sine';
+            gain.gain.value = Math.min(1, volume * 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+            currentOscillators.push(osc);
+            return osc;
+        } catch(e) { return null; }
+    }
+    
+    function playMeow() {
+        playTone(440, 'sine', 0.2);
+        setTimeout(() => playTone(880, 'sine', 0.3), 150);
+        setTimeout(() => playTone(660, 'sine', 0.2), 300);
+    }
+    
+    function playDrum() {
+        playTone(120, 'triangle', 0.3, 0.8);
+        setTimeout(() => playTone(80, 'square', 0.1, 0.5), 50);
+    }
+    
+    function stopAllSounds() {
+        if (audioCtx) {
+            try {
+                // Close and recreate context to stop all sounds
+                audioCtx.close();
+                audioCtx = null;
+                initAudio();
+            } catch(e) {}
+        }
+        currentOscillators = [];
+    }
+    
+    // ===== UI Elements =====
+    const soundChar = document.getElementById('soundCharacter');
+    const soundStatus = document.getElementById('soundStatus');
+    const volumeDisplay = document.getElementById('volumeDisplay');
+    const volumeFill = document.getElementById('volumeFill');
+    
+    function showSpeech(text, duration = 1500) {
+        const old = document.querySelector('#soundStage .speech-bubble');
+        if(old) old.remove();
+        const bubble = document.createElement('div');
+        bubble.className = 'speech-bubble';
+        bubble.textContent = text;
+        bubble.style.top = '-40px';
+        document.getElementById('soundStage').appendChild(bubble);
+        setTimeout(() => bubble.remove(), duration);
+    }
+    
+    function animateCharacter(emoji, text) {
+        soundChar.textContent = emoji;
+        showSpeech(text, 1200);
+        setTimeout(() => {
+            if (soundChar.textContent === emoji) {
+                soundChar.textContent = '🐱';
+            }
+        }, 1200);
+    }
+    
+    function updateVolumeDisplay() {
+        volumeDisplay.textContent = currentVolume + '%';
+        volumeFill.style.width = currentVolume + '%';
+    }
+    
+    // ===== Event Listeners =====
+    document.getElementById('playUntilBtn')?.addEventListener('click', () => {
+        initAudio();
+        playMeow();
+        animateCharacter('😺', '🔊 play sound Meow until done');
+        soundStatus.innerHTML = '⏳ تم تشغيل الصوت وسينتظر حتى ينتهي...';
+        // Simulate waiting by disabling button briefly?
+        setTimeout(() => {
+            soundStatus.innerHTML = '✅ انتهى الصوت! يمكنك متابعة الأوامر.';
+        }, 800);
+    });
+    
+    document.getElementById('startSoundBtn')?.addEventListener('click', () => {
+        initAudio();
+        playDrum();
+        animateCharacter('🥁', '⚡ start sound Drum');
+        soundStatus.innerHTML = '⚡ تم تشغيل الصوت واستمرار البرنامج فوراً!';
+    });
+    
+    document.getElementById('setVolume50Btn')?.addEventListener('click', () => {
+        currentVolume = 50;
+        updateVolumeDisplay();
+        soundStatus.innerHTML = `🔊 تم ضبط مستوى الصوت إلى 50%`;
+        showSpeech(`🔊 volume = 50%`, 1000);
+    });
+    
+    document.getElementById('changeVolumeBtn')?.addEventListener('click', () => {
+        currentVolume = Math.max(0, Math.min(100, currentVolume - 10));
+        updateVolumeDisplay();
+        soundStatus.innerHTML = `🔊 تم تغيير الصوت إلى ${currentVolume}%`;
+        showSpeech(`🔊 volume = ${currentVolume}%`, 1000);
+    });
+    
+    document.getElementById('stopAllBtn')?.addEventListener('click', () => {
+        stopAllSounds();
+        soundChar.textContent = '😴';
+        showSpeech('⏹️ stop all sounds', 1200);
+        setTimeout(() => soundChar.textContent = '🐱', 1200);
+        soundStatus.innerHTML = '⏹️ تم إيقاف جميع الأصوات!';
+    });
+    
+    // ===== Recording Simulation =====
+    let isRecording = false;
+    let recordedAudio = null;
+    const recordBtn = document.getElementById('recordSimBtn');
+    const playRecordedBtn = document.getElementById('playRecordedBtn');
+    const recordingStatus = document.getElementById('recordingStatus');
+    
+    recordBtn?.addEventListener('click', () => {
+        if (!isRecording) {
+            // Start recording simulation
+            isRecording = true;
+            recordBtn.textContent = '⏹️ إيقاف التسجيل';
+            recordBtn.style.background = '#ef4444';
+            recordingStatus.innerHTML = '🔴 جاري التسجيل... تحدث الآن! (محاكاة)';
+            soundChar.textContent = '🎤';
+            showSpeech('🔴 تسجيل...', 1500);
+            
+            // Simulate recording a sample
+            setTimeout(() => {
+                // Generate a simple beep as recorded sound
+                initAudio();
+                playTone(523, 'sine', 0.5);
+                // Store a dummy blob
+                recordedAudio = 'sample';
+                playRecordedBtn.disabled = false;
+                recordingStatus.innerHTML = '✅ تم التسجيل! اضغط "تشغيل" لسماع الصوت المسجل.';
+                recordBtn.textContent = '🔴 تسجيل (محاكاة)';
+                recordBtn.style.background = '#10b981';
+                isRecording = false;
+                soundChar.textContent = '🐱';
+            }, 3000);
+        } else {
+            // Cancel recording
+            isRecording = false;
+            recordBtn.textContent = '🔴 تسجيل (محاكاة)';
+            recordBtn.style.background = '#10b981';
+            recordingStatus.innerHTML = '⏹️ تم إلغاء التسجيل.';
+            soundChar.textContent = '🐱';
+        }
+    });
+    
+    playRecordedBtn?.addEventListener('click', () => {
+        if (recordedAudio) {
+            // Play a sound as "recorded"
+            initAudio();
+            playTone(440, 'sine', 0.3);
+            setTimeout(() => playTone(660, 'sine', 0.3), 200);
+            setTimeout(() => playTone(880, 'sine', 0.4), 400);
+            soundChar.textContent = '🔊';
+            showSpeech('🔊 تشغيل التسجيل', 1500);
+            setTimeout(() => soundChar.textContent = '🐱', 1500);
+            recordingStatus.innerHTML = '▶️ يتم تشغيل الصوت المسجل...';
+            setTimeout(() => {
+                recordingStatus.innerHTML = '✅ انتهى تشغيل التسجيل.';
+            }, 1000);
+        }
+    });
+    
+    // ===== Text-to-Speech (Web Speech API) =====
+    let speechSynth = window.speechSynthesis;
+    let currentUtterance = null;
+    const ttsInput = document.getElementById('ttsInput');
+    const ttsSpeakBtn = document.getElementById('ttsSpeakBtn');
+    const ttsStopBtn = document.getElementById('ttsStopBtn');
+    const ttsLanguage = document.getElementById('ttsLanguage');
+    const ttsVoiceSelect = document.getElementById('ttsVoice');
+    
+    // Populate voices
+    function populateVoices() {
+        if (!speechSynth) return;
+        const voices = speechSynth.getVoices();
+        ttsVoiceSelect.innerHTML = '<option value="">افتراضي</option>';
+        voices.forEach(voice => {
+            const option = document.createElement('option');
+            option.value = voice.name;
+            option.textContent = voice.name + ' (' + voice.lang + ')';
+            ttsVoiceSelect.appendChild(option);
+        });
+    }
+    if (speechSynth) {
+        speechSynth.onvoiceschanged = populateVoices;
+        populateVoices();
+    }
+    
+    ttsSpeakBtn?.addEventListener('click', () => {
+        if (!speechSynth) {
+            alert('متصفحك لا يدعم تحويل النص إلى كلام.');
+            return;
+        }
+        // Stop any current speech
+        if (currentUtterance) {
+            speechSynth.cancel();
+        }
+        const text = ttsInput.value || 'مرحباً!';
+        const lang = ttsLanguage.value || 'ar-SA';
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.volume = currentVolume / 100;
+        utterance.rate = 1;
+        utterance.pitch = 1;
+        // Set voice if selected
+        const selectedVoice = ttsVoiceSelect.value;
+        if (selectedVoice) {
+            const voices = speechSynth.getVoices();
+            const voice = voices.find(v => v.name === selectedVoice);
+            if (voice) utterance.voice = voice;
+        }
+        currentUtterance = utterance;
+        speechSynth.speak(utterance);
+        soundChar.textContent = '🗣️';
+        showSpeech('🔊 تكلم: ' + text, 2000);
+        setTimeout(() => soundChar.textContent = '🐱', 2000);
+        soundStatus.innerHTML = `🗣️ يتم تشغيل النص: "${text}"`;
+    });
+    
+    ttsStopBtn?.addEventListener('click', () => {
+        if (speechSynth) {
+            speechSynth.cancel();
+            soundStatus.innerHTML = '⏹️ تم إيقاف التحدث.';
+            soundChar.textContent = '😶';
+            setTimeout(() => soundChar.textContent = '🐱', 1000);
+        }
+    });
+    
+    // ===== Initialize =====
+    window.addEventListener('load', () => {
+        updateVolumeDisplay();
+        initAudio();
+    });
+    
+    // Enable audio context on first click
+    document.addEventListener('click', () => {
+        initAudio();
+    }, { once: true });
+</script>
+</body>
+</html>
