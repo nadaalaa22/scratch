@@ -286,8 +286,8 @@
 
 <script>
   (function() {
-    // ✅ Total sessions updated to 4
-    const totalSessions = 4;
+    // ✅ Total sessions updated to 5
+    const totalSessions = 5;
     
     // Session metadata — titles only, descriptions removed as requested
     const sessionsData = {
@@ -304,8 +304,12 @@
         title: "Session 3: Repeat, Bounce & Interactive Events"
       },
       4: {
-        emoji: "🎭",
+        emoji: "🎭👗",
         title: "Session 4: Looks — Say, Size, Costumes & Movement"
+      },
+      5: {
+        emoji: "🎵🔊",
+        title: "Session 5: Sound — Play, Volume, Record & TTS"
       }
     };
     
@@ -349,7 +353,8 @@
       if (i === 1) lightBg = "#F1FAFF";
       else if (i === 2) lightBg = "#F9F3FF";
       else if (i === 3) lightBg = "#EBFFEF";
-      else lightBg = "#FDF2F8";   // soft pink for session 4 (looks theme)
+      else if (i === 4) lightBg = "#FDF2F8";
+      else lightBg = "#F0F9FF";   // soft blue for session 5 (sound theme)
       card.style.background = `linear-gradient(145deg, #ffffff, ${lightBg})`;
       
       const delay = (i - 1) * 0.08;
