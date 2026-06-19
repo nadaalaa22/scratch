@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 6 - Conditional Statements (If) in Scratch ⚡</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #f0fdf4 0%, #ecfdf5 50%, #eef2ff 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-control: #ffab19;
+            --scratch-operators: #5cb1d6;
+            --scratch-events: #ffbf00;
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sensing: #5cb1d6;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6, #a78bfa);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(124,58,237,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '❓'; position: absolute; font-size: 8rem; opacity: 0.1; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '⚡'; position: absolute; font-size: 6rem; opacity: 0.1; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.5rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.2rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #c4b5fd; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #7c3aed, #8b5cf6);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.operators { background: #5cb1d6; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sensing { background: #5cb1d6; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .demo-stage {
+            background: linear-gradient(145deg, #f3e8ff, #e9d5ff);
+            border-radius: 30px;
+            min-height: 200px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            border: 4px solid #c4b5fd;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        .stage-grid {
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.blue { background: #3b82f6; }
+        .ctrl-btn.green { background: #10b981; }
+        .status-box {
+            background: #f3e8ff; border-radius: 25px; padding: 15px; text-align: center;
+            font-weight: 800; border-right: 6px solid #8b5cf6; margin: 15px 0;
+        }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .homework {
+            background: linear-gradient(145deg, #fff0df, #ffe4c4);
+            border: 4px dashed #f59e0b; border-radius: 40px; padding: 35px; margin: 30px 0;
+        }
+        footer {
+            text-align: center; margin-top: 20px; padding: 20px;
+            background: #7c3aed; color: white; border-radius: 40px 40px 0 0;
+        }
+        .comparison-box {
+            display: flex; flex-wrap: wrap; gap: 20px; margin: 15px 0;
+        }
+        .comparison-box > div {
+            flex: 1; min-width: 200px; background: #f8fafc; border-radius: 25px; padding: 20px;
+        }
+        .code-example {
+            background: #1e293b; border-radius: 20px; padding: 15px; color: #e2e8f0;
+            font-family: monospace; direction: ltr; text-align: left; margin: 10px 0;
+        }
+        .code-example .keyword { color: #f472b6; }
+        .code-example .string { color: #34d399; }
+        .code-example .comment { color: #94a3b8; }
+        .code-example .number { color: #fbbf24; }
+        .code-example .function { color: #60a5fa; }
+        @media (max-width: 640px) {
+            .hero h1 { font-size: 1.6rem; }
+            .comparison-box > div { min-width: 100%; }
+        }
+        .input-number {
+            padding: 10px 15px;
+            border-radius: 30px;
+            border: 3px solid #c4b5fd;
+            font-family: inherit;
+            font-size: 1.2rem;
+            width: 150px;
+            text-align: center;
+        }
+        .result-bubble {
+            background: white;
+            border-radius: 20px;
+            padding: 12px 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: inline-block;
+            animation: popIn 0.3s ease;
+            margin-top: 10px;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .operators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        .operator-card {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .operator-card:hover {
+            border-color: #8b5cf6;
+            transform: scale(1.02);
+        }
+        .operator-card .symbol {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #7c3aed;
+        }
+        .operator-card .desc {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        .ask-demo {
+            background: #f1f5f9;
+            border-radius: 25px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .ask-demo .step {
+            display: inline-block;
+            background: white;
+            padding: 8px 16px;
+            border-radius: 15px;
+            margin: 5px;
+            font-weight: bold;
+            border: 2px solid #e2e8f0;
+        }
+        .ask-demo .arrow {
+            font-size: 1.5rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>⚡ الجمل الشرطية (If) في سكراتش</h1>
+        <p>تعلّم كيف تجعل برامجك تتخذ قرارات ذكية!</p>
+    </div>
+
+    <!-- ===== مقدمة عن الشروط ===== -->
+    <div class="card">
+        <h2 class="card-title">🤔 ما هي الجمل الشرطية (If)؟</h2>
+        <p style="line-height:1.8; font-size:1.1rem;">
+            الجمل الشرطية هي <strong>أوامر تسمح للبرنامج باتخاذ قرارات</strong> بناءً على شروط معينة. 
+            في الحياة اليومية، نستخدم الشروط كل يوم: 
+            <span style="color:#7c3aed; font-weight:800;">"إذا كان الجو ممطراً، خذ المظلة"</span> 
+            أو <span style="color:#7c3aed; font-weight:800;">"إذا أنهيت واجبك، العب"</span>.
+        </p>
+        <div style="background: #f3e8ff; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <p style="font-weight: 800; color: #5b21b6;">🧩 في سكراتش، بلوك الشرط الرئيسي هو:</p>
+            <div style="text-align: center; margin: 10px 0;">
+                <span class="scratch-block control">if <span class="scratch-block-input">condition</span> then</span>
+                <span style="margin-right: 20px;" class="scratch-block control">if <span class="scratch-block-input">condition</span> then</span>
+                <span style="margin-right: 20px;" class="scratch-block control">else</span>
+            </div>
+        </div>
+        <div class="comparison-box">
+            <div style="background:#fef9c3;">
+                <h4 style="color:#92400e;">🔹 if (إذا)</h4>
+                <p>ينفذ الأوامر <strong>فقط</strong> إذا كان الشرط صحيحاً.</p>
+                <div style="background:white; border-radius:15px; padding:10px; margin-top:10px;">
+                    <span class="scratch-block control">if <span class="scratch-block-input">score > 10</span> then</span>
+                    <div style="margin-right:20px;"><span class="scratch-block looks">say <span class="scratch-block-input">أحسنت!</span></span></div>
+                </div>
+            </div>
+            <div style="background:#d1fae5;">
+                <h4 style="color:#065f46;">🔸 if ... else (إذا ... وإلا)</h4>
+                <p>ينفذ مجموعة أوامر إذا كان الشرط صحيحاً، وأخرى إذا كان خاطئاً.</p>
+                <div style="background:white; border-radius:15px; padding:10px; margin-top:10px;">
+                    <span class="scratch-block control">if <span class="scratch-block-input">score > 10</span> then</span>
+                    <div style="margin-right:20px;"><span class="scratch-block looks">say <span class="scratch-block-input">أحسنت!</span></span></div>
+                    <span class="scratch-block control">else</span>
+                    <div style="margin-right:20px;"><span class="scratch-block looks">say <span class="scratch-block-input">حاول مرة أخرى</span></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== شرح ask و answer ===== -->
+    <div class="card">
+        <h2 class="card-title">💬 بلوكات الإدخال: ask and answer</h2>
+        <p style="line-height:1.8;">
+            قبل أن نتعلم الشروط، يجب أن نعرف كيف نجعل البرنامج <strong>يسأل المستخدم</strong> ويستقبل إجابته. 
+            هذه البلوكات موجودة في قسم <strong>الاستشعار (Sensing)</strong>:
+        </p>
+        <div style="text-align: center; margin: 20px 0;">
+            <span class="scratch-block sensing">ask <span class="scratch-block-input">ما اسمك؟</span> and wait</span>
+            <span class="scratch-block sensing">answer</span>
+        </div>
+        <div class="ask-demo">
+            <p style="font-weight: 800; color: #1e293b;">كيف تعمل معاً؟</p>
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 10px;">
+                <span class="step" style="border-color: #8b5cf6;">1️⃣ ask "ما اسمك؟" and wait</span>
+                <span class="arrow">→</span>
+                <span class="step" style="border-color: #10b981;">2️⃣ يظهر مربع حوار للمستخدم</span>
+                <span class="arrow">→</span>
+                <span class="step" style="border-color: #f59e0b;">3️⃣ المستخدم يكتب الإجابة</span>
+                <span class="arrow">→</span>
+                <span class="step" style="border-color: #ec4899;">4️⃣ الإجابة تُخزَّن في <strong>answer</strong></span>
+            </div>
+            <div style="background: white; border-radius: 20px; padding: 15px; margin-top: 15px;">
+                <p style="font-weight:800; color:#0369a1;">📝 مثال:</p>
+                <div style="text-align: right; font-size:1.1rem; line-height:2;">
+                    <span class="scratch-block sensing">ask <span class="scratch-block-input">أدخل رقماً</span> and wait</span><br>
+                    <span class="scratch-block looks">say <span class="scratch-block-input">أدخلت الرقم: </span></span> <span class="scratch-block sensing">answer</span>
+                </div>
+                <p style="color:#64748b; font-size:0.9rem; margin-top:8px;">
+                    💡 هنا سيسأل البرنامج المستخدم عن رقم، ثم تقول الشخصية الرقم الذي أدخله المستخدم.
+                </p>
+            </div>
+        </div>
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b;">
+            ⭐ <strong>تذكير:</strong> بلوك <span class="scratch-block sensing">answer</span> يحمل <strong>آخر إجابة</strong> أدخلها المستخدم. استخدمه بعد <span class="scratch-block sensing">ask and wait</span> مباشرة.
+        </div>
+    </div>
+
+    <!-- ===== شرح بلوكات المقارنة (من Operators) ===== -->
+    <div class="card">
+        <h2 class="card-title">🧮 بلوكات المقارنة (من قسم Operators)</h2>
+        <p style="line-height:1.8;">
+            بلوكات المقارنة موجودة في قسم <strong>العمليات (Operators)</strong>. 
+            هذه البلوكات تُستخدم مع <span class="scratch-block control">if</span> لمقارنة القيم:
+        </p>
+        <div class="operators-grid">
+            <div class="operator-card">
+                <div class="symbol">></div>
+                <div class="desc">أكبر من</div>
+                <div style="font-size:0.8rem; color:#475569;">مثال: 5 > 3 ✅</div>
+            </div>
+            <div class="operator-card">
+                <div class="symbol"><</div>
+                <div class="desc">أصغر من</div>
+                <div style="font-size:0.8rem; color:#475569;">مثال: 3 < 5 ✅</div>
+            </div>
+            <div class="operator-card">
+                <div class="symbol">=</div>
+                <div class="desc">يساوي</div>
+                <div style="font-size:0.8rem; color:#475569;">مثال: 5 = 5 ✅</div>
+            </div>
+            <div class="operator-card">
+                <div class="symbol">mod</div>
+                <div class="desc">باقي القسمة</div>
+                <div style="font-size:0.8rem; color:#475569;">مثال: 7 mod 2 = 1</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin: 15px 0;">
+            <span class="scratch-block operators"><span class="scratch-block-input">  </span> > <span class="scratch-block-input">  </span></span>
+            <span class="scratch-block operators"><span class="scratch-block-input">  </span> < <span class="scratch-block-input">  </span></span>
+            <span class="scratch-block operators"><span class="scratch-block-input">  </span> = <span class="scratch-block-input">  </span></span>
+            <span class="scratch-block operators"><span class="scratch-block-input">  </span> mod <span class="scratch-block-input">  </span></span>
+        </div>
+        <div style="background: #e0f2fe; border-radius: 20px; padding: 15px;">
+            <p style="font-weight:800; color:#0369a1;">💡 ما هو <strong>mod</strong>؟</p>
+            <p><strong>mod</strong> = باقي القسمة. مثلاً: 10 ÷ 3 = 3 والباقي 1، إذن 10 mod 3 = 1. 
+            نستخدمه كثيراً لمعرفة إذا كان الرقم <strong>زوجياً</strong> (إذا كان الباقي 0) أو <strong>فردياً</strong> (إذا كان الباقي 1).</p>
+            <div style="background:white; border-radius:15px; padding:10px; margin-top:10px;">
+                <span class="scratch-block operators"><span class="scratch-block-input">7</span> mod <span class="scratch-block-input">2</span></span> = 1 → فردي<br>
+                <span class="scratch-block operators"><span class="scratch-block-input">8</span> mod <span class="scratch-block-input">2</span></span> = 0 → زوجي
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== تجربة تفاعلية: الرقم أكبر من 10؟ ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 تجربة تفاعلية: هل الرقم أكبر من 10؟</h2>
+        <p>أدخل رقماً في المربع، ثم اضغط "تحقق" لترى نتيجة الشرط. هذا يحاكي استخدام <span class="scratch-block sensing">ask</span> و <span class="scratch-block control">if</span>.</p>
+        <div class="demo-stage" style="min-height: 180px;">
+            <div class="stage-grid"></div>
+            <div style="position: relative; z-index: 10; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🧮</div>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; align-items: center;">
+                    <input type="number" id="numberInput" class="input-number" value="15" step="1">
+                    <button class="ctrl-btn purple" id="checkNumberBtn">🔍 تحقق</button>
+                    <button class="ctrl-btn orange" id="resetNumberBtn">🔄 إعادة</button>
+                </div>
+                <div id="numberResult" class="result-bubble" style="margin-top: 15px;">
+                    ⏳ انتظر حتى تتحقق
+                </div>
+            </div>
+        </div>
+        <div class="status-box" id="numberStatus" style="background:#fef9c3; border-color:#f59e0b;">
+            💡 أدخل رقماً، وسيخبرك البرنامج إذا كان أكبر من 10 أم لا باستخدام <strong>if ... else</strong>.
+        </div>
+    </div>
+
+    <!-- ===== تجربة: فردي أو زوجي باستخدام mod ===== -->
+    <div class="card">
+        <h2 class="card-title">🔢 تحدي: هل الرقم فردي أم زوجي؟</h2>
+        <p>استخدم <strong>mod</strong> لتحديد إذا كان الرقم فردياً أم زوجياً. (الرقم الزوجي يقبل القسمة على 2 بدون باقٍ).</p>
+        <div class="demo-stage" style="min-height: 180px;">
+            <div class="stage-grid"></div>
+            <div style="position: relative; z-index: 10; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">🔢</div>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; align-items: center;">
+                    <input type="number" id="oddEvenInput" class="input-number" value="7" step="1">
+                    <button class="ctrl-btn blue" id="checkOddEvenBtn">🔍 فردي أم زوجي؟</button>
+                    <button class="ctrl-btn orange" id="resetOddEvenBtn">🔄 إعادة</button>
+                </div>
+                <div id="oddEvenResult" class="result-bubble" style="margin-top: 15px;">
+                    ⏳ أدخل رقماً وتحقق
+                </div>
+            </div>
+        </div>
+        <div class="status-box" id="oddEvenStatus" style="background:#f3e8ff; border-color:#8b5cf6;">
+            💡 سيستخدم البرنامج <strong>mod</strong> للتحقق من باقي القسمة على 2 لتحديد إذا كان الرقم فردياً أم زوجياً.
+        </div>
+    </div>
+
+    <!-- ===== مشروع 4: فردي أو زوجي ===== -->
+    <div class="card">
+        <h2 class="card-title">🏆 مشروع 4: تحديد الرقم الفردي والزوجي</h2>
+        <p>المطلوب: تصميم برنامج في سكراتش يسأل المستخدم عن رقم، ثم يخبره إذا كان الرقم <strong>فردياً</strong> أم <strong>زوجياً</strong>.</p>
+        <div style="background: #f3e8ff; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <p style="font-weight:800; color:#5b21b6;">📋 خطوات تنفيذ المشروع:</p>
+            <ol style="padding-right: 25px; line-height: 2;">
+                <li>استخدم بلوك <span class="scratch-block events">when green flag clicked</span> للبدء.</li>
+                <li>استخدم بلوك <span class="scratch-block sensing">ask <span class="scratch-block-input">أدخل رقماً</span> and wait</span> لسؤال المستخدم.</li>
+                <li>استخدم <span class="scratch-block sensing">answer</span> للحصول على إجابة المستخدم.</li>
+                <li>استخدم <span class="scratch-block control">if ... else</span> للتحقق من باقي القسمة على 2 باستخدام <span class="scratch-block operators">answer mod 2 = 0</span>.</li>
+                <li>إذا كان الباقي 0، فالرقم <strong>زوجي</strong>. وإلا فهو <strong>فردي</strong>.</li>
+                <li>استخدم <span class="scratch-block looks">say</span> لإظهار النتيجة للمستخدم.</li>
+            </ol>
+        </div>
+       
+    </div>
+
+    <!-- ===== واجب منزلي (موجب أم سالب) ===== -->
+    <div class="homework">
+        <h2 class="card-title" style="font-size:1.8rem;">📝 واجب المنزل</h2>
+        <p style="font-weight: 800; color: #7c2d12;">✍️ المطلوب: كتابة برنامج في سكراتش يقرر ما إذا كان الرقم المدخل <strong>موجباً</strong> أم <strong>سالباً</strong>.</p>
+        
+        <div style="background: white; border-radius: 25px; padding: 20px; margin: 15px 0;">
+            <p style="font-weight:800;">📌 تعليمات الواجب:</p>
+            <ol style="padding-right: 25px; line-height: 2;">
+                <li>افتح مشروعاً جديداً في سكراتش.</li>
+                <li>استخدم بلوك <span class="scratch-block events">when green flag clicked</span>.</li>
+                <li>استخدم <span class="scratch-block sensing">ask <span class="scratch-block-input">أدخل رقماً</span> and wait</span>.</li>
+                <li>استخدم <span class="scratch-block control">if ... else</span> للتحقق من قيمة الرقم:</li>
+                
+                <li>اجعل الشخصية تقول النتيجة باستخدام <span class="scratch-block looks">say</span>.</li>
+            </ol>
+        </div>
+
+       
+
+        <div class="status-box" style="background:#d1fae5; margin-top:15px; border-color:#10b981;">
+            🎯 <strong>ملاحظة:</strong> حاول أن تفكر في الحل بنفسك قبل البحث عنه. التجربة والخطأ هي أفضل طريقة للتعلم! استخدم <span class="scratch-block control">if ... else</span> مع <span class="scratch-block operators">></span> و <span class="scratch-block operators"><</span>.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ===== Number Checker: > 10 =====
+    const numberInput = document.getElementById('numberInput');
+    const checkNumberBtn = document.getElementById('checkNumberBtn');
+    const resetNumberBtn = document.getElementById('resetNumberBtn');
+    const numberResult = document.getElementById('numberResult');
+    const numberStatus = document.getElementById('numberStatus');
+
+    function checkNumber() {
+        const num = parseInt(numberInput.value);
+        if (isNaN(num)) {
+            numberResult.textContent = '⚠️ من فضلك أدخل رقماً صحيحاً!';
+            numberResult.style.background = '#fee2e2';
+            numberResult.style.color = '#991b1b';
+            numberStatus.innerHTML = '❌ خطأ: القيمة المدخلة ليست رقماً!';
+            numberStatus.className = 'status-box error';
+            return;
+        }
+        if (num > 10) {
+            numberResult.textContent = `✅ الرقم ${num} أكبر من 10!`;
+            numberResult.style.background = '#d1fae5';
+            numberResult.style.color = '#065f46';
+            numberStatus.innerHTML = `✅ صحيح! ${num} > 10. الشرط تحقق!`;
+            numberStatus.className = 'status-box success';
+        } else {
+            numberResult.textContent = `❌ الرقم ${num} ليس أكبر من 10`;
+            numberResult.style.background = '#fee2e2';
+            numberResult.style.color = '#991b1b';
+            numberStatus.innerHTML = `❌ ${num} <= 10. الشرط لم يتحقق!`;
+            numberStatus.className = 'status-box error';
+        }
+    }
+
+    function resetNumber() {
+        numberInput.value = '15';
+        numberResult.textContent = '⏳ انتظر حتى تتحقق';
+        numberResult.style.background = 'white';
+        numberResult.style.color = '#333';
+        numberStatus.innerHTML = '💡 أدخل رقماً، وسيخبرك البرنامج إذا كان أكبر من 10 أم لا باستخدام <strong>if ... else</strong>.';
+        numberStatus.className = 'status-box';
+        numberStatus.style.background = '#fef9c3';
+        numberStatus.style.borderColor = '#f59e0b';
+    }
+
+    checkNumberBtn.addEventListener('click', checkNumber);
+    resetNumberBtn.addEventListener('click', resetNumber);
+    numberInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkNumber();
+    });
+
+    // ===== Odd / Even Checker =====
+    const oddEvenInput = document.getElementById('oddEvenInput');
+    const checkOddEvenBtn = document.getElementById('checkOddEvenBtn');
+    const resetOddEvenBtn = document.getElementById('resetOddEvenBtn');
+    const oddEvenResult = document.getElementById('oddEvenResult');
+    const oddEvenStatus = document.getElementById('oddEvenStatus');
+
+    function checkOddEven() {
+        const num = parseInt(oddEvenInput.value);
+        if (isNaN(num)) {
+            oddEvenResult.textContent = '⚠️ من فضلك أدخل رقماً صحيحاً!';
+            oddEvenResult.style.background = '#fee2e2';
+            oddEvenResult.style.color = '#991b1b';
+            oddEvenStatus.innerHTML = '❌ خطأ: القيمة المدخلة ليست رقماً!';
+            oddEvenStatus.className = 'status-box error';
+            return;
+        }
+        if (num % 2 === 0) {
+            oddEvenResult.textContent = `✅ الرقم ${num} زوجي!`;
+            oddEvenResult.style.background = '#d1fae5';
+            oddEvenResult.style.color = '#065f46';
+            oddEvenStatus.innerHTML = `✅ ${num} mod 2 = ${num % 2} → رقم زوجي!`;
+            oddEvenStatus.className = 'status-box success';
+        } else {
+            oddEvenResult.textContent = `❌ الرقم ${num} فردي!`;
+            oddEvenResult.style.background = '#fee2e2';
+            oddEvenResult.style.color = '#991b1b';
+            oddEvenStatus.innerHTML = `❌ ${num} mod 2 = ${num % 2} → رقم فردي!`;
+            oddEvenStatus.className = 'status-box error';
+        }
+    }
+
+    function resetOddEven() {
+        oddEvenInput.value = '7';
+        oddEvenResult.textContent = '⏳ أدخل رقماً وتحقق';
+        oddEvenResult.style.background = 'white';
+        oddEvenResult.style.color = '#333';
+        oddEvenStatus.innerHTML = '💡 سيستخدم البرنامج <strong>mod</strong> للتحقق من باقي القسمة على 2 لتحديد إذا كان الرقم فردياً أم زوجياً.';
+        oddEvenStatus.className = 'status-box';
+        oddEvenStatus.style.background = '#f3e8ff';
+        oddEvenStatus.style.borderColor = '#8b5cf6';
+    }
+
+    checkOddEvenBtn.addEventListener('click', checkOddEven);
+    resetOddEvenBtn.addEventListener('click', resetOddEven);
+    oddEvenInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkOddEven();
+    });
+
+    // ===== Initialize =====
+    resetNumber();
+    resetOddEven();
+</script>
+</body>
+</html>
