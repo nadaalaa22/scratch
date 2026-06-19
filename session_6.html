@@ -95,29 +95,12 @@
         }
         .status-box.success { background: #d1fae5; border-color: #10b981; }
         .status-box.error { background: #fee2e2; border-color: #ef4444; }
-        .homework {
-            background: linear-gradient(145deg, #fff0df, #ffe4c4);
-            border: 4px dashed #f59e0b; border-radius: 40px; padding: 35px; margin: 30px 0;
-        }
-        footer {
-            text-align: center; margin-top: 20px; padding: 20px;
-            background: #7c3aed; color: white; border-radius: 40px 40px 0 0;
-        }
         .comparison-box {
             display: flex; flex-wrap: wrap; gap: 20px; margin: 15px 0;
         }
         .comparison-box > div {
             flex: 1; min-width: 200px; background: #f8fafc; border-radius: 25px; padding: 20px;
         }
-        .code-example {
-            background: #1e293b; border-radius: 20px; padding: 15px; color: #e2e8f0;
-            font-family: monospace; direction: ltr; text-align: left; margin: 10px 0;
-        }
-        .code-example .keyword { color: #f472b6; }
-        .code-example .string { color: #34d399; }
-        .code-example .comment { color: #94a3b8; }
-        .code-example .number { color: #fbbf24; }
-        .code-example .function { color: #60a5fa; }
         @media (max-width: 640px) {
             .hero h1 { font-size: 1.6rem; }
             .comparison-box > div { min-width: 100%; }
@@ -194,6 +177,17 @@
         .ask-demo .arrow {
             font-size: 1.5rem;
             color: #94a3b8;
+        }
+        footer {
+            text-align: center; margin-top: 20px; padding: 20px;
+            background: #7c3aed; color: white; border-radius: 40px 40px 0 0;
+        }
+        .challenge-area {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border-radius: 30px;
+            padding: 25px;
+            border: 3px solid #f59e0b;
+            margin: 15px 0;
         }
     </style>
 </head>
@@ -304,25 +298,18 @@
                 <div class="desc">يساوي</div>
                 <div style="font-size:0.8rem; color:#475569;">مثال: 5 = 5 ✅</div>
             </div>
-            <div class="operator-card">
-                <div class="symbol">mod</div>
-                <div class="desc">باقي القسمة</div>
-                <div style="font-size:0.8rem; color:#475569;">مثال: 7 mod 2 = 1</div>
-            </div>
         </div>
         <div style="text-align: center; margin: 15px 0;">
             <span class="scratch-block operators"><span class="scratch-block-input">  </span> > <span class="scratch-block-input">  </span></span>
             <span class="scratch-block operators"><span class="scratch-block-input">  </span> < <span class="scratch-block-input">  </span></span>
             <span class="scratch-block operators"><span class="scratch-block-input">  </span> = <span class="scratch-block-input">  </span></span>
-            <span class="scratch-block operators"><span class="scratch-block-input">  </span> mod <span class="scratch-block-input">  </span></span>
         </div>
         <div style="background: #e0f2fe; border-radius: 20px; padding: 15px;">
-            <p style="font-weight:800; color:#0369a1;">💡 ما هو <strong>mod</strong>؟</p>
-            <p><strong>mod</strong> = باقي القسمة. مثلاً: 10 ÷ 3 = 3 والباقي 1، إذن 10 mod 3 = 1. 
-            نستخدمه كثيراً لمعرفة إذا كان الرقم <strong>زوجياً</strong> (إذا كان الباقي 0) أو <strong>فردياً</strong> (إذا كان الباقي 1).</p>
+            <p style="font-weight:800; color:#0369a1;">💡 هذه البلوكات تُرجع قيمة <strong>صحيح (True)</strong> أو <strong>خاطئ (False)</strong>:</p>
             <div style="background:white; border-radius:15px; padding:10px; margin-top:10px;">
-                <span class="scratch-block operators"><span class="scratch-block-input">7</span> mod <span class="scratch-block-input">2</span></span> = 1 → فردي<br>
-                <span class="scratch-block operators"><span class="scratch-block-input">8</span> mod <span class="scratch-block-input">2</span></span> = 0 → زوجي
+                <span class="scratch-block operators"><span class="scratch-block-input">5</span> > <span class="scratch-block-input">3</span></span> = صحيح ✅<br>
+                <span class="scratch-block operators"><span class="scratch-block-input">3</span> > <span class="scratch-block-input">5</span></span> = خاطئ ❌<br>
+                <span class="scratch-block operators"><span class="scratch-block-input">4</span> = <span class="scratch-block-input">4</span></span> = صحيح ✅
             </div>
         </div>
     </div>
@@ -350,69 +337,53 @@
         </div>
     </div>
 
-    <!-- ===== تجربة: فردي أو زوجي باستخدام mod ===== -->
+    <!-- ===== التحدي الرئيسي: موجب أم سالب ===== -->
     <div class="card">
-        <h2 class="card-title">🔢 تحدي: هل الرقم فردي أم زوجي؟</h2>
-        <p>استخدم <strong>mod</strong> لتحديد إذا كان الرقم فردياً أم زوجياً. (الرقم الزوجي يقبل القسمة على 2 بدون باقٍ).</p>
-        <div class="demo-stage" style="min-height: 180px;">
-            <div class="stage-grid"></div>
-            <div style="position: relative; z-index: 10; text-align: center;">
-                <div style="font-size: 3rem; margin-bottom: 10px;">🔢</div>
+        <h2 class="card-title">🏆 تحدي: هل الرقم موجب أم سالب؟</h2>
+        <p>استخدم ما تعلمته عن <span class="scratch-block control">if</span> وبلوكات المقارنة لتحديد إذا كان الرقم <strong>موجباً</strong> أم <strong>سالباً</strong>.</p>
+        
+        <div class="challenge-area">
+            <p style="font-weight:800; color:#92400e;">🎯 جرب بنفسك:</p>
+            <div style="text-align: center; margin: 15px 0;">
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; align-items: center;">
-                    <input type="number" id="oddEvenInput" class="input-number" value="7" step="1">
-                    <button class="ctrl-btn blue" id="checkOddEvenBtn">🔍 فردي أم زوجي؟</button>
-                    <button class="ctrl-btn orange" id="resetOddEvenBtn">🔄 إعادة</button>
+                    <input type="number" id="positiveNegativeInput" class="input-number" value="-5" step="1">
+                    <button class="ctrl-btn green" id="checkPositiveNegativeBtn">🔍 موجب أم سالب؟</button>
+                    <button class="ctrl-btn orange" id="resetPositiveNegativeBtn">🔄 إعادة</button>
                 </div>
-                <div id="oddEvenResult" class="result-bubble" style="margin-top: 15px;">
+                <div id="positiveNegativeResult" class="result-bubble" style="margin-top: 15px;">
                     ⏳ أدخل رقماً وتحقق
                 </div>
             </div>
         </div>
-        <div class="status-box" id="oddEvenStatus" style="background:#f3e8ff; border-color:#8b5cf6;">
-            💡 سيستخدم البرنامج <strong>mod</strong> للتحقق من باقي القسمة على 2 لتحديد إذا كان الرقم فردياً أم زوجياً.
-        </div>
-    </div>
 
-    <!-- ===== مشروع 4: فردي أو زوجي ===== -->
-    <div class="card">
-        <h2 class="card-title">🏆 مشروع 4: تحديد الرقم الفردي والزوجي</h2>
-        <p>المطلوب: تصميم برنامج في سكراتش يسأل المستخدم عن رقم، ثم يخبره إذا كان الرقم <strong>فردياً</strong> أم <strong>زوجياً</strong>.</p>
         <div style="background: #f3e8ff; border-radius: 25px; padding: 20px; margin: 15px 0;">
-            <p style="font-weight:800; color:#5b21b6;">📋 خطوات تنفيذ المشروع:</p>
+            <p style="font-weight:800; color:#5b21b6;">📋 كيف يعمل البرنامج؟</p>
             <ol style="padding-right: 25px; line-height: 2;">
-                <li>استخدم بلوك <span class="scratch-block events">when green flag clicked</span> للبدء.</li>
-                <li>استخدم بلوك <span class="scratch-block sensing">ask <span class="scratch-block-input">أدخل رقماً</span> and wait</span> لسؤال المستخدم.</li>
-                <li>استخدم <span class="scratch-block sensing">answer</span> للحصول على إجابة المستخدم.</li>
-                <li>استخدم <span class="scratch-block control">if ... else</span> للتحقق من باقي القسمة على 2 باستخدام <span class="scratch-block operators">answer mod 2 = 0</span>.</li>
-                <li>إذا كان الباقي 0، فالرقم <strong>زوجي</strong>. وإلا فهو <strong>فردي</strong>.</li>
-                <li>استخدم <span class="scratch-block looks">say</span> لإظهار النتيجة للمستخدم.</li>
-            </ol>
-        </div>
-       
-    </div>
-
-    <!-- ===== واجب منزلي (موجب أم سالب) ===== -->
-    <div class="homework">
-        <h2 class="card-title" style="font-size:1.8rem;">📝 واجب المنزل</h2>
-        <p style="font-weight: 800; color: #7c2d12;">✍️ المطلوب: كتابة برنامج في سكراتش يقرر ما إذا كان الرقم المدخل <strong>موجباً</strong> أم <strong>سالباً</strong>.</p>
-        
-        <div style="background: white; border-radius: 25px; padding: 20px; margin: 15px 0;">
-            <p style="font-weight:800;">📌 تعليمات الواجب:</p>
-            <ol style="padding-right: 25px; line-height: 2;">
-                <li>افتح مشروعاً جديداً في سكراتش.</li>
-                <li>استخدم بلوك <span class="scratch-block events">when green flag clicked</span>.</li>
-                <li>استخدم <span class="scratch-block sensing">ask <span class="scratch-block-input">أدخل رقماً</span> and wait</span>.</li>
-                <li>استخدم <span class="scratch-block control">if ... else</span> للتحقق من قيمة الرقم:</li>
-                
-                <li>اجعل الشخصية تقول النتيجة باستخدام <span class="scratch-block looks">say</span>.</li>
+                <li>يسأل المستخدم عن رقم (باستخدام <span class="scratch-block sensing">ask and wait</span>).</li>
+                <li>يخزن الإجابة في <span class="scratch-block sensing">answer</span>.</li>
+                <li>يستخدم <span class="scratch-block control">if ... else</span> للتحقق:</li>
+                <ul style="padding-right: 25px; line-height: 2; list-style-type: circle;">
+                    <li>إذا كان <span class="scratch-block operators">answer > 0</span> → الرقم <strong>موجب</strong> ✅</li>
+                    <li>إذا كان <span class="scratch-block operators">answer < 0</span> → الرقم <strong>سالب</strong> ❌</li>
+                    <li>إذا كان <span class="scratch-block operators">answer = 0</span> → الرقم <strong>صفر</strong> (تحدي إضافي!)</li>
+                </ul>
+                <li>يُظهر النتيجة باستخدام <span class="scratch-block looks">say</span>.</li>
             </ol>
         </div>
 
-       
-
-        <div class="status-box" style="background:#d1fae5; margin-top:15px; border-color:#10b981;">
-            🎯 <strong>ملاحظة:</strong> حاول أن تفكر في الحل بنفسك قبل البحث عنه. التجربة والخطأ هي أفضل طريقة للتعلم! استخدم <span class="scratch-block control">if ... else</span> مع <span class="scratch-block operators">></span> و <span class="scratch-block operators"><</span>.
+        <div style="background: #d1fae5; border-radius: 20px; padding: 15px; margin-top: 10px;">
+            <p style="font-weight:800; color:#065f46;">💡 تلميح: الكود في سكراتش</p>
+            <div style="background: #1e293b; border-radius: 15px; padding: 15px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 8px;">
+                <span style="color:#f472b6;">when</span> <span style="color:#60a5fa;">green flag</span> <span style="color:#f472b6;">clicked</span><br>
+                <span style="color:#34d399;">ask</span> <span style="color:#f472b6;">"أدخل رقماً"</span> <span style="color:#f472b6;">and wait</span><br>
+                <span style="color:#f472b6;">if</span> <span style="color:#fbbf24;">(answer > 0)</span> <span style="color:#f472b6;">then</span><br>
+                &nbsp;&nbsp;<span style="color:#34d399;">say</span> <span style="color:#f472b6;">"الرقم موجب ✅"</span><br>
+                <span style="color:#f472b6;">else</span><br>
+                &nbsp;&nbsp;<span style="color:#34d399;">say</span> <span style="color:#f472b6;">"الرقم سالب ❌"</span>
+            </div>
         </div>
+
+      
     </div>
 
 </div>
@@ -467,58 +438,51 @@
         if (e.key === 'Enter') checkNumber();
     });
 
-    // ===== Odd / Even Checker =====
-    const oddEvenInput = document.getElementById('oddEvenInput');
-    const checkOddEvenBtn = document.getElementById('checkOddEvenBtn');
-    const resetOddEvenBtn = document.getElementById('resetOddEvenBtn');
-    const oddEvenResult = document.getElementById('oddEvenResult');
-    const oddEvenStatus = document.getElementById('oddEvenStatus');
+    // ===== Positive / Negative Checker =====
+    const positiveNegativeInput = document.getElementById('positiveNegativeInput');
+    const checkPositiveNegativeBtn = document.getElementById('checkPositiveNegativeBtn');
+    const resetPositiveNegativeBtn = document.getElementById('resetPositiveNegativeBtn');
+    const positiveNegativeResult = document.getElementById('positiveNegativeResult');
 
-    function checkOddEven() {
-        const num = parseInt(oddEvenInput.value);
+    function checkPositiveNegative() {
+        const num = parseInt(positiveNegativeInput.value);
         if (isNaN(num)) {
-            oddEvenResult.textContent = '⚠️ من فضلك أدخل رقماً صحيحاً!';
-            oddEvenResult.style.background = '#fee2e2';
-            oddEvenResult.style.color = '#991b1b';
-            oddEvenStatus.innerHTML = '❌ خطأ: القيمة المدخلة ليست رقماً!';
-            oddEvenStatus.className = 'status-box error';
+            positiveNegativeResult.textContent = '⚠️ من فضلك أدخل رقماً صحيحاً!';
+            positiveNegativeResult.style.background = '#fee2e2';
+            positiveNegativeResult.style.color = '#991b1b';
             return;
         }
-        if (num % 2 === 0) {
-            oddEvenResult.textContent = `✅ الرقم ${num} زوجي!`;
-            oddEvenResult.style.background = '#d1fae5';
-            oddEvenResult.style.color = '#065f46';
-            oddEvenStatus.innerHTML = `✅ ${num} mod 2 = ${num % 2} → رقم زوجي!`;
-            oddEvenStatus.className = 'status-box success';
+        if (num > 0) {
+            positiveNegativeResult.textContent = `✅ الرقم ${num} موجب!`;
+            positiveNegativeResult.style.background = '#d1fae5';
+            positiveNegativeResult.style.color = '#065f46';
+        } else if (num < 0) {
+            positiveNegativeResult.textContent = `❌ الرقم ${num} سالب!`;
+            positiveNegativeResult.style.background = '#fee2e2';
+            positiveNegativeResult.style.color = '#991b1b';
         } else {
-            oddEvenResult.textContent = `❌ الرقم ${num} فردي!`;
-            oddEvenResult.style.background = '#fee2e2';
-            oddEvenResult.style.color = '#991b1b';
-            oddEvenStatus.innerHTML = `❌ ${num} mod 2 = ${num % 2} → رقم فردي!`;
-            oddEvenStatus.className = 'status-box error';
+            positiveNegativeResult.textContent = `⚪ الرقم صفر!`;
+            positiveNegativeResult.style.background = '#fef9c3';
+            positiveNegativeResult.style.color = '#92400e';
         }
     }
 
-    function resetOddEven() {
-        oddEvenInput.value = '7';
-        oddEvenResult.textContent = '⏳ أدخل رقماً وتحقق';
-        oddEvenResult.style.background = 'white';
-        oddEvenResult.style.color = '#333';
-        oddEvenStatus.innerHTML = '💡 سيستخدم البرنامج <strong>mod</strong> للتحقق من باقي القسمة على 2 لتحديد إذا كان الرقم فردياً أم زوجياً.';
-        oddEvenStatus.className = 'status-box';
-        oddEvenStatus.style.background = '#f3e8ff';
-        oddEvenStatus.style.borderColor = '#8b5cf6';
+    function resetPositiveNegative() {
+        positiveNegativeInput.value = '-5';
+        positiveNegativeResult.textContent = '⏳ أدخل رقماً وتحقق';
+        positiveNegativeResult.style.background = 'white';
+        positiveNegativeResult.style.color = '#333';
     }
 
-    checkOddEvenBtn.addEventListener('click', checkOddEven);
-    resetOddEvenBtn.addEventListener('click', resetOddEven);
-    oddEvenInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') checkOddEven();
+    checkPositiveNegativeBtn.addEventListener('click', checkPositiveNegative);
+    resetPositiveNegativeBtn.addEventListener('click', resetPositiveNegative);
+    positiveNegativeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkPositiveNegative();
     });
 
     // ===== Initialize =====
     resetNumber();
-    resetOddEven();
+    resetPositiveNegative();
 </script>
 </body>
 </html>
