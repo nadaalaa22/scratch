@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 8 - الاختبار العملي: صديقي القط المتفاعل 🏆🐱</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #fff7ed 0%, #fef2f2 50%, #fdf4ff 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(236,72,153,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🏆'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🐱'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.3rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.1rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent; transition: 0.3s;
+        }
+        .card:hover { border-color: #fbcfe8; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #f59e0b, #ec4899);
+            -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 20px;
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem; margin: 4px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.15); color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.operators { background: #5cb1d6; }
+        .scratch-block.sensing { background: #5cb1d6; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.pink { background: #ec4899; }
+        .ctrl-btn.red { background: #ef4444; }
+        .status-box { background: #fff7ed; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #f59e0b; margin: 15px 0; }
+        .mission {
+            background: white; border-radius: 28px; padding: 22px; margin: 18px 0;
+            border: 3px solid #fed7aa; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+        .mission-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; flex-wrap:wrap; }
+        .mission-num {
+            background: linear-gradient(135deg,#f59e0b,#ec4899); color:white; font-weight:900;
+            min-width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+        }
+        .mission-head h3 { font-size:1.25rem; color:#9a3412; font-weight:900; }
+        .mission-tag { background:#fef3c7; color:#92400e; font-weight:800; font-size:0.8rem; padding:4px 12px; border-radius:50px; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 12px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .se { color:#7dd3fc; } .codebox .tx { color:#86efac; }
+        .demo-stage {
+            background: linear-gradient(145deg, #ffe4e6, #fecdd3); border-radius: 30px; height: 260px;
+            position: relative; overflow: hidden; margin: 20px 0; border: 4px solid #fda4af; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #examCat { position: absolute; font-size: 3.5rem; bottom: 25px; left: 50px; transition: left 0.1s linear; z-index:10; cursor:pointer; }
+        .speech { position:absolute; background:white; padding:8px 16px; border-radius:18px; font-weight:bold; box-shadow:0 5px 15px rgba(0,0,0,0.2); z-index:20; white-space:nowrap; }
+        /* Rubric */
+        .rubric { width:100%; border-collapse:separate; border-spacing:0 10px; }
+        .rubric td { background:#fff7ed; padding:14px 16px; font-weight:700; color:#7c2d12; vertical-align:middle; }
+        .rubric td:first-child { border-radius:0 18px 18px 0; }
+        .rubric td:last-child { border-radius:18px 0 0 18px; text-align:center; white-space:nowrap; }
+        .stars { cursor:pointer; font-size:1.3rem; user-select:none; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #fed7aa; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#7c2d12; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#f59e0b; }
+        .checklist li.done { background:#ffedd5; border-color:#f59e0b; color:#9a3412; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #ec4899; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🏆 الاختبار العملي: صديقي القط المتفاعل 🐱</h1>
+        <p>وقت تثبت إنك بقيت تعرف تبرمج! اعمل المشروع ده بنفسك في سكراتش</p>
+    </div>
+
+    <!-- ===== مقدمة الاختبار ===== -->
+    <div class="card">
+        <h2 class="card-title">📋 قبل ما تبدأ — اقرأ ده</h2>
+        <p style="line-height:1.9; font-size:1.05rem;">
+            النهارده مفيش شرح جديد خالص! ده <strong>اختبارك العملي</strong> على كل اللي اتعلمناه من Session 1 لـ 6.
+            هتبني مشروع واحد ممتع اسمه <strong>"القط المتفاعل" 🐱</strong> — قط بيرحّب بيك باسمك، بيتحرّك ويبدّل شكله،
+            بيعمل صوت لما تدوس عليه، وبيردّ عليك حسب إجابتك.
+        </p>
+        <div class="status-box">
+            🎯 المشروع مقسّم لـ <strong>5 مهام</strong>. كل مهمة بتختبر فكرة من سيشن. اعملهم بالترتيب وهتلاقي القط اتكوّن لوحده!
+        </div>
+        <p style="line-height:1.9;">
+            <strong>اللي محتاجه:</strong> افتح سكراتش، سيب القطة 🐱 الموجودة (Sprite1)، وابدأ تركّب البلوكات زي ما هنقولك في كل مهمة 👇
+        </p>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+            <span class="scratch-block events">when 🚩 clicked</span>
+            <span class="scratch-block motion">move</span>
+            <span class="scratch-block control">forever</span>
+            <span class="scratch-block looks">say</span>
+            <span class="scratch-block sound">start sound</span>
+            <span class="scratch-block control">if / else</span>
+            <span class="scratch-block sensing">ask</span>
+        </div>
+    </div>
+
+    <!-- ===== معاينة الهدف ===== -->
+    <div class="card">
+        <h2 class="card-title">🎬 شكل المشروع لما يخلّص (معاينة)</h2>
+        <p>كده هيبقى شكل القط بتاعك: بيتحرك، بيبدّل شكله (أنيميشن)، يرتد عند الحافة، ولما تدوس عليه يقولك "هاي!".</p>
+        <div class="demo-stage" id="examStage">
+            <div id="examCat">🐱</div>
+        </div>
+        <div style="text-align:center;">
+            <button class="ctrl-btn pink" id="playBtn">▶️ شغّل المعاينة</button>
+            <button class="ctrl-btn orange" id="stopBtn">⏹️ وقّف</button>
+            <p style="font-size:0.9rem; color:#9a3412; margin-top:8px;">(دوس على القط 🐱 وهو بيتحرك عشان يقولك هاي! — دي معاينة بس، انت اللي هتبنيها)</p>
+        </div>
+    </div>
+
+    <!-- ===== المهمة 1 ===== -->
+    <div class="mission">
+        <div class="mission-head"><div class="mission-num">1</div><h3>القط يرحّب بيك باسمك</h3><span class="mission-tag">Session 1 + 6: أحداث + سؤال</span></div>
+        <p style="line-height:1.8;">خلّي البرنامج يسألك عن اسمك أول ما تضغط العلم الأخضر، وبعدين القط يرحّب بيك باسمك.</p>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="se">ask "إيه اسمك؟" and wait</span><br>
+<span class="lo">say (join "أهلاً يا " (answer)) for 2 seconds</span>
+        </div>
+        <div class="status-box" style="background:#fdf4ff; border-color:#ec4899;">💡 تلميح: بلوك <span class="scratch-block operators">join</span> من قسم Operators بيلزّق كلمتين مع بعض (الترحيب + الاسم).</div>
+    </div>
+
+    <!-- ===== المهمة 2 ===== -->
+    <div class="mission">
+        <div class="mission-head"><div class="mission-num">2</div><h3>القط يتحرّك ويبدّل شكله للأبد</h3><span class="mission-tag">Session 2 + 3 + 4: حركة + لوب + مظاهر</span></div>
+        <p style="line-height:1.8;">خلّي القط يتحرك على المسرح، يرتد لما يوصل الحافة، ويبدّل أزياءه عشان يبان بيتحرّك (أنيميشن) — وكل ده طول الوقت بلوب.</p>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="mo">set rotation style [left-right]</span><br>
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="mo">move 10 steps</span><br>
+&nbsp;&nbsp;<span class="co">if on edge, bounce</span><br>
+&nbsp;&nbsp;<span class="lo">next costume</span><br>
+&nbsp;&nbsp;<span class="co">wait 0.3 seconds</span>
+        </div>
+        <div class="status-box" style="background:#eff6ff; border-color:#4c97ff;">💡 تلميح: <span class="scratch-block motion">set rotation style left-right</span> بتمنع القط إنه يمشي مقلوب لما يرتد.</div>
+    </div>
+
+    <!-- ===== المهمة 3 ===== -->
+    <div class="mission">
+        <div class="mission-head"><div class="mission-num">3</div><h3>القط يعمل صوت لما تدوس عليه</h3><span class="mission-tag">Session 5: الصوت</span></div>
+        <p style="line-height:1.8;">لما تدوس على القط، يعمل صوت "مياو" ويقولك "هاي!".</p>
+        <div class="codebox">
+<span class="ev">when this sprite clicked</span><br>
+&nbsp;&nbsp;<span class="so">start sound [Meow]</span><br>
+&nbsp;&nbsp;<span class="lo">say "هاي! 😺" for 1 seconds</span>
+        </div>
+    </div>
+
+    <!-- ===== المهمة 4 ===== -->
+    <div class="mission">
+        <div class="mission-head"><div class="mission-num">4</div><h3>القط ياخد قرار (سؤال نعم/لأ)</h3><span class="mission-tag">Session 6: الشرط if / else</span></div>
+        <p style="line-height:1.8;">خلّي القط يسألك سؤال، ولو إجابتك "نعم" يعمل حاجة، ولو لأ يعمل حاجة تانية. ده قلب الاختبار! ⚡</p>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="se">ask "تحب أكبر شوية؟ اكتب نعم" and wait</span><br>
+<span class="co">if &lt;answer = "نعم"&gt; then</span><br>
+&nbsp;&nbsp;<span class="lo">change size by 30</span><br>
+&nbsp;&nbsp;<span class="lo">say "شكراً! بقيت أكبر 😻" for 2 seconds</span><br>
+<span class="co">else</span><br>
+&nbsp;&nbsp;<span class="lo">say "تمام، هفضل زي ما أنا 🙂" for 2 seconds</span>
+        </div>
+        <div class="status-box" style="background:#f5f3ff; border-color:#7c3aed;">💡 تلميح: استخدم بلوك المقارنة <span class="scratch-block operators"><span class="scratch-block-input">answer</span> = <span class="scratch-block-input">نعم</span></span> من قسم Operators جوه الـ if.</div>
+    </div>
+
+    <!-- ===== المهمة 5 ===== -->
+    <div class="mission">
+        <div class="mission-head"><div class="mission-num">5</div><h3>زرار سحري بالكيبورد</h3><span class="mission-tag">Session 3 + 4: حدث + مظاهر</span></div>
+        <p style="line-height:1.8;">لما تضغط زرار المسافة (space) القط يكبر شوية، ولما تضغط زرار <strong>r</strong> يرجع لحجمه الطبيعي.</p>
+        <div class="codebox">
+<span class="ev">when [space] key pressed</span><br>
+&nbsp;&nbsp;<span class="lo">change size by 10</span><br>
+<br>
+<span class="ev">when [r] key pressed</span><br>
+&nbsp;&nbsp;<span class="lo">set size to 100 %</span>
+        </div>
+    </div>
+
+    <!-- ===== تحدي إضافي ===== -->
+    <div class="card" style="background:linear-gradient(145deg,#fef9c3,#fde68a); border:3px dashed #f59e0b;">
+        <h2 class="card-title" style="background:linear-gradient(120deg,#f59e0b,#d97706); -webkit-background-clip:text; background-clip:text; color:transparent;">🌟 تحدي إضافي (لو عايز تحدي أكبر!)</h2>
+        <ul style="padding-right:25px; line-height:2.2; font-weight:700; color:#92400e;">
+            <li>🎵 خلّي القط يقول جملة عشوائية كل شوية باستخدام <span class="scratch-block operators">pick random</span>.</li>
+            <li>🌳 غيّر خلفية المسرح (backdrop) لمكان حلو.</li>
+            <li>🔢 ضيف متغير "عدد النقرات" يزيد كل ما تدوس على القط (تشويق لـ Session 9!).</li>
+        </ul>
+    </div>
+
+    <!-- ===== التقييم ===== -->
+    <div class="card">
+        <h2 class="card-title">⭐ قيّم مشروعك بنفسك (دوس على النجوم)</h2>
+        <p style="line-height:1.8;">بعد ما تخلّص، ادّي لنفسك نجوم على كل مهمة عملتها صح. هدفك تجمّع أكبر عدد نجوم! 🌟</p>
+        <table class="rubric">
+            <tr><td>1️⃣ القط رحّب بيك باسمك (ask + join)</td><td><span class="stars" data-max="2">⭐⭐</span></td></tr>
+            <tr><td>2️⃣ القط بيتحرك ويبدّل شكله ويرتد (forever + bounce + next costume)</td><td><span class="stars" data-max="2">⭐⭐</span></td></tr>
+            <tr><td>3️⃣ القط بيعمل صوت لما تدوس عليه</td><td><span class="stars" data-max="2">⭐⭐</span></td></tr>
+            <tr><td>4️⃣ القط بياخد قرار بـ if / else</td><td><span class="stars" data-max="2">⭐⭐</span></td></tr>
+            <tr><td>5️⃣ الكيبورد بيكبّر ويصغّر القط</td><td><span class="stars" data-max="2">⭐⭐</span></td></tr>
+        </table>
+        <div class="status-box" id="totalStars" style="margin-top:15px;">مجموع نجومك: 0 من 10 ⭐</div>
+    </div>
+
+    <!-- ===== قائمة التسليم ===== -->
+    <div class="card">
+        <h2 class="card-title">✅ قبل ما تسلّم — اتأكد من ده</h2>
+        <ul class="checklist" id="submitChecklist">
+            <li>المشروع بيشتغل لما أضغط العلم الأخضر 🚩</li>
+            <li>القط رحّب بيّ باسمي</li>
+            <li>القط بيتحرك ويبدّل شكله (أنيميشن)</li>
+            <li>فيه صوت بيشتغل لما أدوس على القط</li>
+            <li>فيه سؤال بـ if/else والقط بيرد حسب إجابتي</li>
+        </ul>
+        <div class="status-box" style="background:#ecfdf5; border-color:#10b981;">🎉 لو علّمت على كل النقاط — مبروك، انت جاهز!  💪</div>
+    </div>
+
+    <footer>
+        🐱🏆 برافو عليك! خلّصت اختبارك الأول. استعد لمهارات جديدة في Session 9! 🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Cat preview =====
+    const cat = document.getElementById('examCat');
+    const stage = document.getElementById('examStage');
+    const costumes = ['🐱','😸','😺','😻'];
+    let timer = null, pos = 40, dir = 1, ci = 0;
+    function play() {
+        stop();
+        const w = stage.clientWidth - 60;
+        timer = setInterval(() => {
+            pos += dir * 8;
+            if (pos >= w) { pos = w; dir = -1; cat.style.transform = 'scaleX(-1)'; }
+            if (pos <= 10) { pos = 10; dir = 1; cat.style.transform = 'scaleX(1)'; }
+            cat.style.left = pos + 'px';
+            ci = (ci + 1) % costumes.length;
+            cat.textContent = costumes[ci];
+        }, 250);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+    document.getElementById('playBtn').addEventListener('click', play);
+    document.getElementById('stopBtn').addEventListener('click', stop);
+    cat.addEventListener('click', () => {
+        cat.textContent = '😻';
+        const b = document.createElement('div');
+        b.className = 'speech';
+        b.textContent = 'هاي! 😺';
+        b.style.left = Math.min(pos, stage.clientWidth - 90) + 'px';
+        b.style.bottom = '95px';
+        stage.appendChild(b);
+        setTimeout(() => b.remove(), 1200);
+    });
+
+    // ===== Star rating =====
+    const starEls = document.querySelectorAll('.stars');
+    const totalBox = document.getElementById('totalStars');
+    function renderStars(el, val) {
+        const max = +el.dataset.max;
+        let s = '';
+        for (let i = 0; i < max; i++) s += (i < val) ? '⭐' : '☆';
+        el.textContent = s;
+        el.dataset.val = val;
+    }
+    function updateTotal() {
+        let total = 0;
+        starEls.forEach(el => total += (+el.dataset.val || 0));
+        totalBox.textContent = `مجموع نجومك: ${total} من 10 ⭐`;
+        if (total === 10) totalBox.textContent += ' — نتيجة خارقة! 🏆';
+    }
+    starEls.forEach(el => {
+        el.dataset.val = +el.dataset.max; // start full
+        el.addEventListener('click', (e) => {
+            // toggle between full and 1 and 0 on each click for simplicity
+            let v = (+el.dataset.val || 0);
+            v = (v === 0) ? +el.dataset.max : v - 1;
+            renderStars(el, v);
+            updateTotal();
+        });
+        renderStars(el, +el.dataset.max);
+    });
+    updateTotal();
+
+    // ===== Submit checklist =====
+    document.querySelectorAll('#submitChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+</script>
+</body>
+</html>
