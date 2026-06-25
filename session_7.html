@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 7 - مراجعة شاملة + مشروع اختبار 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #ecfeff 0%, #f0fdfa 50%, #fef9c3 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #06b6d4, #10b981, #f59e0b);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(6,182,212,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🎉'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🏆'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #99f6e4; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #06b6d4, #10b981);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .station-badge {
+            display:inline-block; background:#06b6d4; color:white; font-weight:900;
+            padding:5px 18px; border-radius:50px; font-size:0.95rem; margin-bottom:12px;
+            box-shadow:0 4px 0 rgba(0,0,0,0.15);
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
+        .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
+        .recap-item:hover { transform: scale(1.03); border-color: #2dd4bf; }
+        .recap-item .ricon { font-size: 2.2rem; }
+        .recap-item h4 { color: #0f766e; margin: 8px 0 4px; }
+        .recap-item p { font-size: 0.85rem; color: #475569; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.teal { background: #14b8a6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .status-box { background: #ecfeff; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #06b6d4; margin: 15px 0; }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .mini-task {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border: 3px dashed #f59e0b; border-radius: 25px; padding: 20px; margin: 15px 0;
+        }
+        .mini-task h4 { color: #92400e; font-size: 1.15rem; margin-bottom: 8px; }
+        .hint-toggle { cursor: pointer; color: #0e7490; font-weight: 800; text-decoration: underline; margin-top: 8px; display: inline-block; }
+        .hint-body { display: none; background: #fff; border-radius: 15px; padding: 12px; margin-top: 8px; border: 2px solid #a5f3fc; }
+        .hint-body.show { display: block; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Quiz */
+        .quiz-q { background: #f8fafc; border-radius: 25px; padding: 20px; margin: 15px 0; border: 2px solid #e2e8f0; }
+        .quiz-q .q-text { font-weight: 800; font-size: 1.1rem; color: #0f172a; margin-bottom: 12px; }
+        .quiz-opt {
+            display: block; width: 100%; text-align: right; background: white; border: 2px solid #cbd5e1;
+            border-radius: 18px; padding: 12px 18px; margin: 8px 0; font-family: 'Tajawal', sans-serif;
+            font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.15s; color:#334155;
+        }
+        .quiz-opt:hover { border-color: #14b8a6; background: #f0fdfa; }
+        .quiz-opt.correct { background: #d1fae5; border-color: #10b981; color:#065f46; }
+        .quiz-opt.wrong { background: #fee2e2; border-color: #ef4444; color:#991b1b; }
+        .quiz-opt:disabled { cursor: default; }
+        .score-banner {
+            text-align:center; font-size:1.4rem; font-weight:900; padding:20px; border-radius:25px;
+            background:linear-gradient(120deg,#06b6d4,#10b981); color:white; margin-top:15px; display:none;
+        }
+        .score-banner.show { display:block; animation: popIn 0.4s ease; }
+        /* Final project stage */
+        .demo-stage {
+            background: linear-gradient(145deg, #cffafe, #a5f3fc);
+            border-radius: 30px; height: 260px; position: relative; overflow: hidden;
+            margin: 20px 0; border: 4px solid #67e8f9; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #danceChar { position: absolute; font-size: 3.5rem; bottom: 25px; left: 50px; transition: left 0.1s linear; z-index:10; }
+        .project-step {
+            background: #f0fdfa; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
+            border-right: 6px solid #14b8a6; display:flex; gap:12px; align-items:flex-start;
+        }
+        .project-step .num { background:#14b8a6; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#10b981; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .tx { color:#86efac; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #06b6d4; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🎉 مراجعة شاملة: رحلتنا من Session 1 لـ 5 🏆</h1>
+        <p>هنلف على كل اللي اتعلمناه بألعاب وتحديات، وفي الآخر مشروع اختبار ممتع!</p>
+    </div>
+
+    <!-- ===== مقدمة: خريطة الرحلة ===== -->
+    <div class="card">
+        <h2 class="card-title">🗺️ خريطة رحلتنا — 5 محطات</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            النهارده مفيش شرح جديد… النهارده هنلعب ونتحدى ونفتكر كل حاجة عملناها سوا!
+            هنعدّي على 5 محطات، كل محطة فيها فكرة سريعة + تمرين صغير. وفي الآخر هتعمل مشروعك بنفسك 💪
+        </p>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">💻</div><h4>محطة 1</h4><p>الكمبيوتر والخوارزمية</p></div>
+            <div class="recap-item"><div class="ricon">🧭</div><h4>محطة 2</h4><p>الحركة والاتجاهات</p></div>
+            <div class="recap-item"><div class="ricon">🔁</div><h4>محطة 3</h4><p>التكرار والأحداث</p></div>
+            <div class="recap-item"><div class="ricon">🎭</div><h4>محطة 4</h4><p>المظاهر (Looks)</p></div>
+            <div class="recap-item"><div class="ricon">🎵</div><h4>محطة 5</h4><p>الصوت (Sound)</p></div>
+        </div>
+    </div>
+
+    <!-- ===== محطة 1 ===== -->
+    <div class="card">
+        <span class="station-badge">💻 محطة 1</span>
+        <h2 class="card-title">الكمبيوتر والخوارزمية</h2>
+        <p style="line-height:1.8;">
+            افتكرنا إن الكمبيوتر بياخد <strong>مدخلات (Input)</strong> 📥،
+            <strong>يعالجها (Process)</strong> 🧠، ويطلّع <strong>مخرجات (Output)</strong> 📤.
+            و<strong>الخوارزمية</strong> هي خطوات مرتّبة بنعملها عشان نوصل لهدف (زي وصفة الأكل 🍕).
+        </p>
+        <div class="mini-task">
+            <h4>📝 تمرين سريع: رتّب الخوارزمية</h4>
+            <p>عايزين نعمل خوارزمية "نغسل أسناننا". رتّب الخطوات دي في دماغك بالترتيب الصح:</p>
+            <p style="margin-top:8px;">🪥 نحط معجون على الفرشاة — 💧 نبلل الفرشاة — 😬 نفرشي الأسنان — 🚰 نخبّط بميّة</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">الترتيب الصح: 💧 نبلل الفرشاة → 🪥 نحط معجون → 😬 نفرشي الأسنان → 🚰 نخبّط بميّة. (الترتيب مهم جداً في الخوارزمية!)</div>
+        </div>
+        <div class="mini-task" style="background:linear-gradient(145deg,#e0f2fe,#bae6fd); border-color:#3b82f6;">
+            <h4 style="color:#1e40af;">🤔 سؤال سريع: مدخل ولا مخرج؟</h4>
+            <p>الميكروفون 🎤 ده مدخل ولا مخرج؟ والسماعة 🔊؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">الميكروفون 🎤 = <strong>مدخل</strong> (بيسمع صوتك ويدخّله للجهاز). السماعة 🔊 = <strong>مخرج</strong> (بتطلّع الصوت لينا).</div>
+        </div>
+    </div>
+
+    <!-- ===== محطة 2 ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#4c97ff;">🧭 محطة 2</span>
+        <h2 class="card-title">الحركة والاتجاهات</h2>
+        <p style="line-height:1.8;">بلوكات الحركة بتحرّك الشخصية على المسرح:</p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+            <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">15</span> degrees</span>
+            <span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span>
+        </div>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">⬆️</div><h4>90 لليمين</h4><p>اتجاه 90</p></div>
+            <div class="recap-item"><div class="ricon">⬇️</div><h4>للأسفل</h4><p>اتجاه 180</p></div>
+            <div class="recap-item"><div class="ricon">⬅️</div><h4>للشمال</h4><p>اتجاه -90 (90 ناحية الشمال)</p></div>
+            <div class="recap-item"><div class="ricon">🔼</div><h4>لفوق</h4><p>اتجاه 0</p></div>
+        </div>
+        <div class="mini-task">
+            <h4>🎯 تمرين: القطة تمشي وترجع</h4>
+            <p>عايزين القطة تمشي <strong>50 خطوة لليمين</strong>، تستنى ثانية، وبعدين ترجع <strong>50 خطوة</strong>. أنهي بلوكات هتستخدم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block motion">move <span class="scratch-block-input">50</span> steps</span> →
+                <span class="scratch-block control">wait <span class="scratch-block-input">1</span> seconds</span> →
+                <span class="scratch-block motion">point in direction <span class="scratch-block-input">-90</span></span> →
+                <span class="scratch-block motion">move <span class="scratch-block-input">50</span> steps</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== محطة 3 ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#ffab19;">🔁 محطة 3</span>
+        <h2 class="card-title">التكرار والأحداث</h2>
+        <p style="line-height:1.8;">
+            بدل ما نكرر نفس الأمر 10 مرات بإيدينا، بنستخدم <strong>اللوب (Loops)</strong>!
+            و<strong>الأحداث (Events)</strong> هي اللي بتبدأ البرنامج (زي ضغط العلم الأخضر 🚩).
+        </p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block events">when 🚩 clicked</span>
+            <span class="scratch-block events">when <span class="scratch-block-input">space</span> key pressed</span>
+            <span class="scratch-block control">repeat <span class="scratch-block-input">10</span></span>
+            <span class="scratch-block control">forever</span>
+            <span class="scratch-block control">if on edge, bounce</span>
+        </div>
+        <div class="mini-task">
+            <h4>🟦 تمرين: ارسم مربع</h4>
+            <p>عايزين نرسم مربع. المربع عنده 4 ضلوع متساوية و 4 زوايا. لو استخدمنا <span class="scratch-block control">repeat</span>، الرقم اللي جواها هيكون كام؟ والقطة هتلف كام درجة كل مرة؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span> →
+                جواها: <span class="scratch-block motion">move <span class="scratch-block-input">100</span> steps</span> +
+                <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">90</span> degrees</span>.
+                (4 مرات × لفّة 90 درجة = دورة كاملة 360 درجة 🔄)
+            </div>
+        </div>
+        <div class="mini-task" style="background:linear-gradient(145deg,#fce7f3,#fbcfe8); border-color:#ec4899;">
+            <h4 style="color:#9d174d;">🤔 الفرق بين repeat و forever؟</h4>
+            <p>إيه الفرق بين <span class="scratch-block control">repeat 10</span> و <span class="scratch-block control">forever</span>؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body"><strong>repeat 10</strong> = بيكرر عدد محدد من المرات وبعدين يقف. <strong>forever</strong> = بيكرر للأبد ومبيقفش (لحد ما توقف البرنامج). نستخدم forever مثلاً عشان شخصية تتحرك طول الوقت.</div>
+        </div>
+    </div>
+
+    <!-- ===== محطة 4 ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#9966ff;">🎭 محطة 4</span>
+        <h2 class="card-title">المظاهر (Looks)</h2>
+        <p style="line-height:1.8;">بلوكات المظاهر بتغيّر شكل الشخصية وكلامها وحجمها:</p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block looks">say <span class="scratch-block-input">أهلاً!</span> for <span class="scratch-block-input">2</span> sec</span>
+            <span class="scratch-block looks">next costume</span>
+            <span class="scratch-block looks">change size by <span class="scratch-block-input">10</span></span>
+            <span class="scratch-block looks">switch costume to <span class="scratch-block-input">costume2</span></span>
+        </div>
+        <div class="mini-task">
+            <h4>💃 تمرين: خلّي القطة "ترقص"</h4>
+            <p>الرقص في سكراتش معناه تبديل الأزياء بسرعة! أنهي بلوكين تكررهم جوه لوب عشان تبان كأنها بترقص؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                جوه <span class="scratch-block control">forever</span>:
+                <span class="scratch-block looks">next costume</span> +
+                <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span>.
+                التبديل السريع بين الأزياء بيعمل إحساس الحركة! 🕺
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== محطة 5 ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#ff80ab;">🎵 محطة 5</span>
+        <h2 class="card-title">الصوت (Sound)</h2>
+        <p style="line-height:1.8;">بلوكات الصوت بتشغّل أصوات وتتحكم في مستواها:</p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block sound">play sound <span class="scratch-block-input">Meow</span> until done</span>
+            <span class="scratch-block sound">start sound <span class="scratch-block-input">Meow</span></span>
+            <span class="scratch-block sound">set volume to <span class="scratch-block-input">100</span>%</span>
+            <span class="scratch-block sound">stop all sounds</span>
+        </div>
+        <div class="mini-task" style="background:linear-gradient(145deg,#fce7f3,#fbcfe8); border-color:#ec4899;">
+            <h4 style="color:#9d174d;">🤔 إيه الفرق؟ play until done ولا start sound؟</h4>
+            <p>لو عايز الشخصية تستنى الصوت يخلّص الأول قبل ما تكمّل، هتستخدم أنهي بلوك؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body"><strong>play sound until done</strong> = الشخصية تستنى الصوت يخلّص وبعدين تكمّل. <strong>start sound</strong> = تشغّل الصوت وتكمّل على طول من غير ما تستنى.</div>
+        </div>
+    </div>
+
+    <!-- ===== لعبة الاختبار السريع (Quiz) ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 لعبة المراجعة السريعة (Quiz)</h2>
+        <p style="line-height:1.8;">جاوب على الأسئلة دي وشوف كام نقطة هتجيب من 6! اضغط على الإجابة اللي تشوفها صح.</p>
+        <div id="quizArea"></div>
+        <div class="score-banner" id="scoreBanner"></div>
+        <div style="text-align:center; margin-top:15px;">
+            <button class="ctrl-btn orange" id="resetQuizBtn">🔄 العب تاني</button>
+        </div>
+    </div>
+
+    <!-- ===== المشروع النهائي: مشروع الاختبار ===== -->
+    <div class="card" style="border:3px solid #f59e0b; background:linear-gradient(145deg,#ffffff,#fffbeb);">
+        <h2 class="card-title" style="background:linear-gradient(120deg,#f59e0b,#ec4899); -webkit-background-clip:text; background-clip:text; color:transparent;">🏆 مشروع الاختبار: القطة الراقصة 🐱💃</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            دلوقتي دورك! المشروع ده هيجمّع <strong>كل اللي اتعلمناه</strong>:
+            حركة 🧭 + لوب 🔁 + أحداث 🚩 + مظاهر 🎭 + صوت 🎵.
+            اعمله بنفسك في سكراتش خطوة بخطوة 👇
+        </p>
+
+        <div class="status-box">🎯 <strong>الهدف:</strong> قطة بترقص وتتحرك على المسرح، ترتد لما توصل الحافة، وتعمل صوت لما تدوس عليها!</div>
+
+        <!-- معاينة بسيطة -->
+        <div class="demo-stage" id="projectStage">
+            <div id="danceChar">🐱</div>
+        </div>
+        <div style="text-align:center; margin-bottom:15px;">
+            <button class="ctrl-btn teal" id="playProjectBtn">▶️ شوف المعاينة</button>
+            <button class="ctrl-btn orange" id="stopProjectBtn">⏹️ وقّف</button>
+            <p style="font-size:0.9rem; color:#64748b; margin-top:8px;">دي معاينة تقريبية بس — انت اللي هتبنيها بنفسك في سكراتش الحقيقي 💪</p>
+        </div>
+
+        <h3 style="color:#0f766e; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
+
+        <div class="project-step"><div class="num">1</div><div>
+            ابدأ البرنامج بحدث: <span class="scratch-block events">when 🚩 clicked</span>
+        </div></div>
+        <div class="project-step"><div class="num">2</div><div>
+            خلّي القطة ترحّب: <span class="scratch-block looks">say <span class="scratch-block-input">شوفوا رقصتي! 💃</span> for <span class="scratch-block-input">2</span> sec</span>
+        </div></div>
+        <div class="project-step"><div class="num">3</div><div>
+            حط لوب لا نهائي عشان ترقص وتتحرك طول الوقت: <span class="scratch-block control">forever</span> وجواها الخطوات دي:
+            <div style="margin-top:8px;">
+                <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+                <span class="scratch-block control">if on edge, bounce</span>
+                <span class="scratch-block looks">next costume</span>
+                <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">4</div><div>
+            عشان القطة متمشيش بالمقلوب لما ترتد، استخدم نمط الدوران:
+            <span class="scratch-block motion">set rotation style <span class="scratch-block-input">left-right</span></span> (في أول البرنامج).
+        </div></div>
+        <div class="project-step"><div class="num">5</div><div>
+            ضيف حدث تاني: لما تدوس على القطة تعمل صوت وتقول "هاي!":
+            <div style="margin-top:8px;">
+                <span class="scratch-block events">when this sprite clicked</span>
+                <span class="scratch-block sound">start sound <span class="scratch-block-input">Meow</span></span>
+                <span class="scratch-block looks">say <span class="scratch-block-input">هاي! 😺</span> for <span class="scratch-block-input">1</span> sec</span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">6</div><div>
+            وأخيراً: لما تدوس على زرار المسافة (space) القطة تكبر شوية:
+            <div style="margin-top:8px;">
+                <span class="scratch-block events">when <span class="scratch-block-input">space</span> key pressed</span>
+                <span class="scratch-block looks">change size by <span class="scratch-block-input">10</span></span>
+            </div>
+        </div></div>
+
+        <h3 style="color:#0f766e; margin:20px 0 10px;">🧩 الكود كامل (شكله في سكراتش):</h3>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="mo">set rotation style [left-right]</span><br>
+<span class="lo">say "شوفوا رقصتي! 💃" for 2 seconds</span><br>
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="mo">move 10 steps</span><br>
+&nbsp;&nbsp;<span class="co">if on edge, bounce</span><br>
+&nbsp;&nbsp;<span class="lo">next costume</span><br>
+&nbsp;&nbsp;<span class="co">wait 0.3 seconds</span><br>
+<br>
+<span class="ev">when this sprite clicked</span><br>
+&nbsp;&nbsp;<span class="so">start sound [Meow]</span><br>
+&nbsp;&nbsp;<span class="lo">say "هاي! 😺" for 1 seconds</span><br>
+<br>
+<span class="ev">when [space] key pressed</span><br>
+&nbsp;&nbsp;<span class="lo">change size by 10</span>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:18px;">
+            🌟 <strong>تحديات إضافية (لو خلصت بسرعة):</strong>
+            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
+                • غيّر الخلفية (backdrop) لمسرح رقص 🪩<br>
+                • خلّي القطة تقول جملة عشوائية كل شوية<br>
+                • ضيف زرار "r" يرجّع حجمها للطبيعي (set size to 100%)
+            </div>
+        </div>
+
+        <h3 style="color:#0f766e; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li>حطيت حدث when green flag clicked</li>
+            <li>القطة بتتحرك بـ move steps</li>
+            <li>استخدمت لوب forever</li>
+            <li>القطة بترتد بـ if on edge bounce</li>
+            <li>القطة بتبدّل أزياء بـ next costume (بترقص)</li>
+            <li>فيه صوت بيشتغل لما أدوس عليها</li>
+            <li>القطة بتكبر لما أدوس space</li>
+        </ul>
+    </div>
+
+    <footer>
+        🎓 برافو عليك! خلّصت أول 5 محطات + المشروع. استعد لمغامرات جديدة في Session 8! 🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Hints toggle =====
+    function toggleHint(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('show');
+        el.textContent = body.classList.contains('show') ? '🙈 اخفي الإجابة' : '👁️ شوف الإجابة';
+    }
+
+    // ===== Quiz =====
+    const QUIZ = [
+        {
+            q: "💻 الميكروفون في الكمبيوتر بيعتبر إيه؟",
+            opts: ["مخرج (Output)", "مدخل (Input)", "معالج (Process)"],
+            correct: 1
+        },
+        {
+            q: "🧭 لو عايز الشخصية تمشي لقدّام، أنهي بلوك تستخدم؟",
+            opts: ["move 10 steps", "say Hello", "play sound"],
+            correct: 0
+        },
+        {
+            q: "🔁 عايز الشخصية تتحرك طول الوقت من غير ما تقف. تستخدم أنهي لوب؟",
+            opts: ["repeat 4", "forever", "wait 1 second"],
+            correct: 1
+        },
+        {
+            q: "🚩 أنهي بلوك بيبدأ البرنامج لما تضغط العلم الأخضر؟",
+            opts: ["when green flag clicked", "next costume", "turn 15 degrees"],
+            correct: 0
+        },
+        {
+            q: "🎭 عشان الشخصية تبان بتتحرك أو ترقص، بنبدّل الـ...؟",
+            opts: ["الصوت", "الأزياء (Costumes)", "مستوى الصوت"],
+            correct: 1
+        },
+        {
+            q: "🎵 عايز الصوت يخلّص الأول قبل ما الشخصية تكمّل. تستخدم؟",
+            opts: ["start sound", "stop all sounds", "play sound until done"],
+            correct: 2
+        }
+    ];
+
+    let answered = 0, score = 0;
+    const quizArea = document.getElementById('quizArea');
+    const scoreBanner = document.getElementById('scoreBanner');
+
+    function buildQuiz() {
+        answered = 0; score = 0;
+        quizArea.innerHTML = '';
+        scoreBanner.classList.remove('show');
+        QUIZ.forEach((item, qi) => {
+            const block = document.createElement('div');
+            block.className = 'quiz-q';
+            const qt = document.createElement('div');
+            qt.className = 'q-text';
+            qt.textContent = (qi + 1) + ') ' + item.q;
+            block.appendChild(qt);
+            item.opts.forEach((opt, oi) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-opt';
+                btn.textContent = opt;
+                btn.addEventListener('click', () => handleAnswer(block, btn, qi, oi));
+                block.appendChild(btn);
+            });
+            quizArea.appendChild(block);
+        });
+    }
+
+    function handleAnswer(block, btn, qi, oi) {
+        if (block.dataset.done) return;
+        block.dataset.done = '1';
+        const correctIdx = QUIZ[qi].correct;
+        const buttons = block.querySelectorAll('.quiz-opt');
+        buttons.forEach((b, i) => {
+            b.disabled = true;
+            if (i === correctIdx) b.classList.add('correct');
+        });
+        if (oi === correctIdx) {
+            score++;
+        } else {
+            btn.classList.add('wrong');
+        }
+        answered++;
+        if (answered === QUIZ.length) showScore();
+    }
+
+    function showScore() {
+        let msg;
+        if (score === QUIZ.length) msg = `🏆 ممتاز جداً! جبت ${score} من ${QUIZ.length} — انت نجم! ⭐`;
+        else if (score >= 4) msg = `😍 شاطر! جبت ${score} من ${QUIZ.length}. شوية كمان وتبقى محترف!`;
+        else msg = `💪 جبت ${score} من ${QUIZ.length}. ارجع للمحطات وراجع تاني، انت قدها!`;
+        scoreBanner.textContent = msg;
+        scoreBanner.classList.add('show');
+    }
+
+    document.getElementById('resetQuizBtn').addEventListener('click', buildQuiz);
+    buildQuiz();
+
+    // ===== Final checklist =====
+    document.querySelectorAll('#finalChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+
+    // ===== Project preview (dancing cat) =====
+    const danceChar = document.getElementById('danceChar');
+    const stage = document.getElementById('projectStage');
+    const costumes = ['🐱', '😸', '😺', '😻'];
+    let projTimer = null, pos = 30, dir = 1, ci = 0;
+
+    function startProject() {
+        stopProject();
+        const stageWidth = stage.clientWidth - 60;
+        projTimer = setInterval(() => {
+            pos += dir * 8;
+            if (pos >= stageWidth) { pos = stageWidth; dir = -1; danceChar.style.transform = 'scaleX(-1)'; }
+            if (pos <= 10) { pos = 10; dir = 1; danceChar.style.transform = 'scaleX(1)'; }
+            danceChar.style.left = pos + 'px';
+            ci = (ci + 1) % costumes.length;
+            danceChar.textContent = costumes[ci];
+        }, 250);
+    }
+    function stopProject() {
+        if (projTimer) { clearInterval(projTimer); projTimer = null; }
+    }
+    document.getElementById('playProjectBtn').addEventListener('click', startProject);
+    document.getElementById('stopProjectBtn').addEventListener('click', stopProject);
+    danceChar.addEventListener('click', () => {
+        danceChar.textContent = '😻';
+        const bubble = document.createElement('div');
+        bubble.textContent = 'هاي! 😺';
+        bubble.style.cssText = 'position:absolute; background:white; padding:6px 14px; border-radius:15px; font-weight:bold; bottom:90px; left:'+pos+'px; box-shadow:0 4px 10px rgba(0,0,0,0.2); z-index:20;';
+        stage.appendChild(bubble);
+        setTimeout(() => bubble.remove(), 1200);
+    });
+</script>
+</body>
+</html>
