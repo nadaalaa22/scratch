@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Session 7 - مراجعة شاملة + مشروع اختبار 🎉</title>
+    <title>Session 7 - مراجعة شاملة على السيشنات من 1 لـ 6 🎉</title>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -20,6 +20,8 @@
             --scratch-sound: #ff80ab;
             --scratch-events: #ffbf00;
             --scratch-control: #ffab19;
+            --scratch-operators: #5cb1d6;
+            --scratch-sensing: #5cb1d6;
         }
         @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
@@ -32,7 +34,7 @@
             position: relative; overflow: hidden;
         }
         .hero::before { content: '🎉'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
-        .hero::after { content: '🏆'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero::after { content: '🧠'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
         .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
         .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
         .card {
@@ -63,6 +65,8 @@
         .scratch-block.sound { background: #ff80ab; }
         .scratch-block.events { background: #ffbf00; }
         .scratch-block.control { background: #ffab19; }
+        .scratch-block.operators { background: #5cb1d6; }
+        .scratch-block.sensing { background: #5cb1d6; }
         .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
         .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
         .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
@@ -109,26 +113,34 @@
             background:linear-gradient(120deg,#06b6d4,#10b981); color:white; margin-top:15px; display:none;
         }
         .score-banner.show { display:block; animation: popIn 0.4s ease; }
-        /* Final project stage */
+        /* magic door demo */
         .demo-stage {
             background: linear-gradient(145deg, #cffafe, #a5f3fc);
-            border-radius: 30px; height: 260px; position: relative; overflow: hidden;
+            border-radius: 30px; min-height: 200px; position: relative; overflow: hidden;
             margin: 20px 0; border: 4px solid #67e8f9; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+            padding: 20px; text-align:center;
         }
-        #danceChar { position: absolute; font-size: 3.5rem; bottom: 25px; left: 50px; transition: left 0.1s linear; z-index:10; }
-        .project-step {
-            background: #f0fdfa; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
-            border-right: 6px solid #14b8a6; display:flex; gap:12px; align-items:flex-start;
+        .input-text {
+            padding: 10px 15px; border-radius: 30px; border: 3px solid #67e8f9;
+            font-family: inherit; font-size: 1.1rem; width: 200px; text-align: center;
         }
-        .project-step .num { background:#14b8a6; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .result-bubble {
+            background: white; border-radius: 20px; padding: 12px 20px; font-weight: bold;
+            font-size: 1.05rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: inline-block;
+            animation: popIn 0.3s ease; margin-top: 12px;
+        }
         .checklist { list-style:none; padding:0; }
         .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
         .checklist li:hover { border-color:#10b981; }
-        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; }
         .checklist li::before { content:'⬜ '; }
         .checklist li.done::before { content:'✅ '; }
-        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
-        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .tx { color:#86efac; }
+        .exam-teaser {
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            border-radius: 30px; padding: 30px; color: white; text-align: center;
+            box-shadow: 0 18px 40px rgba(236,72,153,0.3);
+        }
+        .exam-teaser h3 { font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; text-shadow: 2px 2px 0 rgba(0,0,0,0.15); }
         footer { text-align: center; margin-top: 20px; padding: 20px; background: #06b6d4; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
         @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
     </style>
@@ -136,16 +148,17 @@
 <body>
 <div class="container">
     <div class="hero">
-        <h1>🎉 مراجعة شاملة: رحلتنا من Session 1 لـ 5 🏆</h1>
-        <p>هنلف على كل اللي اتعلمناه بألعاب وتحديات، وفي الآخر مشروع اختبار ممتع!</p>
+        <h1>🎉 مراجعة شاملة: رحلتنا من Session 1 لـ 6 🧠</h1>
+        <p>هنلف على كل اللي اتعلمناه بألعاب وأسئلة وتحديات — وبعدها جاهزين للاختبار!</p>
     </div>
 
     <!-- ===== مقدمة: خريطة الرحلة ===== -->
     <div class="card">
-        <h2 class="card-title">🗺️ خريطة رحلتنا — 5 محطات</h2>
+        <h2 class="card-title">🗺️ خريطة رحلتنا — 6 محطات</h2>
         <p style="line-height:1.8; font-size:1.05rem;">
-            النهارده مفيش شرح جديد… النهارده هنلعب ونتحدى ونفتكر كل حاجة عملناها سوا!
-            هنعدّي على 5 محطات، كل محطة فيها فكرة سريعة + تمرين صغير. وفي الآخر هتعمل مشروعك بنفسك 💪
+            النهارده مفيش شرح جديد… النهارده هنلعب ونفتكر كل حاجة عملناها سوا من أول سيشن!
+            هنعدّي على 6 محطات، كل محطة فيها فكرة سريعة + تمرين أو سؤال صغير.
+            وفي الآخر فيه <strong>كويز ممتع</strong> 🎮 — والاختبار الكبير هيكون في Session 8 💪
         </p>
         <div class="recap-grid">
             <div class="recap-item"><div class="ricon">💻</div><h4>محطة 1</h4><p>الكمبيوتر والخوارزمية</p></div>
@@ -153,6 +166,7 @@
             <div class="recap-item"><div class="ricon">🔁</div><h4>محطة 3</h4><p>التكرار والأحداث</p></div>
             <div class="recap-item"><div class="ricon">🎭</div><h4>محطة 4</h4><p>المظاهر (Looks)</p></div>
             <div class="recap-item"><div class="ricon">🎵</div><h4>محطة 5</h4><p>الصوت (Sound)</p></div>
+            <div class="recap-item"><div class="ricon">⚡</div><h4>محطة 6</h4><p>الجمل الشرطية (If)</p></div>
         </div>
     </div>
 
@@ -191,19 +205,19 @@
             <span class="scratch-block motion">point in direction <span class="scratch-block-input">90</span></span>
         </div>
         <div class="recap-grid">
-            <div class="recap-item"><div class="ricon">⬆️</div><h4>90 لليمين</h4><p>اتجاه 90</p></div>
-            <div class="recap-item"><div class="ricon">⬇️</div><h4>للأسفل</h4><p>اتجاه 180</p></div>
-            <div class="recap-item"><div class="ricon">⬅️</div><h4>للشمال</h4><p>اتجاه -90 (90 ناحية الشمال)</p></div>
-            <div class="recap-item"><div class="ricon">🔼</div><h4>لفوق</h4><p>اتجاه 0</p></div>
+            <div class="recap-item"><div class="ricon">➡️</div><h4>لليمين</h4><p>اتجاه 90</p></div>
+            <div class="recap-item"><div class="ricon">⬇️</div><h4>لتحت</h4><p>اتجاه 180</p></div>
+            <div class="recap-item"><div class="ricon">⬅️</div><h4>للشمال</h4><p>اتجاه 90 ناحية الشمال</p></div>
+            <div class="recap-item"><div class="ricon">⬆️</div><h4>لفوق</h4><p>اتجاه 0</p></div>
         </div>
         <div class="mini-task">
             <h4>🎯 تمرين: القطة تمشي وترجع</h4>
-            <p>عايزين القطة تمشي <strong>50 خطوة لليمين</strong>، تستنى ثانية، وبعدين ترجع <strong>50 خطوة</strong>. أنهي بلوكات هتستخدم؟</p>
+            <p>عايزين القطة تمشي شوية لليمين، تستنى ثانية، وبعدين ترجع تاني. أنهي بلوكات هتستخدم؟</p>
             <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
             <div class="hint-body">
                 <span class="scratch-block motion">move <span class="scratch-block-input">50</span> steps</span> →
                 <span class="scratch-block control">wait <span class="scratch-block-input">1</span> seconds</span> →
-                <span class="scratch-block motion">point in direction <span class="scratch-block-input">-90</span></span> →
+                <span class="scratch-block motion">turn ↻ <span class="scratch-block-input">180</span> degrees</span> →
                 <span class="scratch-block motion">move <span class="scratch-block-input">50</span> steps</span>
             </div>
         </div>
@@ -226,7 +240,7 @@
         </div>
         <div class="mini-task">
             <h4>🟦 تمرين: ارسم مربع</h4>
-            <p>عايزين نرسم مربع. المربع عنده 4 ضلوع متساوية و 4 زوايا. لو استخدمنا <span class="scratch-block control">repeat</span>، الرقم اللي جواها هيكون كام؟ والقطة هتلف كام درجة كل مرة؟</p>
+            <p>عايزين نرسم مربع (4 ضلوع و 4 زوايا). لو استخدمنا <span class="scratch-block control">repeat</span>، الرقم اللي جواها هيكون كام؟ والقطة هتلف كام درجة كل مرة؟</p>
             <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
             <div class="hint-body">
                 <span class="scratch-block control">repeat <span class="scratch-block-input">4</span></span> →
@@ -239,7 +253,7 @@
             <h4 style="color:#9d174d;">🤔 الفرق بين repeat و forever؟</h4>
             <p>إيه الفرق بين <span class="scratch-block control">repeat 10</span> و <span class="scratch-block control">forever</span>؟</p>
             <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
-            <div class="hint-body"><strong>repeat 10</strong> = بيكرر عدد محدد من المرات وبعدين يقف. <strong>forever</strong> = بيكرر للأبد ومبيقفش (لحد ما توقف البرنامج). نستخدم forever مثلاً عشان شخصية تتحرك طول الوقت.</div>
+            <div class="hint-body"><strong>repeat 10</strong> = بيكرر عدد محدد من المرات وبعدين يقف. <strong>forever</strong> = بيكرر للأبد ومبيقفش (لحد ما توقف البرنامج).</div>
         </div>
     </div>
 
@@ -255,14 +269,13 @@
             <span class="scratch-block looks">switch costume to <span class="scratch-block-input">costume2</span></span>
         </div>
         <div class="mini-task">
-            <h4>💃 تمرين: خلّي القطة "ترقص"</h4>
-            <p>الرقص في سكراتش معناه تبديل الأزياء بسرعة! أنهي بلوكين تكررهم جوه لوب عشان تبان كأنها بترقص؟</p>
+            <h4>🎬 تمرين: خلّي القطة تتحرّك (أنيميشن)</h4>
+            <p>الأنيميشن في سكراتش معناه تبديل الأزياء بسرعة! أنهي بلوكين تكررهم جوه لوب عشان تبان كأنها بتتحرّك؟</p>
             <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
             <div class="hint-body">
                 جوه <span class="scratch-block control">forever</span>:
                 <span class="scratch-block looks">next costume</span> +
-                <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span>.
-                التبديل السريع بين الأزياء بيعمل إحساس الحركة! 🕺
+                <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span>. 🎬
             </div>
         </div>
     </div>
@@ -286,10 +299,57 @@
         </div>
     </div>
 
+    <!-- ===== محطة 6: الشروط (جديدة) ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#7c3aed;">⚡ محطة 6</span>
+        <h2 class="card-title">الجمل الشرطية (If) — القرارات الذكية</h2>
+        <p style="line-height:1.8;">
+            الشرط بيخلّي البرنامج <strong>ياخد قرار</strong>: "لو حصل كذا… اعمل كذا، وإلا اعمل حاجة تانية".
+            وعشان ناخد قرار، بنحتاج <strong>نسأل المستخدم</strong> ونقارن إجابته.
+        </p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block control">if <span class="scratch-block-input">شرط</span> then</span>
+            <span class="scratch-block control">else</span>
+            <span class="scratch-block sensing">ask <span class="scratch-block-input">ما اسمك؟</span> and wait</span>
+            <span class="scratch-block sensing">answer</span>
+            <span class="scratch-block operators"><span class="scratch-block-input"> </span> = <span class="scratch-block-input"> </span></span>
+            <span class="scratch-block operators"><span class="scratch-block-input"> </span> &gt; <span class="scratch-block-input"> </span></span>
+        </div>
+        <div class="mini-task">
+            <h4>🚪 تمرين: الباب السحري</h4>
+            <p>عايزين باب يفتح بس لو كتبت كلمة السر "نجم". أنهي بلوكات تستخدم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block sensing">ask <span class="scratch-block-input">اكتب كلمة السر</span> and wait</span> →
+                <span class="scratch-block control">if <span class="scratch-block sensing" style="box-shadow:none;">answer</span> = <span class="scratch-block-input">نجم</span> then</span>
+                <span class="scratch-block looks">say <span class="scratch-block-input">الباب فتح! 🎉</span></span>
+                <span class="scratch-block control">else</span>
+                <span class="scratch-block looks">say <span class="scratch-block-input">كلمة السر غلط 🔒</span></span>
+            </div>
+        </div>
+        <!-- تجربة سريعة للباب -->
+        <div class="demo-stage">
+            <div style="font-size: 3.2rem;" id="doorEmoji">🚪</div>
+            <p style="font-weight:800; margin:8px 0; color:#0e7490;">جرّب بنفسك — كلمة السر هي: <span style="background:#fff; padding:2px 12px; border-radius:12px;">نجم</span></p>
+            <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; align-items:center;">
+                <input type="text" id="passwordInput" class="input-text" placeholder="اكتب كلمة السر">
+                <button class="ctrl-btn green" id="checkPasswordBtn">🔑 افتح الباب</button>
+                <button class="ctrl-btn orange" id="resetPasswordBtn">🔄 إعادة</button>
+            </div>
+            <div id="passwordResult" class="result-bubble">⏳ اكتب كلمة السر واضغط "افتح الباب"</div>
+        </div>
+        <div class="mini-task" style="background:linear-gradient(145deg,#ede9fe,#ddd6fe); border-color:#7c3aed;">
+            <h4 style="color:#5b21b6;">🤔 سؤال سريع: مين أكبر؟</h4>
+            <p>لو عندنا <span class="scratch-block operators"><span class="scratch-block-input">7</span> &gt; <span class="scratch-block-input">4</span></span> — النتيجة صح ولا غلط؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">7 أكبر من 4 → النتيجة <strong>صح (True)</strong> ✅. بلوكات المقارنة دايماً بترجّع صح أو غلط.</div>
+        </div>
+    </div>
+
     <!-- ===== لعبة الاختبار السريع (Quiz) ===== -->
     <div class="card">
         <h2 class="card-title">🎮 لعبة المراجعة السريعة (Quiz)</h2>
-        <p style="line-height:1.8;">جاوب على الأسئلة دي وشوف كام نقطة هتجيب من 6! اضغط على الإجابة اللي تشوفها صح.</p>
+        <p style="line-height:1.8;">جاوب على الأسئلة دي وشوف كام نقطة هتجيب من 8! اضغط على الإجابة اللي تشوفها صح.</p>
         <div id="quizArea"></div>
         <div class="score-banner" id="scoreBanner"></div>
         <div style="text-align:center; margin-top:15px;">
@@ -297,106 +357,35 @@
         </div>
     </div>
 
-    <!-- ===== المشروع النهائي: مشروع الاختبار ===== -->
-    <div class="card" style="border:3px solid #f59e0b; background:linear-gradient(145deg,#ffffff,#fffbeb);">
-        <h2 class="card-title" style="background:linear-gradient(120deg,#f59e0b,#ec4899); -webkit-background-clip:text; background-clip:text; color:transparent;">🏆 مشروع الاختبار: القطة الراقصة 🐱💃</h2>
-        <p style="line-height:1.8; font-size:1.05rem;">
-            دلوقتي دورك! المشروع ده هيجمّع <strong>كل اللي اتعلمناه</strong>:
-            حركة 🧭 + لوب 🔁 + أحداث 🚩 + مظاهر 🎭 + صوت 🎵.
-            اعمله بنفسك في سكراتش خطوة بخطوة 👇
-        </p>
-
-        <div class="status-box">🎯 <strong>الهدف:</strong> قطة بترقص وتتحرك على المسرح، ترتد لما توصل الحافة، وتعمل صوت لما تدوس عليها!</div>
-
-        <!-- معاينة بسيطة -->
-        <div class="demo-stage" id="projectStage">
-            <div id="danceChar">🐱</div>
-        </div>
-        <div style="text-align:center; margin-bottom:15px;">
-            <button class="ctrl-btn teal" id="playProjectBtn">▶️ شوف المعاينة</button>
-            <button class="ctrl-btn orange" id="stopProjectBtn">⏹️ وقّف</button>
-            <p style="font-size:0.9rem; color:#64748b; margin-top:8px;">دي معاينة تقريبية بس — انت اللي هتبنيها بنفسك في سكراتش الحقيقي 💪</p>
-        </div>
-
-        <h3 style="color:#0f766e; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
-
-        <div class="project-step"><div class="num">1</div><div>
-            ابدأ البرنامج بحدث: <span class="scratch-block events">when 🚩 clicked</span>
-        </div></div>
-        <div class="project-step"><div class="num">2</div><div>
-            خلّي القطة ترحّب: <span class="scratch-block looks">say <span class="scratch-block-input">شوفوا رقصتي! 💃</span> for <span class="scratch-block-input">2</span> sec</span>
-        </div></div>
-        <div class="project-step"><div class="num">3</div><div>
-            حط لوب لا نهائي عشان ترقص وتتحرك طول الوقت: <span class="scratch-block control">forever</span> وجواها الخطوات دي:
-            <div style="margin-top:8px;">
-                <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
-                <span class="scratch-block control">if on edge, bounce</span>
-                <span class="scratch-block looks">next costume</span>
-                <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span>
-            </div>
-        </div></div>
-        <div class="project-step"><div class="num">4</div><div>
-            عشان القطة متمشيش بالمقلوب لما ترتد، استخدم نمط الدوران:
-            <span class="scratch-block motion">set rotation style <span class="scratch-block-input">left-right</span></span> (في أول البرنامج).
-        </div></div>
-        <div class="project-step"><div class="num">5</div><div>
-            ضيف حدث تاني: لما تدوس على القطة تعمل صوت وتقول "هاي!":
-            <div style="margin-top:8px;">
-                <span class="scratch-block events">when this sprite clicked</span>
-                <span class="scratch-block sound">start sound <span class="scratch-block-input">Meow</span></span>
-                <span class="scratch-block looks">say <span class="scratch-block-input">هاي! 😺</span> for <span class="scratch-block-input">1</span> sec</span>
-            </div>
-        </div></div>
-        <div class="project-step"><div class="num">6</div><div>
-            وأخيراً: لما تدوس على زرار المسافة (space) القطة تكبر شوية:
-            <div style="margin-top:8px;">
-                <span class="scratch-block events">when <span class="scratch-block-input">space</span> key pressed</span>
-                <span class="scratch-block looks">change size by <span class="scratch-block-input">10</span></span>
-            </div>
-        </div></div>
-
-        <h3 style="color:#0f766e; margin:20px 0 10px;">🧩 الكود كامل (شكله في سكراتش):</h3>
-        <div class="codebox">
-<span class="ev">when 🚩 clicked</span><br>
-<span class="mo">set rotation style [left-right]</span><br>
-<span class="lo">say "شوفوا رقصتي! 💃" for 2 seconds</span><br>
-<span class="co">forever</span><br>
-&nbsp;&nbsp;<span class="mo">move 10 steps</span><br>
-&nbsp;&nbsp;<span class="co">if on edge, bounce</span><br>
-&nbsp;&nbsp;<span class="lo">next costume</span><br>
-&nbsp;&nbsp;<span class="co">wait 0.3 seconds</span><br>
-<br>
-<span class="ev">when this sprite clicked</span><br>
-&nbsp;&nbsp;<span class="so">start sound [Meow]</span><br>
-&nbsp;&nbsp;<span class="lo">say "هاي! 😺" for 1 seconds</span><br>
-<br>
-<span class="ev">when [space] key pressed</span><br>
-&nbsp;&nbsp;<span class="lo">change size by 10</span>
-        </div>
-
-        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:18px;">
-            🌟 <strong>تحديات إضافية (لو خلصت بسرعة):</strong>
-            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
-                • غيّر الخلفية (backdrop) لمسرح رقص 🪩<br>
-                • خلّي القطة تقول جملة عشوائية كل شوية<br>
-                • ضيف زرار "r" يرجّع حجمها للطبيعي (set size to 100%)
-            </div>
-        </div>
-
-        <h3 style="color:#0f766e; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
-        <ul class="checklist" id="finalChecklist">
-            <li>حطيت حدث when green flag clicked</li>
-            <li>القطة بتتحرك بـ move steps</li>
-            <li>استخدمت لوب forever</li>
-            <li>القطة بترتد بـ if on edge bounce</li>
-            <li>القطة بتبدّل أزياء بـ next costume (بترقص)</li>
-            <li>فيه صوت بيشتغل لما أدوس عليها</li>
-            <li>القطة بتكبر لما أدوس space</li>
+    <!-- ===== تقييم ذاتي ===== -->
+    <div class="card">
+        <h2 class="card-title">✅ أنا أعرف… (قيّم نفسك)</h2>
+        <p style="line-height:1.8;">دوس على كل مهارة اتقنتها. لو فيه حاجة لسه مش مظبوطة، ارجع لمحطتها وراجعها قبل الاختبار 💪</p>
+        <ul class="checklist" id="selfChecklist">
+            <li>أعرف يعني إيه مدخل ومخرج وخوارزمية</li>
+            <li>أقدر أحرّك الشخصية وأغيّر اتجاهها (move / turn / point)</li>
+            <li>أقدر أستخدم اللوب (repeat / forever) والأحداث (when 🚩 / when key)</li>
+            <li>أقدر أخلّي الشخصية تتكلم وتغيّر شكلها وحجمها (Looks)</li>
+            <li>أقدر أشغّل أصوات وأتحكم في الصوت (Sound)</li>
+            <li>أقدر أستخدم الشرط if/else وأسأل المستخدم (ask/answer)</li>
         </ul>
     </div>
 
+    <!-- ===== تشويق للاختبار ===== -->
+    <div class="card" style="background:transparent; box-shadow:none; border:none; padding:0;">
+        <div class="exam-teaser">
+            <h3>🏆 جاهز للاختبار الكبير؟</h3>
+            <p style="font-size:1.1rem; line-height:1.9; font-weight:700;">
+                في <strong>Session 8</strong> هتبني مشروعك بنفسك في سكراتش —
+                مشروع ممتع بيجمّع كل اللي اتعلمناه من Session 1 لـ 6:
+                حركة 🧭 + لوب 🔁 + أحداث 🚩 + مظاهر 🎭 + صوت 🎵 + شروط ⚡.
+                ذاكر محطاتك كويس وتعالى مستعد! 🚀
+            </p>
+        </div>
+    </div>
+
     <footer>
-        🎓 برافو عليك! خلّصت أول 5 محطات + المشروع. استعد لمغامرات جديدة في Session 8! 🚀
+        🎓 برافو عليك! خلّصت مراجعة 6 سيشنات. النهارده راجعت… وبكرة في الاختبار هتبدع! 💪🎉
     </footer>
 </div>
 
@@ -408,38 +397,48 @@
         el.textContent = body.classList.contains('show') ? '🙈 اخفي الإجابة' : '👁️ شوف الإجابة';
     }
 
+    // ===== Magic door demo (conditionals review) =====
+    const passwordInput = document.getElementById('passwordInput');
+    const passwordResult = document.getElementById('passwordResult');
+    const doorEmoji = document.getElementById('doorEmoji');
+    const SECRET = 'نجم';
+    function checkPassword() {
+        const answer = (passwordInput.value || '').trim();
+        if (answer === '') {
+            passwordResult.textContent = '⚠️ اكتب كلمة السر الأول!';
+            passwordResult.style.background = '#fee2e2'; passwordResult.style.color = '#991b1b';
+            doorEmoji.textContent = '🚪'; return;
+        }
+        if (answer === SECRET) {
+            passwordResult.textContent = '🎉 الباب فتح! أهلاً بيك جوّه!';
+            passwordResult.style.background = '#d1fae5'; passwordResult.style.color = '#065f46';
+            doorEmoji.textContent = '🚪✨';
+        } else {
+            passwordResult.textContent = '🔒 كلمة السر غلط! الباب مقفول.';
+            passwordResult.style.background = '#fee2e2'; passwordResult.style.color = '#991b1b';
+            doorEmoji.textContent = '🚪🔒';
+        }
+    }
+    function resetPassword() {
+        passwordInput.value = '';
+        passwordResult.textContent = '⏳ اكتب كلمة السر واضغط "افتح الباب"';
+        passwordResult.style.background = 'white'; passwordResult.style.color = '#333';
+        doorEmoji.textContent = '🚪';
+    }
+    document.getElementById('checkPasswordBtn').addEventListener('click', checkPassword);
+    document.getElementById('resetPasswordBtn').addEventListener('click', resetPassword);
+    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkPassword(); });
+
     // ===== Quiz =====
     const QUIZ = [
-        {
-            q: "💻 الميكروفون في الكمبيوتر بيعتبر إيه؟",
-            opts: ["مخرج (Output)", "مدخل (Input)", "معالج (Process)"],
-            correct: 1
-        },
-        {
-            q: "🧭 لو عايز الشخصية تمشي لقدّام، أنهي بلوك تستخدم؟",
-            opts: ["move 10 steps", "say Hello", "play sound"],
-            correct: 0
-        },
-        {
-            q: "🔁 عايز الشخصية تتحرك طول الوقت من غير ما تقف. تستخدم أنهي لوب؟",
-            opts: ["repeat 4", "forever", "wait 1 second"],
-            correct: 1
-        },
-        {
-            q: "🚩 أنهي بلوك بيبدأ البرنامج لما تضغط العلم الأخضر؟",
-            opts: ["when green flag clicked", "next costume", "turn 15 degrees"],
-            correct: 0
-        },
-        {
-            q: "🎭 عشان الشخصية تبان بتتحرك أو ترقص، بنبدّل الـ...؟",
-            opts: ["الصوت", "الأزياء (Costumes)", "مستوى الصوت"],
-            correct: 1
-        },
-        {
-            q: "🎵 عايز الصوت يخلّص الأول قبل ما الشخصية تكمّل. تستخدم؟",
-            opts: ["start sound", "stop all sounds", "play sound until done"],
-            correct: 2
-        }
+        { q: "💻 الميكروفون في الكمبيوتر بيعتبر إيه؟", opts: ["مخرج (Output)", "مدخل (Input)", "معالج (Process)"], correct: 1 },
+        { q: "🧭 لو عايز الشخصية تمشي لقدّام، أنهي بلوك تستخدم؟", opts: ["move 10 steps", "say Hello", "play sound"], correct: 0 },
+        { q: "🔁 عايز الشخصية تتحرك طول الوقت من غير ما تقف. تستخدم أنهي لوب؟", opts: ["repeat 4", "forever", "wait 1 second"], correct: 1 },
+        { q: "🚩 أنهي بلوك بيبدأ البرنامج لما تضغط العلم الأخضر؟", opts: ["when green flag clicked", "next costume", "turn 15 degrees"], correct: 0 },
+        { q: "🎭 عشان الشخصية تبان بتتحرك (أنيميشن)، بنبدّل الـ...؟", opts: ["الصوت", "الأزياء (Costumes)", "مستوى الصوت"], correct: 1 },
+        { q: "🎵 عايز الصوت يخلّص الأول قبل ما الشخصية تكمّل. تستخدم؟", opts: ["start sound", "stop all sounds", "play sound until done"], correct: 2 },
+        { q: "⚡ أنهي بلوك بيخلّي البرنامج ياخد قرار (لو… اعمل كذا)؟", opts: ["if ... then", "move 10 steps", "next costume"], correct: 0 },
+        { q: "💬 عايز تسأل المستخدم سؤال وتستنى إجابته. تستخدم؟", opts: ["say Hello", "ask [...] and wait", "play sound"], correct: 1 }
     ];
 
     let answered = 0, score = 0;
@@ -467,72 +466,32 @@
             quizArea.appendChild(block);
         });
     }
-
     function handleAnswer(block, btn, qi, oi) {
         if (block.dataset.done) return;
         block.dataset.done = '1';
         const correctIdx = QUIZ[qi].correct;
-        const buttons = block.querySelectorAll('.quiz-opt');
-        buttons.forEach((b, i) => {
+        block.querySelectorAll('.quiz-opt').forEach((b, i) => {
             b.disabled = true;
             if (i === correctIdx) b.classList.add('correct');
         });
-        if (oi === correctIdx) {
-            score++;
-        } else {
-            btn.classList.add('wrong');
-        }
+        if (oi === correctIdx) score++; else btn.classList.add('wrong');
         answered++;
         if (answered === QUIZ.length) showScore();
     }
-
     function showScore() {
         let msg;
-        if (score === QUIZ.length) msg = `🏆 ممتاز جداً! جبت ${score} من ${QUIZ.length} — انت نجم! ⭐`;
-        else if (score >= 4) msg = `😍 شاطر! جبت ${score} من ${QUIZ.length}. شوية كمان وتبقى محترف!`;
+        if (score === QUIZ.length) msg = `🏆 ممتاز جداً! جبت ${score} من ${QUIZ.length} — نتيجة ممتازة! ⭐`;
+        else if (score >= 6) msg = `😍 شطارة! جبت ${score} من ${QUIZ.length}. جاهز للاختبار تقريباً!`;
         else msg = `💪 جبت ${score} من ${QUIZ.length}. ارجع للمحطات وراجع تاني، انت قدها!`;
         scoreBanner.textContent = msg;
         scoreBanner.classList.add('show');
     }
-
     document.getElementById('resetQuizBtn').addEventListener('click', buildQuiz);
     buildQuiz();
 
-    // ===== Final checklist =====
-    document.querySelectorAll('#finalChecklist li').forEach(li => {
+    // ===== Self checklist =====
+    document.querySelectorAll('#selfChecklist li').forEach(li => {
         li.addEventListener('click', () => li.classList.toggle('done'));
-    });
-
-    // ===== Project preview (dancing cat) =====
-    const danceChar = document.getElementById('danceChar');
-    const stage = document.getElementById('projectStage');
-    const costumes = ['🐱', '😸', '😺', '😻'];
-    let projTimer = null, pos = 30, dir = 1, ci = 0;
-
-    function startProject() {
-        stopProject();
-        const stageWidth = stage.clientWidth - 60;
-        projTimer = setInterval(() => {
-            pos += dir * 8;
-            if (pos >= stageWidth) { pos = stageWidth; dir = -1; danceChar.style.transform = 'scaleX(-1)'; }
-            if (pos <= 10) { pos = 10; dir = 1; danceChar.style.transform = 'scaleX(1)'; }
-            danceChar.style.left = pos + 'px';
-            ci = (ci + 1) % costumes.length;
-            danceChar.textContent = costumes[ci];
-        }, 250);
-    }
-    function stopProject() {
-        if (projTimer) { clearInterval(projTimer); projTimer = null; }
-    }
-    document.getElementById('playProjectBtn').addEventListener('click', startProject);
-    document.getElementById('stopProjectBtn').addEventListener('click', stopProject);
-    danceChar.addEventListener('click', () => {
-        danceChar.textContent = '😻';
-        const bubble = document.createElement('div');
-        bubble.textContent = 'هاي! 😺';
-        bubble.style.cssText = 'position:absolute; background:white; padding:6px 14px; border-radius:15px; font-weight:bold; bottom:90px; left:'+pos+'px; box-shadow:0 4px 10px rgba(0,0,0,0.2); z-index:20;';
-        stage.appendChild(bubble);
-        setTimeout(() => bubble.remove(), 1200);
     });
 </script>
 </body>
