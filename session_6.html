@@ -316,14 +316,14 @@
 
     <!-- ===== تجربة تفاعلية: الرقم أكبر من 10؟ ===== -->
     <div class="card">
-        <h2 class="card-title">🎮 تجربة تفاعلية: هل الرقم أكبر من 10؟</h2>
-        <p>أدخل رقماً في المربع، ثم اضغط "تحقق" لترى نتيجة الشرط. هذا يحاكي استخدام <span class="scratch-block sensing">ask</span> و <span class="scratch-block control">if</span>.</p>
+        <h2 class="card-title">🎮 تجربة تفاعلية: هل نقاطك أكبر من 10؟</h2>
+        <p>اكتب عدد نقاطك في اللعبة، ثم اضغط "تحقق" لترى نتيجة الشرط. لو نقاطك أكبر من 10 تكون فزت! هذا يحاكي استخدام <span class="scratch-block sensing">ask</span> و <span class="scratch-block control">if</span>.</p>
         <div class="demo-stage" style="min-height: 180px;">
             <div class="stage-grid"></div>
             <div style="position: relative; z-index: 10; text-align: center;">
-                <div style="font-size: 3rem; margin-bottom: 10px;">🧮</div>
+                <div style="font-size: 3rem; margin-bottom: 10px;">🏆</div>
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; align-items: center;">
-                    <input type="number" id="numberInput" class="input-number" value="15" step="1">
+                    <input type="number" id="numberInput" class="input-number" value="15" step="1" min="0">
                     <button class="ctrl-btn purple" id="checkNumberBtn">🔍 تحقق</button>
                     <button class="ctrl-btn orange" id="resetNumberBtn">🔄 إعادة</button>
                 </div>
@@ -337,37 +337,68 @@
         </div>
     </div>
 
-    <!-- ===== التحدي الرئيسي: موجب أم سالب ===== -->
+    <!-- ===== مثال بصري سهل: مين أكتر؟ ===== -->
     <div class="card">
-        <h2 class="card-title">🏆 تحدي: هل الرقم موجب أم سالب؟</h2>
-        <p>استخدم ما تعلمته عن <span class="scratch-block control">if</span> وبلوكات المقارنة لتحديد إذا كان الرقم <strong>موجباً</strong> أم <strong>سالباً</strong>.</p>
-        
+        <h2 class="card-title">🍎 مثال سهل جداً: مين عنده تفاح أكتر؟</h2>
+        <p style="line-height:1.8;">
+            عشان نفهم بلوك المقارنة <span class="scratch-block operators">&gt;</span> بشكل سهل،
+            تخيّل إن عندنا طبقين فيهم تفاح. البرنامج بيبص على الطبقين ويقول مين فيهم تفاح أكتر.
+            ده بالظبط اللي بيعمله الشرط <span class="scratch-block control">if</span>!
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center; align-items:center; margin:20px 0;">
+            <div style="background:#fef3c7; border-radius:25px; padding:20px; text-align:center;">
+                <div style="font-size:2rem;">🍎🍎🍎🍎🍎</div>
+                <p style="font-weight:800; color:#92400e; margin-top:8px;">طبق أحمد = 5 تفاحات</p>
+            </div>
+            <div style="font-size:2.5rem; font-weight:900; color:#7c3aed;">&gt;</div>
+            <div style="background:#dcfce7; border-radius:25px; padding:20px; text-align:center;">
+                <div style="font-size:2rem;">🍎🍎🍎</div>
+                <p style="font-weight:800; color:#065f46; margin-top:8px;">طبق سارة = 3 تفاحات</p>
+            </div>
+        </div>
+        <div class="status-box success">
+            ✅ 5 أكبر من 3 → يبقى الشرط <strong>صحيح (True)</strong> → الشخصية تقول: "أحمد عنده تفاح أكتر! 🎉"
+        </div>
+        <p style="line-height:1.8; margin-top:10px;">
+            👈 لاحظ إننا استخدمنا أرقام عادية بسيطة (5 و 3)، زي ما بنعدّ حاجات حوالينا بالظبط.
+        </p>
+    </div>
+
+    <!-- ===== التحدي الرئيسي: الباب السحري (كلمة السر) ===== -->
+    <div class="card">
+        <h2 class="card-title">🚪🔑 تحدي: الباب السحري وكلمة السر</h2>
+        <p style="line-height:1.8;">
+            في التحدي ده هنستخدم بلوك المقارنة <span class="scratch-block operators">=</span> (يساوي).
+            الفكرة بسيطة وممتعة: في باب سحري ميفتحش غير لما تكتب <strong>كلمة السر الصحيحة</strong>.
+            لو كتبت الكلمة الصح، الباب بيفتح 🎉، ولو غلط بيفضل مقفول 🔒.
+        </p>
+
         <div class="challenge-area">
-            <p style="font-weight:800; color:#92400e;">🎯 جرب بنفسك:</p>
+            <p style="font-weight:800; color:#92400e;">🎯 جرب بنفسك — كلمة السر هي: <span style="background:#fff; padding:3px 12px; border-radius:12px;">نجم</span></p>
             <div style="text-align: center; margin: 15px 0;">
+                <div style="font-size: 3.5rem; margin-bottom: 10px;" id="doorEmoji">🚪</div>
                 <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; align-items: center;">
-                    <input type="number" id="positiveNegativeInput" class="input-number" value="-5" step="1">
-                    <button class="ctrl-btn green" id="checkPositiveNegativeBtn">🔍 موجب أم سالب؟</button>
-                    <button class="ctrl-btn orange" id="resetPositiveNegativeBtn">🔄 إعادة</button>
+                    <input type="text" id="passwordInput" class="input-number" style="width:200px;" placeholder="اكتب كلمة السر هنا">
+                    <button class="ctrl-btn green" id="checkPasswordBtn">🔑 افتح الباب</button>
+                    <button class="ctrl-btn orange" id="resetPasswordBtn">🔄 إعادة</button>
                 </div>
-                <div id="positiveNegativeResult" class="result-bubble" style="margin-top: 15px;">
-                    ⏳ أدخل رقماً وتحقق
+                <div id="passwordResult" class="result-bubble" style="margin-top: 15px;">
+                    ⏳ اكتب كلمة السر واضغط "افتح الباب"
                 </div>
             </div>
         </div>
 
         <div style="background: #f3e8ff; border-radius: 25px; padding: 20px; margin: 15px 0;">
-            <p style="font-weight:800; color:#5b21b6;">📋 كيف يعمل البرنامج؟</p>
+            <p style="font-weight:800; color:#5b21b6;">📋 إزاي البرنامج بيشتغل؟</p>
             <ol style="padding-right: 25px; line-height: 2;">
-                <li>يسأل المستخدم عن رقم (باستخدام <span class="scratch-block sensing">ask and wait</span>).</li>
-                <li>يخزن الإجابة في <span class="scratch-block sensing">answer</span>.</li>
-                <li>يستخدم <span class="scratch-block control">if ... else</span> للتحقق:</li>
+                <li>البرنامج يسأل المستخدم: "اكتب كلمة السر" (باستخدام <span class="scratch-block sensing">ask and wait</span>).</li>
+                <li>الإجابة بتتخزن في <span class="scratch-block sensing">answer</span>.</li>
+                <li>نستخدم <span class="scratch-block control">if ... else</span> للتحقق:</li>
                 <ul style="padding-right: 25px; line-height: 2; list-style-type: circle;">
-                    <li>إذا كان <span class="scratch-block operators">answer > 0</span> → الرقم <strong>موجب</strong> ✅</li>
-                    <li>إذا كان <span class="scratch-block operators">answer < 0</span> → الرقم <strong>سالب</strong> ❌</li>
-                    <li>إذا كان <span class="scratch-block operators">answer = 0</span> → الرقم <strong>صفر</strong> (تحدي إضافي!)</li>
+                    <li>لو <span class="scratch-block operators">answer = نجم</span> → الباب يفتح 🎉</li>
+                    <li>غير كده (else) → الباب يفضل مقفول 🔒</li>
                 </ul>
-                <li>يُظهر النتيجة باستخدام <span class="scratch-block looks">say</span>.</li>
+                <li>نُظهر النتيجة باستخدام <span class="scratch-block looks">say</span>.</li>
             </ol>
         </div>
 
@@ -375,15 +406,17 @@
             <p style="font-weight:800; color:#065f46;">💡 تلميح: الكود في سكراتش</p>
             <div style="background: #1e293b; border-radius: 15px; padding: 15px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 8px;">
                 <span style="color:#f472b6;">when</span> <span style="color:#60a5fa;">green flag</span> <span style="color:#f472b6;">clicked</span><br>
-                <span style="color:#34d399;">ask</span> <span style="color:#f472b6;">"أدخل رقماً"</span> <span style="color:#f472b6;">and wait</span><br>
-                <span style="color:#f472b6;">if</span> <span style="color:#fbbf24;">(answer > 0)</span> <span style="color:#f472b6;">then</span><br>
-                &nbsp;&nbsp;<span style="color:#34d399;">say</span> <span style="color:#f472b6;">"الرقم موجب ✅"</span><br>
+                <span style="color:#34d399;">ask</span> <span style="color:#f472b6;">"اكتب كلمة السر"</span> <span style="color:#f472b6;">and wait</span><br>
+                <span style="color:#f472b6;">if</span> <span style="color:#fbbf24;">(answer = "نجم")</span> <span style="color:#f472b6;">then</span><br>
+                &nbsp;&nbsp;<span style="color:#34d399;">say</span> <span style="color:#f472b6;">"الباب فتح! 🎉"</span><br>
                 <span style="color:#f472b6;">else</span><br>
-                &nbsp;&nbsp;<span style="color:#34d399;">say</span> <span style="color:#f472b6;">"الرقم سالب ❌"</span>
+                &nbsp;&nbsp;<span style="color:#34d399;">say</span> <span style="color:#f472b6;">"كلمة السر غلط 🔒"</span>
             </div>
         </div>
 
-      
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:15px;">
+            🌟 <strong>تحدي إضافي:</strong> خلّي الباب يفتح بكلمتين سر مختلفتين (مثلاً "نجم" أو "قمر) باستخدام شرطين <span class="scratch-block control">if</span>.
+        </div>
     </div>
 
 </div>
@@ -438,51 +471,53 @@
         if (e.key === 'Enter') checkNumber();
     });
 
-    // ===== Positive / Negative Checker =====
-    const positiveNegativeInput = document.getElementById('positiveNegativeInput');
-    const checkPositiveNegativeBtn = document.getElementById('checkPositiveNegativeBtn');
-    const resetPositiveNegativeBtn = document.getElementById('resetPositiveNegativeBtn');
-    const positiveNegativeResult = document.getElementById('positiveNegativeResult');
+    // ===== Magic Door: Password Checker (uses = equality) =====
+    const passwordInput = document.getElementById('passwordInput');
+    const checkPasswordBtn = document.getElementById('checkPasswordBtn');
+    const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+    const passwordResult = document.getElementById('passwordResult');
+    const doorEmoji = document.getElementById('doorEmoji');
+    const SECRET = 'نجم';
 
-    function checkPositiveNegative() {
-        const num = parseInt(positiveNegativeInput.value);
-        if (isNaN(num)) {
-            positiveNegativeResult.textContent = '⚠️ من فضلك أدخل رقماً صحيحاً!';
-            positiveNegativeResult.style.background = '#fee2e2';
-            positiveNegativeResult.style.color = '#991b1b';
+    function checkPassword() {
+        const answer = (passwordInput.value || '').trim();
+        if (answer === '') {
+            passwordResult.textContent = '⚠️ اكتب كلمة السر الأول!';
+            passwordResult.style.background = '#fee2e2';
+            passwordResult.style.color = '#991b1b';
+            doorEmoji.textContent = '🚪';
             return;
         }
-        if (num > 0) {
-            positiveNegativeResult.textContent = `✅ الرقم ${num} موجب!`;
-            positiveNegativeResult.style.background = '#d1fae5';
-            positiveNegativeResult.style.color = '#065f46';
-        } else if (num < 0) {
-            positiveNegativeResult.textContent = `❌ الرقم ${num} سالب!`;
-            positiveNegativeResult.style.background = '#fee2e2';
-            positiveNegativeResult.style.color = '#991b1b';
+        if (answer === SECRET) {
+            passwordResult.textContent = '🎉 الباب فتح! أهلاً بيك جوّه!';
+            passwordResult.style.background = '#d1fae5';
+            passwordResult.style.color = '#065f46';
+            doorEmoji.textContent = '🚪✨';
         } else {
-            positiveNegativeResult.textContent = `⚪ الرقم صفر!`;
-            positiveNegativeResult.style.background = '#fef9c3';
-            positiveNegativeResult.style.color = '#92400e';
+            passwordResult.textContent = '🔒 كلمة السر غلط! الباب مقفول.';
+            passwordResult.style.background = '#fee2e2';
+            passwordResult.style.color = '#991b1b';
+            doorEmoji.textContent = '🚪🔒';
         }
     }
 
-    function resetPositiveNegative() {
-        positiveNegativeInput.value = '-5';
-        positiveNegativeResult.textContent = '⏳ أدخل رقماً وتحقق';
-        positiveNegativeResult.style.background = 'white';
-        positiveNegativeResult.style.color = '#333';
+    function resetPassword() {
+        passwordInput.value = '';
+        passwordResult.textContent = '⏳ اكتب كلمة السر واضغط "افتح الباب"';
+        passwordResult.style.background = 'white';
+        passwordResult.style.color = '#333';
+        doorEmoji.textContent = '🚪';
     }
 
-    checkPositiveNegativeBtn.addEventListener('click', checkPositiveNegative);
-    resetPositiveNegativeBtn.addEventListener('click', resetPositiveNegative);
-    positiveNegativeInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') checkPositiveNegative();
+    checkPasswordBtn.addEventListener('click', checkPassword);
+    resetPasswordBtn.addEventListener('click', resetPassword);
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkPassword();
     });
 
     // ===== Initialize =====
     resetNumber();
-    resetPositiveNegative();
+    resetPassword();
 </script>
 </body>
 </html>
