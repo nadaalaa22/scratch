@@ -286,10 +286,9 @@
 
 <script>
   (function() {
-    // ✅ Total sessions updated to 6
-    const totalSessions = 6;
-    
-    // Session metadata — titles only, descriptions removed as requested
+    // ✅ Total sessions updated to 21
+    const totalSessions = 7;
+
     const sessionsData = {
       1: {
         emoji: "💻⚙️",
@@ -314,6 +313,66 @@
       6: {
         emoji: "⚡❓",
         title: "Session 6: Conditional Statements (If)"
+      },
+      7: {
+        emoji: "🎉🧠",
+        title: "Session 7: Big Revision (Sessions 1–6)"
+      },
+      8: {
+        emoji: "🏆🐱",
+        title: "Session 8: Practical Exam — Interactive Cat"
+      },
+      9: {
+        emoji: "🔁♾️",
+        title: "Session 9: Forever, Wait & Repeat Until"
+      },
+      10: {
+        emoji: "📦🔢",
+        title: "Session 10: Variables — Score Counter"
+      },
+      11: {
+        emoji: "🖐️🎯",
+        title: "Session 11: Sensing & Touching"
+      },
+      12: {
+        emoji: "🗺️🚀",
+        title: "Session 12: Coordinates & Glide"
+      },
+      13: {
+        emoji: "📢💬",
+        title: "Session 13: Broadcast Messages"
+      },
+      14: {
+        emoji: "🎲🤔",
+        title: "Session 14: Guessing Game (Variables + If)"
+      },
+      15: {
+        emoji: "👯💧",
+        title: "Session 15: Clones"
+      },
+      16: {
+        emoji: "🖌️🌈",
+        title: "Session 16: Pen — Drawing with Code"
+      },
+      17: {
+        emoji: "🍎🧺",
+        title: "Session 17: Project — Catch the Falling Fruits"
+      },
+      18: {
+        emoji: "🌀🏁",
+        title: "Session 18: Project — Maze Game"
+      },
+      19: {
+        emoji: "🎬✨",
+        title: "Session 19: Project — Animated Interactive Story"
+      },
+      20: {
+        emoji: "🏆❓",
+        title: "Session 20: Project — Quiz Game"
+      },
+      21: {
+        emoji: "🎓🎉",
+        title: "Session 21: Your Own Project + Graduation"
       }
     };
     
@@ -359,13 +418,12 @@
       else if (i === 3) lightBg = "#EBFFEF";
       else if (i === 4) lightBg = "#FDF2F8";
       else if (i === 5) lightBg = "#F0F9FF";
-      else lightBg = "#F3E8FF";   // soft purple for session 6 (if/conditional theme)
+      else lightBg = "#F3E8FF";   
       card.style.background = `linear-gradient(145deg, #ffffff, ${lightBg})`;
       
       const delay = (i - 1) * 0.08;
       card.style.animationDelay = `${delay}s`;
       
-      // Description line is completely removed
       card.innerHTML = `
         <div class="card-emoji">${data.emoji}</div>
         <div class="session-title">${data.title}</div>
