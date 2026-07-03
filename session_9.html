@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 9 - اللوبات المستمرة: forever و wait و repeat until 🔁</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #ecfeff 0%, #f0fdfa 50%, #fef9c3 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+            --scratch-operators: #5cb1d6;
+            --scratch-sensing: #5cb1d6;
+            --scratch-variables: #ff8c1a;
+            --scratch-pen: #0fbd8c;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #06b6d4, #0ea5e9, #38bdf8);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(6,182,212,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🔁'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '✨'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #99f6e4; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #06b6d4, #0ea5e9);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .station-badge {
+            display:inline-block; background:#06b6d4; color:white; font-weight:900;
+            padding:5px 18px; border-radius:50px; font-size:0.95rem; margin-bottom:12px;
+            box-shadow:0 4px 0 rgba(0,0,0,0.15);
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.operators { background: #5cb1d6; }
+        .scratch-block.sensing { background: #5cb1d6; }
+        .scratch-block.variables { background: #ff8c1a; }
+        .scratch-block.pen { background: #0fbd8c; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
+        .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
+        .recap-item:hover { transform: scale(1.03); border-color: #2dd4bf; }
+        .recap-item .ricon { font-size: 2.2rem; }
+        .recap-item h4 { color: #0f766e; margin: 8px 0 4px; }
+        .recap-item p { font-size: 0.85rem; color: #475569; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.teal { background: #14b8a6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.blue { background: #0ea5e9; }
+        .ctrl-btn.red { background: #ef4444; }
+        .status-box { background: #ecfeff; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #06b6d4; margin: 15px 0; }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .mini-task {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border: 3px dashed #f59e0b; border-radius: 25px; padding: 20px; margin: 15px 0;
+        }
+        .mini-task h4 { color: #92400e; font-size: 1.15rem; margin-bottom: 8px; }
+        .hint-toggle { cursor: pointer; color: #0e7490; font-weight: 800; text-decoration: underline; margin-top: 8px; display: inline-block; }
+        .hint-body { display: none; background: #fff; border-radius: 15px; padding: 12px; margin-top: 8px; border: 2px solid #a5f3fc; }
+        .hint-body.show { display: block; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Final project / demo stage */
+        .demo-stage {
+            background: linear-gradient(145deg, #cffafe, #a5f3fc);
+            border-radius: 30px; height: 260px; position: relative; overflow: hidden;
+            margin: 20px 0; border: 4px solid #67e8f9; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #creature { position: absolute; font-size: 3.2rem; bottom: 30px; left: 50px; transition: left 0.1s linear; z-index:10; }
+        #starBlink { position: absolute; font-size: 2.6rem; top: 30px; left: 50%; transform: translateX(-50%); z-index:9; transition: opacity 0.1s; }
+        #fishChar { position: absolute; font-size: 3rem; top: 100px; left: 50px; z-index:10; transition: left 0.1s linear; }
+        .bubblefx { position:absolute; font-size:1.2rem; opacity:0.6; }
+        .project-step {
+            background: #f0fdfa; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
+            border-right: 6px solid #14b8a6; display:flex; gap:12px; align-items:flex-start;
+        }
+        .project-step .num { background:#14b8a6; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#10b981; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .tx { color:#86efac; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #06b6d4; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🔁 اللوبات المستمرة: forever و wait و repeat until</h1>
+        <p>خلّي شخصياتك تتحرك وتلمع طول الوقت! ✨</p>
+    </div>
+
+    <!-- ===== الهدف ===== -->
+    <div class="card">
+        <h2 class="card-title">🎯 الهدف: إيه اللي هنتعلمه النهارده؟</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            في الـ Session اللي فات اتعلمنا الـ <span class="scratch-block control">forever</span> سريع كده.
+            النهارده هنفهمه صح ونتعرّف على إخواته! 💪 هنتعلم إزاي نخلّي الشخصية تتحرك وتلمع <strong>طول الوقت</strong>،
+            وإزاي نتحكم في <strong>سرعة الحركة</strong> عشان نقدر نشوفها بعينينا. 👀
+        </p>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">♾️</div><h4>forever</h4><p>لوب لا نهائي بيفضل شغال للأبد</p></div>
+            <div class="recap-item"><div class="ricon">⏳</div><h4>wait</h4><p>يستنى شوية قبل ما يكمّل</p></div>
+            <div class="recap-item"><div class="ricon">🏁</div><h4>repeat until</h4><p>يكرّر لحد ما يحصل شرط</p></div>
+            <div class="recap-item"><div class="ricon">✨</div><h4>أمثلة حلوة</h4><p>نجمة بتلمع، خفاش بيرفرف، سمكة بتسبح</p></div>
+        </div>
+    </div>
+
+    <!-- ===== forever ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#ffab19;">♾️ المفهوم الأول</span>
+        <h2 class="card-title">forever — لوب اللي بيفضل شغال للأبد</h2>
+        <p style="line-height:1.8;">
+            بلوك <span class="scratch-block control">forever</span> معناه: <strong>"كرّر اللي جواك للأبد، ومتقفش أبداً!"</strong> ♾️
+            أي بلوكات تحطها جوّه الـ forever هتفضل تتكرر طول ما البرنامج شغّال.
+            بنستخدمه لما عايزين حاجة تحصل <strong>طول الوقت</strong> — زي قلب بيدق ❤️ أو نجمة بتلمع ✨.
+        </p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block events">when 🚩 clicked</span><br>
+            <span class="scratch-block control">forever</span>
+            <div style="margin-top:6px;">
+                <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+                <span class="scratch-block control">if on edge, bounce</span>
+            </div>
+        </div>
+        <div class="status-box">♾️ الشخصية هنا هتمشي وترتد على الحافة وترجع… <strong>طول الوقت من غير ما تقف</strong>!</div>
+    </div>
+
+    <!-- ===== wait ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#ffab19;">⏳ المفهوم الثاني</span>
+        <h2 class="card-title">wait — استنى شوية قبل ما تكمّل</h2>
+        <p style="line-height:1.8;">
+            بلوك <span class="scratch-block control">wait <span class="scratch-block-input">0.5</span> seconds</span> بيخلّي البرنامج
+            <strong>يستنى شوية</strong> قبل ما يكمّل اللي بعده. ⏳
+        </p>
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b;">
+            💡 الـ wait مهم جداً! الكمبيوتر سريع جداً جداً ⚡ — لو من غير wait، كل الحركة هتحصل بسرعة رهيبة وانت مش هتشوف حاجة!
+            الـ wait بيدّينا فرصة نشوف الحركة بعينينا. 👀
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; margin:15px 0;">
+            <div style="flex:1; min-width:220px; background:#fee2e2; border-radius:25px; padding:18px; text-align:center;">
+                <h4 style="color:#991b1b;">⚡ من غير wait</h4>
+                <p style="color:#7f1d1d;">كل حاجة بتحصل في لمح البصر — مش هتشوف الحركة خالص!</p>
+            </div>
+            <div style="flex:1; min-width:220px; background:#d1fae5; border-radius:25px; padding:18px; text-align:center;">
+                <h4 style="color:#065f46;">⏳ مع wait</h4>
+                <p style="color:#064e3b;">الحركة بتبقى هادية وواضحة، وتقدر تتفرّج عليها! 😍</p>
+            </div>
+        </div>
+        <div class="status-box">
+            ⏳ رقم أصغر (زي <strong>0.1</strong>) = حركة <strong>أسرع</strong>. رقم أكبر (زي <strong>0.5</strong>) = حركة <strong>أبطأ وأهدى</strong>.
+        </div>
+    </div>
+
+    <!-- ===== repeat until ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#ffab19;">🏁 المفهوم الثالث</span>
+        <h2 class="card-title">repeat until — كرّر لحد ما يحصل شرط</h2>
+        <p style="line-height:1.8;">
+            بلوك <span class="scratch-block control">repeat until &lt;...&gt;</span> بيكرّر اللي جوّاه
+            <strong>لحد ما شرط معيّن يتحقق</strong>، وبعدين <strong>يقف</strong>. 🏁
+            يعني زي ما تقول: "امشي… امشي… امشي… <strong>لحد ما توصل الحافة</strong> وبعدها قف!" 🚶
+        </p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block control">repeat until <span class="scratch-block-input">touching edge?</span></span>
+            <div style="margin-top:6px;">
+                <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+                <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span>
+            </div>
+        </div>
+
+        <h3 style="color:#0f766e; margin:18px 0 10px;">🤔 الفرق بين التلاتة (مهم جداً!):</h3>
+        <div class="recap-grid">
+            <div class="recap-item" style="border-color:#fbbf24;">
+                <div class="ricon">🔢</div>
+                <h4>repeat 10</h4>
+                <p>يكرّر <strong>عدد محدد</strong> من المرات (10 مرات) وبعدين يقف</p>
+            </div>
+            <div class="recap-item" style="border-color:#f59e0b;">
+                <div class="ricon">♾️</div>
+                <h4>forever</h4>
+                <p>يكرّر <strong>للأبد</strong> ومبيقفش خالص</p>
+            </div>
+            <div class="recap-item" style="border-color:#fb923c;">
+                <div class="ricon">🏁</div>
+                <h4>repeat until</h4>
+                <p>يكرّر <strong>لحد ما شرط يحصل</strong> وبعدها يقف</p>
+            </div>
+        </div>
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b;">
+            🌟 خليها في دماغك: <strong>عدد معروف؟</strong> استخدم repeat. <strong>للأبد؟</strong> استخدم forever. <strong>لحد ما يحصل حاجة؟</strong> استخدم repeat until.
+        </div>
+    </div>
+
+    <!-- ===== أمثلة من الحياة ===== -->
+    <div class="card">
+        <h2 class="card-title">🌍 أمثلة من حواليك على اللوبات المستمرة</h2>
+        <p style="line-height:1.8;">حاجات كتير حواليك بتفضل بتعمل نفس الحاجة طول الوقت — دي زي الـ <span class="scratch-block control">forever</span> بالظبط!</p>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">✨</div><h4>نجمة بتلمع</h4><p>تظهر… تختفي… تظهر… طول الوقت</p></div>
+            <div class="recap-item"><div class="ricon">🦇</div><h4>خفاش بيرفرف</h4><p>بيحرّك جناحاته من غير ما يقف</p></div>
+            <div class="recap-item"><div class="ricon">🕐</div><h4>ساعة بتدق</h4><p>تيك… تاك… تيك… للأبد</p></div>
+            <div class="recap-item"><div class="ricon">❤️</div><h4>قلب بيدق</h4><p>بيكبر ويصغّر طول الوقت</p></div>
+        </div>
+    </div>
+
+    <!-- ===== التجربة التفاعلية ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 جرّب بنفسك: المسرح المتحرك!</h2>
+        <p style="line-height:1.8;">
+            في المسرح ده فيه فراشة 🦋 بتتحرك يمين وشمال بالـ <span class="scratch-block control">forever</span>،
+            ونجمة ✨ بتلمع بالـ <span class="scratch-block control">wait</span>. دوس على الأزرار وشوف بنفسك!
+            جرّب تغيّر سرعة الـ wait وشوف الفرق. 👇
+        </p>
+
+        <div class="demo-stage" id="demoStage">
+            <div id="starBlink">✨</div>
+            <div id="creature">🦋</div>
+        </div>
+
+        <div style="text-align:center; margin-bottom:10px;">
+            <button class="ctrl-btn teal" id="startBtn">▶️ forever (حركة مستمرة)</button>
+            <button class="ctrl-btn red" id="stopBtn">⏹️ وقّف</button>
+        </div>
+        <div style="text-align:center; margin-bottom:10px;">
+            <span style="font-weight:800; color:#0f766e;">⏳ غيّر سرعة الـ wait:</span><br>
+            <button class="ctrl-btn green" id="slow05Btn">🐢 wait 0.5 (بطيء وواضح)</button>
+            <button class="ctrl-btn blue" id="fast01Btn">🐇 wait 0.1 (أسرع)</button>
+            <button class="ctrl-btn orange" id="nowaitBtn">⚡ من غير wait (بسرعة جداً!)</button>
+        </div>
+        <div class="status-box" id="demoStatus">💡 دوس على "▶️ forever" عشان تبدأ، وبعدين جرّب أزرار السرعة!</div>
+    </div>
+
+    <!-- ===== التمارين الصغيرة ===== -->
+    <div class="card">
+        <h2 class="card-title">🧩 تمارين سريعة — فكّر وبعدين شوف الحل</h2>
+
+        <!-- Mini task 1 -->
+        <div class="mini-task">
+            <h4>✨ تمرين 1: خلّي نجمة تلمع</h4>
+            <p>عايزين نجمة تظهر وتختفي طول الوقت كأنها بتلمع. جوّه أنهي لوب نحط الخطوات؟ وأنهي بلوكات نستخدم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                جوّه <span class="scratch-block control">forever</span>:
+                <div style="margin-top:6px;">
+                    <span class="scratch-block looks">show</span> →
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span> →
+                    <span class="scratch-block looks">hide</span> →
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span>
+                </div>
+                ✨ النجمة بتظهر، تستنى شوية، تختفي، تستنى شوية… وكده تبان بتلمع!
+            </div>
+        </div>
+
+        <!-- Mini task 2 -->
+        <div class="mini-task">
+            <h4>🦇 تمرين 2: خفاش يطير للأبد</h4>
+            <p>عايزين خفاش يطير في الشاشة طول الوقت، يرفرف بجناحاته، ويرتد لما يوصل الحافة. أنهي بلوكات تحط جوّه الـ forever؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                جوّه <span class="scratch-block control">forever</span>:
+                <div style="margin-top:6px;">
+                    <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+                    <span class="scratch-block control">if on edge, bounce</span>
+                    <span class="scratch-block looks">next costume</span>
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span>
+                </div>
+                🦇 الـ next costume بيبدّل شكل الجناحين فيبان بيرفرف، والـ wait بيخلّي الرفرفة واضحة!
+            </div>
+        </div>
+
+        <!-- Mini task 3 -->
+        <div class="mini-task" style="background:linear-gradient(145deg,#cffafe,#a5f3fc); border-color:#06b6d4;">
+            <h4 style="color:#0e7490;">🤔 تمرين 3: إيه الفرق بين forever و repeat 5؟</h4>
+            <p>صاحبك بيسألك: إيه الفرق بين <span class="scratch-block control">forever</span> و <span class="scratch-block control">repeat <span class="scratch-block-input">5</span></span>؟ جاوبه!</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                <strong>forever</strong> = بيكرّر اللي جوّاه <strong>للأبد</strong> ومبيقفش خالص ♾️.
+                <strong>repeat 5</strong> = بيكرّر اللي جوّاه <strong>خمس مرات بس</strong>، وبعد الخامسة <strong>يقف</strong> 🛑.
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== المشروع النهائي: السمكة اللي بتسبح ===== -->
+    <div class="card" style="border:3px solid #0ea5e9; background:linear-gradient(145deg,#ffffff,#f0f9ff);">
+        <h2 class="card-title" style="background:linear-gradient(120deg,#0ea5e9,#06b6d4); -webkit-background-clip:text; background-clip:text; color:transparent;">🐠 المشروع النهائي: السمكة اللي بتسبح</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            دلوقتي دورك! 💪 هنعمل سمكة 🐠 بتسبح في البحر <strong>طول الوقت</strong> بالـ forever،
+            بتحرّك زعانفها (next costume + wait)، وبترتد لما توصل الحافة، وبتلمع وهي مبسوطة 😄.
+            اعملها بنفسك في سكراتش خطوة بخطوة 👇
+        </p>
+
+        <div class="status-box">🎯 <strong>الهدف:</strong> سمكة بتسبح للأبد، بتحرّك زعانفها، وبترتد على الحافة!</div>
+
+        <!-- معاينة السمكة -->
+        <div class="demo-stage" id="fishStage" style="background:linear-gradient(145deg,#bae6fd,#7dd3fc);">
+            <div id="fishChar">🐠</div>
+        </div>
+        <div style="text-align:center; margin-bottom:15px;">
+            <button class="ctrl-btn teal" id="playFishBtn">▶️ شوف المعاينة</button>
+            <button class="ctrl-btn red" id="stopFishBtn">⏹️ وقّف</button>
+            <p style="font-size:0.9rem; color:#64748b; margin-top:8px;">دي معاينة تقريبية بس — انت اللي هتبنيها بنفسك في سكراتش الحقيقي 💪</p>
+        </div>
+
+        <h3 style="color:#0f766e; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
+
+        <div class="project-step"><div class="num">1</div><div>
+            ابدأ البرنامج بحدث: <span class="scratch-block events">when 🚩 clicked</span>
+        </div></div>
+        <div class="project-step"><div class="num">2</div><div>
+            عشان السمكة متقلبش بالمقلوب لما ترتد، حط نمط الدوران:
+            <span class="scratch-block motion">set rotation style <span class="scratch-block-input">left-right</span></span>
+        </div></div>
+        <div class="project-step"><div class="num">3</div><div>
+            حط لوب لا نهائي عشان تسبح طول الوقت: <span class="scratch-block control">forever</span> وجوّاه الخطوات دي:
+            <div style="margin-top:8px;">
+                <span class="scratch-block motion">move <span class="scratch-block-input">8</span> steps</span>
+                <span class="scratch-block control">if on edge, bounce</span>
+                <span class="scratch-block looks">next costume</span>
+                <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">4</div><div>
+            الـ <span class="scratch-block looks">next costume</span> بيخلّي زعانف السمكة تتحرّك، والـ
+            <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span> بيخلّي الحركة هادية وواضحة 🐟.
+        </div></div>
+        <div class="project-step"><div class="num">5</div><div>
+            عايز السمكة تلمع وهي مبسوطة؟ اعمل سكريبت تاني منفصل: لوب forever فيه
+            <span class="scratch-block looks">change color effect by <span class="scratch-block-input">25</span></span> +
+            <span class="scratch-block control">wait <span class="scratch-block-input">0.3</span> seconds</span> ✨😄.
+        </div></div>
+
+        <h3 style="color:#0f766e; margin:20px 0 10px;">🧩 الكود كامل (شكله في سكراتش):</h3>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="mo">set rotation style [left-right]</span><br>
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="mo">move 8 steps</span><br>
+&nbsp;&nbsp;<span class="co">if on edge, bounce</span><br>
+&nbsp;&nbsp;<span class="lo">next costume</span><br>
+&nbsp;&nbsp;<span class="co">wait 0.2 seconds</span><br>
+<br>
+<span class="ev">when 🚩 clicked</span><br>
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="lo">change color effect by 25</span><br>
+&nbsp;&nbsp;<span class="co">wait 0.3 seconds</span>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:18px;">
+            🌟 <strong>تحديات إضافية (لو خلصت بسرعة):</strong>
+            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
+                • ضيف فقاعات 🫧 بتطلع لفوق بلوب forever<br>
+                • خلّي السمكة تكبر وتصغّر شوية وهي بتسبح (change size + wait)<br>
+                • استخدم <span class="scratch-block control">repeat until <span class="scratch-block-input">touching edge?</span></span> عشان السمكة تمشي لحد الحافة بس وتقف
+            </div>
+        </div>
+
+        <h3 style="color:#0f766e; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li>حطيت حدث when green flag clicked</li>
+            <li>استخدمت لوب forever عشان تسبح للأبد</li>
+            <li>السمكة بتتحرك بـ move steps</li>
+            <li>السمكة بترتد بـ if on edge bounce</li>
+            <li>السمكة بتحرّك زعانفها بـ next costume</li>
+            <li>حطيت wait عشان الحركة تبان واضحة</li>
+            <li>السمكة بتلمع بـ change color effect</li>
+        </ul>
+    </div>
+
+    <!-- ===== الواجب: نشاط بدون كمبيوتر ===== -->
+    <div class="card" style="background:linear-gradient(145deg,#fffbeb,#fef3c7); border:3px dashed #f59e0b;">
+        <h2 class="card-title" style="background:linear-gradient(120deg,#f59e0b,#ea580c); -webkit-background-clip:text; background-clip:text; color:transparent;">📒الواجب</h2>
+        <h3 style="color:#b45309; margin-bottom:10px;">🎨 نمط اللوب المتكرر</h3>
+        <p style="line-height:1.9; font-size:1.05rem;">
+            افتكر إن اللوب معناه نكرّر حاجة كذا مرة من غير ما نتعب ✍️.
+            النهارده هنعمل لوب بالورقة والألوان 
+        </p>
+        <div class="status-box" style="background:#fff7ed; border-color:#f59e0b;">🎒 <strong>اللي هتحتاجه:</strong> ورقة، قلم، وألوان — وبس!</div>
+        <h4 style="color:#b45309; margin:15px 0 8px;">✏️ اعمل كده:</h4>
+        <ol style="padding-right:25px; line-height:2.2; font-weight:600; color:#78350f;">
+            <li>اختار "نمط" صغير من رمزين أو تلاتة، مثلاً: 🔴🔺 أو نجمة وقلب ⭐❤️.</li>
+            <li>كرّر النمط ده <strong>6 مرات</strong> ورا بعض في سطر واحد. مبروك — انت عملت لوب <span class="scratch-block control">repeat <span class="scratch-block-input">6</span></span>!</li>
+            <li>تحت الرسمة اكتب اللوب بتاعك كده: <span class="scratch-block control">repeat 6</span> [ ارسم 🔴🔺 ].</li>
+            <li>في سطر تاني، اعمل نمط جديد وكرّره لحد ما السطر يخلص (كأنه <span class="scratch-block control">forever</span> لحد ما تقف).</li>
+        </ol>
+        <div class="status-box" style="background:#eff6ff; border-color:#3b82f6;">🤔 <strong>فكّر وجاوب:</strong> لو النمط الواحد فيه 3 رموز، وكرّرناه 4 مرات — يبقى رسمنا كام رمز كله؟ اكتب الإجابة على الورقة.</div>
+    </div>
+
+    <footer>
+        🎓 برافو! دلوقتي شخصياتك بتتحرك وتلمع طول الوقت! 🔁✨ استعد لمغامرات جديدة في Session 10! 🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Hints toggle =====
+    function toggleHint(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('show');
+        el.textContent = body.classList.contains('show') ? '🙈 اخفي الحل' : '👁️ شوف الحل';
+    }
+
+    // ===== Interactive demo: butterfly forever + blinking star =====
+    const stage = document.getElementById('demoStage');
+    const creature = document.getElementById('creature');
+    const star = document.getElementById('starBlink');
+    const demoStatus = document.getElementById('demoStatus');
+
+    let moveTimer = null, blinkTimer = null;
+    let pos = 50, dir = 1, waitMs = 500, starVisible = true;
+
+    function tickMove() {
+        const maxX = stage.clientWidth - 60;
+        pos += dir * 25;
+        if (pos >= maxX) { pos = maxX; dir = -1; creature.style.transform = 'scaleX(-1)'; }
+        if (pos <= 10) { pos = 10; dir = 1; creature.style.transform = 'scaleX(1)'; }
+        creature.style.left = pos + 'px';
+    }
+    function tickBlink() {
+        starVisible = !starVisible;
+        star.style.opacity = starVisible ? '1' : '0.1';
+    }
+
+    function startDemo() {
+        stopDemo(true);
+        // restart timers using current waitMs
+        moveTimer = setInterval(tickMove, waitMs);
+        blinkTimer = setInterval(tickBlink, waitMs);
+    }
+    function stopDemo(keepStatus) {
+        if (moveTimer) { clearInterval(moveTimer); moveTimer = null; }
+        if (blinkTimer) { clearInterval(blinkTimer); blinkTimer = null; }
+        if (!keepStatus) {
+            demoStatus.className = 'status-box error';
+            demoStatus.innerHTML = '⏹️ وقّفنا اللوب! (زي ما لو ضغطت زر الإيقاف الأحمر في سكراتش 🛑)';
+        }
+    }
+    function setWait(ms, label, cls) {
+        waitMs = ms;
+        demoStatus.className = 'status-box ' + cls;
+        demoStatus.innerHTML = label;
+        if (moveTimer || blinkTimer) startDemo(); // apply new speed live
+    }
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+        startDemo();
+        demoStatus.className = 'status-box success';
+        demoStatus.innerHTML = '▶️ اللوب شغّال! 🦋 الفراشة بتتحرك والنجمة ✨ بتلمع طول الوقت (forever)!';
+    });
+    document.getElementById('stopBtn').addEventListener('click', () => stopDemo(false));
+    document.getElementById('slow05Btn').addEventListener('click', () =>
+        setWait(500, '🐢 wait 0.5 ثانية — الحركة بطيئة وواضحة، تقدر تتفرّج عليها كويس! 👀', 'success'));
+    document.getElementById('fast01Btn').addEventListener('click', () =>
+        setWait(100, '🐇 wait 0.1 ثانية — الحركة بقت أسرع بكتير!', ''));
+    document.getElementById('nowaitBtn').addEventListener('click', () =>
+        setWait(20, '⚡ من غير wait تقريباً — بصّ الحركة بقت سريعة جداً وصعب تتابعها! ده اللي بيحصل من غير الـ wait. 😵', 'error'));
+
+    // ===== Final project preview: swimming fish =====
+    const fishStage = document.getElementById('fishStage');
+    const fish = document.getElementById('fishChar');
+    const fishCostumes = ['🐠', '🐟'];
+    let fishTimer = null, fishPos = 50, fishDir = 1, fishCi = 0;
+
+    function startFish() {
+        stopFish();
+        const maxX = fishStage.clientWidth - 55;
+        fishTimer = setInterval(() => {
+            fishPos += fishDir * 18;
+            if (fishPos >= maxX) { fishPos = maxX; fishDir = -1; fish.style.transform = 'scaleX(-1)'; }
+            if (fishPos <= 10) { fishPos = 10; fishDir = 1; fish.style.transform = 'scaleX(1)'; }
+            fish.style.left = fishPos + 'px';
+            fishCi = (fishCi + 1) % fishCostumes.length;
+            fish.textContent = fishCostumes[fishCi];
+        }, 200);
+    }
+    function stopFish() {
+        if (fishTimer) { clearInterval(fishTimer); fishTimer = null; }
+    }
+    document.getElementById('playFishBtn').addEventListener('click', startFish);
+    document.getElementById('stopFishBtn').addEventListener('click', stopFish);
+
+    // ===== Final checklist =====
+    document.querySelectorAll('#finalChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+</script>
+</body>
+</html>
