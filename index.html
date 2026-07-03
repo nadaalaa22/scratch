@@ -289,6 +289,7 @@
     // ✅ Total sessions updated to 21
     const totalSessions = 8;
 
+    // Session metadata — titles only, descriptions removed as requested
     const sessionsData = {
       1: {
         emoji: "💻⚙️",
@@ -418,12 +419,13 @@
       else if (i === 3) lightBg = "#EBFFEF";
       else if (i === 4) lightBg = "#FDF2F8";
       else if (i === 5) lightBg = "#F0F9FF";
-      else lightBg = "#F3E8FF";   
+      else lightBg = "#F3E8FF";   // soft purple for session 6 (if/conditional theme)
       card.style.background = `linear-gradient(145deg, #ffffff, ${lightBg})`;
       
       const delay = (i - 1) * 0.08;
       card.style.animationDelay = `${delay}s`;
       
+      // Description line is completely removed
       card.innerHTML = `
         <div class="card-emoji">${data.emoji}</div>
         <div class="session-title">${data.title}</div>
