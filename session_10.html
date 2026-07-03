@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 10 - المتغيرات: العداد والنقاط 📦</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #fff7ed 0%, #fffbeb 50%, #fef3c7 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+            --scratch-variables: #ff8c1a;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #ff8c1a, #f97316, #fb923c);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(249,115,22,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '📦'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🔢'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #fed7aa; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #ff8c1a, #f97316);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .station-badge {
+            display:inline-block; background:#f97316; color:white; font-weight:900;
+            padding:5px 18px; border-radius:50px; font-size:0.95rem; margin-bottom:12px;
+            box-shadow:0 4px 0 rgba(0,0,0,0.15);
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.variables { background: #ff8c1a; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
+        .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
+        .recap-item:hover { transform: scale(1.03); border-color: #fb923c; }
+        .recap-item .ricon { font-size: 2.2rem; }
+        .recap-item h4 { color: #c2410c; margin: 8px 0 4px; }
+        .recap-item p { font-size: 0.85rem; color: #475569; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.teal { background: #14b8a6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.pink { background: #ec4899; }
+        .ctrl-btn.red { background: #ef4444; }
+        .status-box { background: #fff7ed; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #f97316; margin: 15px 0; }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .mini-task {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border: 3px dashed #f59e0b; border-radius: 25px; padding: 20px; margin: 15px 0;
+        }
+        .mini-task h4 { color: #92400e; font-size: 1.15rem; margin-bottom: 8px; }
+        .hint-toggle { cursor: pointer; color: #c2410c; font-weight: 800; text-decoration: underline; margin-top: 8px; display: inline-block; }
+        .hint-body { display: none; background: #fff; border-radius: 15px; padding: 12px; margin-top: 8px; border: 2px solid #fed7aa; }
+        .hint-body.show { display: block; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Demo stage (score board) */
+        .demo-stage {
+            background: linear-gradient(145deg, #ffedd5, #fed7aa);
+            border-radius: 30px; min-height: 260px; position: relative; overflow: hidden;
+            margin: 20px 0; border: 4px solid #fdba74; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        .score-display {
+            background: #1e293b; color: #fbbf24; border-radius: 25px; padding: 20px 30px;
+            text-align: center; font-weight: 900; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: inline-block; min-width: 200px;
+        }
+        .score-display .lbl { font-size: 1.1rem; color: #94a3b8; margin-bottom: 5px; }
+        .score-display .big-num { font-size: 4rem; line-height: 1; }
+        .hearts-display { font-size: 2.4rem; letter-spacing: 5px; min-height: 3rem; }
+        .project-step {
+            background: #fff7ed; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
+            border-right: 6px solid #f97316; display:flex; gap:12px; align-items:flex-start;
+        }
+        .project-step .num { background:#f97316; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#f97316; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .va { color:#fdba74; } .codebox .tx { color:#86efac; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #f97316; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📦 المتغيرات: صندوق يحفظ النقاط!</h1>
+        <p>خلّي برنامجك يعدّ ويحفظ الأرقام زي لوحة النتيجة 🔢</p>
+    </div>
+
+    <!-- ===== الهدف ===== -->
+    <div class="card">
+        <h2 class="card-title">🎯 هدفنا النهارده</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            النهارده هنتعلّم حاجة جامدة جداً اسمها <strong>المتغيرات (Variables)</strong> 📦.
+            تخيّل إن عندك <strong>صندوق صغير</strong> بتكتب عليه اسم، وبتحفظ جواه رقم.
+            الرقم ده ممكن يزيد، وممكن نبدأه من الأول في أي وقت!
+        </p>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">📦</div><h4>إيه هو المتغير؟</h4><p>صندوق بنحفظ فيه رقم</p></div>
+            <div class="recap-item"><div class="ricon">⚽</div><h4>عداد النقاط</h4><p>زي لوحة النتيجة في الماتش</p></div>
+            <div class="recap-item"><div class="ricon">🍬</div><h4>عداد الحلوى</h4><p>كل ما تجمع حلوى يزيد</p></div>
+            <div class="recap-item"><div class="ricon">🏆</div><h4>مشروع</h4><p>لعبة جمع الحلوى!</p></div>
+        </div>
+    </div>
+
+    <!-- ===== مفهوم: إيه هو المتغير ===== -->
+    <div class="card">
+        <span class="station-badge">📦 الفكرة الكبيرة</span>
+        <h2 class="card-title">يعني إيه "متغير"؟</h2>
+        <p style="line-height:1.8;">
+            المتغير زي <strong>علبة أو صندوق</strong> بنكتب عليها اسم (زي "النقاط" 🏷️) وبنحفظ جواها رقم.
+            أهم حاجة: الرقم اللي جوّه الصندوق <strong>ممكن يتغيّر في أي وقت</strong> — عشان كده اسمه "متغير"! 😄
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center; align-items:center; margin:20px 0;">
+            <div style="background:#fff7ed; border:3px solid #fdba74; border-radius:25px; padding:20px; text-align:center;">
+                <div style="font-size:3rem;">📦</div>
+                <p style="font-weight:900; color:#c2410c; margin-top:5px;">الاسم: النقاط 🏷️</p>
+                <div style="background:#1e293b; color:#fbbf24; font-size:2rem; font-weight:900; border-radius:15px; padding:8px 20px; margin-top:8px;">5</div>
+                <p style="font-size:0.85rem; color:#64748b; margin-top:6px;">الرقم اللي محفوظ جوّه</p>
+            </div>
+        </div>
+        <div class="status-box">
+            💡 الصندوق ممكن نبدأه بـ <strong>صفر</strong>، وكل ما يحصل حاجة حلوة نزوّد عليه 1! 🎉
+        </div>
+    </div>
+
+    <!-- ===== مفهوم: إزاي نعمل متغير ===== -->
+    <div class="card">
+        <span class="station-badge">🛠️ خطوة بخطوة</span>
+        <h2 class="card-title">إزاي نعمل متغير في سكراتش؟</h2>
+        <p style="line-height:1.8;">
+            بنروح على قسم <strong>المتغيرات (Variables)</strong> 🟧، وندوس على زرار
+            <strong>"Make a Variable"</strong>، ونكتب اسم للصندوق بتاعنا — زي <strong>score</strong> أو <strong>النقاط</strong>.
+        </p>
+        <div class="ask-demo" style="background:#fff7ed; border-radius:25px; padding:20px; margin:15px 0; text-align:center;">
+            <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:10px;">
+                <span style="background:white; border:2px solid #fdba74; padding:8px 16px; border-radius:15px; font-weight:bold;">1️⃣ افتح قسم Variables 🟧</span>
+                <span style="font-size:1.5rem; color:#94a3b8;">→</span>
+                <span style="background:white; border:2px solid #fdba74; padding:8px 16px; border-radius:15px; font-weight:bold;">2️⃣ دوس "Make a Variable"</span>
+                <span style="font-size:1.5rem; color:#94a3b8;">→</span>
+                <span style="background:white; border:2px solid #fdba74; padding:8px 16px; border-radius:15px; font-weight:bold;">3️⃣ اكتب اسم زي score</span>
+                <span style="font-size:1.5rem; color:#94a3b8;">→</span>
+                <span style="background:white; border:2px solid #10b981; padding:8px 16px; border-radius:15px; font-weight:bold;">4️⃣ خلاص الصندوق جاهز! ✅</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== مفهوم: البلوكات ===== -->
+    <div class="card">
+        <span class="station-badge">🧩 البلوكات المهمة</span>
+        <h2 class="card-title">بلوكات المتغيرات</h2>
+        <p style="line-height:1.8;">دي البلوكات اللي هنستخدمها مع الصندوق بتاعنا 👇</p>
+
+        <div style="background:#fff7ed; border-radius:20px; padding:18px; margin:15px 0;">
+            <span class="scratch-block variables">set <span class="scratch-block-input">score</span> to <span class="scratch-block-input">0</span></span>
+            <p style="margin-top:8px; line-height:1.7;">👈 <strong>set</strong> بتحط قيمة معيّنة في الصندوق. بنبدأ بيها من <strong>صفر</strong> أول البرنامج.</p>
+        </div>
+
+        <div style="background:#fff7ed; border-radius:20px; padding:18px; margin:15px 0;">
+            <span class="scratch-block variables">change <span class="scratch-block-input">score</span> by <span class="scratch-block-input">1</span></span>
+            <p style="margin-top:8px; line-height:1.7;">👈 <strong>change</strong> بتزوّد على القيمة اللي موجودة. كل ما تجمع نقطة بنزوّد <strong>1</strong>! ➕</p>
+        </div>
+
+        <div style="background:#fff7ed; border-radius:20px; padding:18px; margin:15px 0;">
+            <span class="scratch-block variables">show variable <span class="scratch-block-input">score</span></span>
+            <span class="scratch-block variables">hide variable <span class="scratch-block-input">score</span></span>
+            <p style="margin-top:8px; line-height:1.7;">👈 <strong>show</strong> بتظهر العداد على المسرح، و<strong>hide</strong> بتخفيه. 👀</p>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b;">
+            ⚽ تخيّل المتغير زي <strong>لوحة النتيجة في الماتش</strong>: بتبدأ 0-0، وكل ما حد يجيب جون الرقم يزيد 1. نفس الفكرة بالظبط في عداد الحلوى 🍬!
+        </div>
+    </div>
+
+    <!-- ===== الديمو التفاعلي ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 جرّب بنفسك: لوحة النتيجة!</h2>
+        <p style="line-height:1.8;">دي لوحة نتيجة حقيقية! المتغير <strong>score</strong> بيبدأ من صفر. دوس الأزرار وشوف الرقم بيتغيّر قدامك مباشرة 👇</p>
+
+        <div class="demo-stage" style="text-align:center;">
+            <div class="score-display" style="margin-top:10px;">
+                <div class="lbl">🍬 النقاط (score)</div>
+                <div class="big-num" id="scoreNum">0</div>
+            </div>
+            <div style="margin-top:20px;">
+                <button class="ctrl-btn green" id="addCandyBtn">🍬 اجمع حلوى (+1)</button>
+                <button class="ctrl-btn orange" id="resetScoreBtn">↩️ set to 0 (إعادة)</button>
+            </div>
+        </div>
+        <div class="status-box" id="scoreStatus">
+            💡 كل ما تدوس "اجمع حلوى" بنعمل <strong>change score by 1</strong>. وزرار الإعادة بيعمل <strong>set score to 0</strong>.
+        </div>
+
+        <!-- العداد العكسي: القلوب -->
+        <h3 style="color:#c2410c; margin:20px 0 10px;">❤️ تحدي تاني: عداد القلوب (lives)</h3>
+        <p style="line-height:1.8;">دلوقتي العداد بيبدأ بـ <strong>3 قلوب</strong> ❤️❤️❤️. كل ما تخسر قلب، العداد <strong>يقلّ واحد</strong> — لكن لما يوصل صفر بيقف ويقول "خلصت القلوب!" (مفيش أرقام تحت الصفر خالص 😄).</p>
+        <div class="demo-stage" style="text-align:center; background:linear-gradient(145deg,#ffe4e6,#fecdd3); border-color:#fda4af; min-height:200px;">
+            <div class="lbl" style="font-weight:900; color:#9f1239; font-size:1.1rem; margin-bottom:8px;">عدد القلوب (lives)</div>
+            <div class="hearts-display" id="heartsDisplay">❤️❤️❤️</div>
+            <div style="margin-top:18px;">
+                <button class="ctrl-btn red" id="loseHeartBtn">💔 خسرت قلب (-1)</button>
+                <button class="ctrl-btn purple" id="resetHeartsBtn">↩️ ارجّع 3 قلوب</button>
+            </div>
+        </div>
+        <div class="status-box" id="heartsStatus" style="background:#ffe4e6; border-color:#f43f5e;">
+            💡 العداد بيبدأ بـ 3 وبيقلّ واحد كل مرة، وبيقف عند صفر — عمره ما هيقل عن كده!
+        </div>
+    </div>
+
+    <!-- ===== المهام الصغيرة ===== -->
+    <div class="card">
+        <h2 class="card-title">✏️ تمارين سريعة</h2>
+
+        <div class="mini-task">
+            <h4>1️⃣ اعمل صندوق وابدأه من صفر</h4>
+            <p>عايزين نعمل متغير اسمه <strong>"نقاط"</strong> ويبدأ من صفر أول ما البرنامج يشتغل. أنهي بلوكات تستخدم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                أول حاجة اعمل المتغير من قسم Variables، وبعدين:
+                <div style="margin-top:8px;">
+                    <span class="scratch-block events">when 🚩 clicked</span> →
+                    <span class="scratch-block variables">set <span class="scratch-block-input">نقاط</span> to <span class="scratch-block-input">0</span></span>
+                </div>
+                كده الصندوق بيبدأ من صفر كل مرة تلعب! ✅
+            </div>
+        </div>
+
+        <div class="mini-task">
+            <h4>2️⃣ كل ما تدوس على الشخصية تزوّد نقطة</h4>
+            <p>عايزين كل ما ندوس على الشخصية، عداد النقاط يزيد <strong>1</strong>. أنهي بلوكات؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                <span class="scratch-block events">when this sprite clicked</span> →
+                <span class="scratch-block variables">change <span class="scratch-block-input">نقاط</span> by <span class="scratch-block-input">1</span></span>
+                <p style="margin-top:6px;">كل دوسة = +1 نقطة 🎉</p>
+            </div>
+        </div>
+
+        <div class="mini-task" style="background:linear-gradient(145deg,#ffedd5,#fed7aa); border-color:#f97316;">
+            <h4 style="color:#9a3412;">3️⃣ سؤال: إيه الفرق بين set و change؟ 🤔</h4>
+            <p>الاتنين بيشتغلوا على الصندوق… بس فيه فرق مهم بينهم. تفتكر إيه هو؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                <strong>set</strong> 📥 بتحط <strong>قيمة جديدة مكان القديمة</strong> (زي ما تمسح الصندوق وتكتب رقم جديد).<br>
+                <strong>change</strong> ➕ بتزوّد على القيمة اللي <strong>موجودة فعلاً</strong> (الصندوق فيه 5، وبعد change by 1 يبقى 6).
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== المشروع النهائي ===== -->
+    <div class="card" style="border:3px solid #f97316; background:linear-gradient(145deg,#ffffff,#fff7ed);">
+        <h2 class="card-title">🍬 المشروع: لعبة جمع الحلوى!</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            دلوقتي دورك! هنعمل لعبة بسيطة وممتعة: في حلوى 🍬 على المسرح،
+            كل ما تدوس عليها <strong>تكسب نقطة</strong> ويزيد العداد. اعملها في سكراتش خطوة بخطوة 👇
+        </p>
+
+        <div class="status-box">🎯 <strong>الهدف:</strong> دوس على الحلوى تجمع نقاط — والعداد بيبان على المسرح ويزيد كل دوسة!</div>
+
+        <h3 style="color:#c2410c; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
+
+        <div class="project-step"><div class="num">1</div><div>
+            اعمل متغير اسمه <strong>score</strong> من قسم Variables (Make a Variable).
+        </div></div>
+        <div class="project-step"><div class="num">2</div><div>
+            ابدأ البرنامج وصفّر العداد وأظهره على المسرح:
+            <div style="margin-top:8px;">
+                <span class="scratch-block events">when 🚩 clicked</span>
+                <span class="scratch-block variables">set <span class="scratch-block-input">score</span> to <span class="scratch-block-input">0</span></span>
+                <span class="scratch-block variables">show variable <span class="scratch-block-input">score</span></span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">3</div><div>
+            ضيف سكريبت تاني على شخصية الحلوى: كل ما تدوس عليها تزيد نقطة:
+            <div style="margin-top:8px;">
+                <span class="scratch-block events">when this sprite clicked</span>
+                <span class="scratch-block variables">change <span class="scratch-block-input">score</span> by <span class="scratch-block-input">1</span></span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">4</div><div>
+            خلّيها تعمل صوت وتشجّعك لما تجمع نقطة:
+            <div style="margin-top:8px;">
+                <span class="scratch-block sound">start sound <span class="scratch-block-input">pop</span></span>
+                <span class="scratch-block looks">say <span class="scratch-block-input">أحسنت!</span> for <span class="scratch-block-input">0.5</span> sec</span>
+            </div>
+        </div></div>
+
+        <h3 style="color:#c2410c; margin:20px 0 10px;">🧩 الكود كامل (شكله في سكراتش):</h3>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="va">set [score] to 0</span><br>
+<span class="va">show variable [score]</span><br>
+<br>
+<span class="ev">when this sprite clicked</span><br>
+&nbsp;&nbsp;<span class="va">change [score] by 1</span><br>
+&nbsp;&nbsp;<span class="so">start sound [pop]</span><br>
+&nbsp;&nbsp;<span class="lo">say "أحسنت!" for 0.5 seconds</span>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:18px;">
+            🌟 <strong>تحديات إضافية (لو خلصت بسرعة):</strong>
+            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
+                • الهدف: لما توصل <strong>10 نقاط</strong> الشخصية تقول "فزت! 🎉".<br>
+                &nbsp;&nbsp;&nbsp;التلميح: استخدم <span class="scratch-block control">if</span> مع
+                <span class="scratch-block operators" style="background:#5cb1d6;">score = 10</span> →
+                <span class="scratch-block looks">say <span class="scratch-block-input">فزت!</span></span><br>
+                • خلّي الحلوى تتنطّ لمكان عشوائي بعد كل دوسة (go to random position).<br>
+                • ضيف عداد تاني للقلوب ❤️ يبدأ بـ 3.
+            </div>
+        </div>
+
+        <h3 style="color:#c2410c; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li>عملت متغير اسمه score من Variables</li>
+            <li>صفّرت العداد بـ set score to 0 أول البرنامج</li>
+            <li>أظهرت العداد على المسرح بـ show variable</li>
+            <li>كل دوسة بتزوّد نقطة بـ change score by 1</li>
+            <li>فيه صوت بيشتغل لما أجمع نقطة</li>
+            <li>الشخصية بتقول "أحسنت!" كل دوسة</li>
+        </ul>
+    </div>
+
+   
+
+    <footer>
+        🎓 برافو عليك! دلوقتي بقيت تعرف تخلّي برنامجك يعدّ ويحفظ الأرقام 📦. استعد للمزيد في Session 11! 🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Hints toggle =====
+    function toggleHint(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('show');
+        el.textContent = body.classList.contains('show') ? '🙈 اخفي الإجابة' : '👁️ شوف الإجابة';
+    }
+
+    // ===== Score board demo (variable: score) =====
+    let score = 0;
+    const scoreNum = document.getElementById('scoreNum');
+    const scoreStatus = document.getElementById('scoreStatus');
+
+    function renderScore() { scoreNum.textContent = score; }
+
+    document.getElementById('addCandyBtn').addEventListener('click', () => {
+        score = score + 1; // change score by 1
+        renderScore();
+        scoreStatus.innerHTML = `🍬 جمعت حلوى! العداد بقى <strong>${score}</strong> (change score by 1).`;
+        scoreStatus.className = 'status-box success';
+    });
+
+    document.getElementById('resetScoreBtn').addEventListener('click', () => {
+        score = 0; // set score to 0
+        renderScore();
+        scoreStatus.innerHTML = '↩️ عملنا <strong>set score to 0</strong> — العداد رجع من الأول!';
+        scoreStatus.className = 'status-box';
+    });
+
+    renderScore();
+
+    // ===== Lives counter demo (counts DOWN, stops at 0, no negatives) =====
+    let lives = 3;
+    const heartsDisplay = document.getElementById('heartsDisplay');
+    const heartsStatus = document.getElementById('heartsStatus');
+
+    function renderHearts() {
+        heartsDisplay.textContent = lives > 0 ? '❤️'.repeat(lives) : '💔';
+    }
+
+    document.getElementById('loseHeartBtn').addEventListener('click', () => {
+        if (lives > 0) {
+            lives = lives - 1; // change lives by 1 (counting down)
+        }
+        renderHearts();
+        if (lives > 0) {
+            heartsStatus.innerHTML = `💔 خسرت قلب! فاضل <strong>${lives}</strong> قلوب.`;
+            heartsStatus.className = 'status-box';
+            heartsStatus.style.background = '#ffe4e6';
+            heartsStatus.style.borderColor = '#f43f5e';
+        } else {
+            heartsStatus.innerHTML = '😵 <strong>خلصت القلوب!</strong> العداد وقف عند صفر.';
+            heartsStatus.className = 'status-box error';
+        }
+    });
+
+    document.getElementById('resetHeartsBtn').addEventListener('click', () => {
+        lives = 3; // set lives to 3
+        renderHearts();
+        heartsStatus.innerHTML = '↩️ رجّعنا العداد لـ <strong>3 قلوب</strong> (set lives to 3).';
+        heartsStatus.className = 'status-box';
+        heartsStatus.style.background = '#ffe4e6';
+        heartsStatus.style.borderColor = '#f43f5e';
+    });
+
+    renderHearts();
+
+    // ===== Final checklist =====
+    document.querySelectorAll('#finalChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+</script>
+</body>
+</html>
