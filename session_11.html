@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 11 - الاستشعار واللمس 🖐️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #ecfeff 0%, #f0fdfa 50%, #fef9c3 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+            --scratch-sensing: #5cb1d6;
+            --scratch-operators: #5cb1d6;
+            --scratch-variables: #ff8c1a;
+            --scratch-pen: #0fbd8c;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #5cb1d6, #0891b2, #06b6d4);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(8,145,178,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🖐️'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🤚'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #99f6e4; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #5cb1d6, #0891b2);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .station-badge {
+            display:inline-block; background:#0891b2; color:white; font-weight:900;
+            padding:5px 18px; border-radius:50px; font-size:0.95rem; margin-bottom:12px;
+            box-shadow:0 4px 0 rgba(0,0,0,0.15);
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.sensing { background: #5cb1d6; }
+        .scratch-block.operators { background: #5cb1d6; }
+        .scratch-block.variables { background: #ff8c1a; }
+        .scratch-block.pen { background: #0fbd8c; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
+        .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
+        .recap-item:hover { transform: scale(1.03); border-color: #2dd4bf; }
+        .recap-item .ricon { font-size: 2.2rem; }
+        .recap-item h4 { color: #0f766e; margin: 8px 0 4px; }
+        .recap-item p { font-size: 0.85rem; color: #475569; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.teal { background: #14b8a6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.cyan { background: #0891b2; }
+        .status-box { background: #ecfeff; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #06b6d4; margin: 15px 0; }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .mini-task {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border: 3px dashed #f59e0b; border-radius: 25px; padding: 20px; margin: 15px 0;
+        }
+        .mini-task h4 { color: #92400e; font-size: 1.15rem; margin-bottom: 8px; }
+        .hint-toggle { cursor: pointer; color: #0e7490; font-weight: 800; text-decoration: underline; margin-top: 8px; display: inline-block; }
+        .hint-body { display: none; background: #fff; border-radius: 15px; padding: 12px; margin-top: 8px; border: 2px solid #a5f3fc; }
+        .hint-body.show { display: block; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Demo / stage */
+        .demo-stage {
+            background: linear-gradient(145deg, #cffafe, #a5f3fc);
+            border-radius: 30px; height: 320px; position: relative; overflow: hidden;
+            margin: 20px 0; border: 4px solid #67e8f9; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #mouseChar { position: absolute; font-size: 2.6rem; top: 130px; left: 50px; transition: top 0.08s linear, left 0.08s linear; z-index:10; }
+        .wall { position:absolute; background: repeating-linear-gradient(45deg, #ef4444, #ef4444 12px, #dc2626 12px, #dc2626 24px); border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.15); }
+        .goal { position:absolute; background: repeating-linear-gradient(45deg, #22c55e, #22c55e 12px, #16a34a 12px, #16a34a 24px); border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; font-size:1.6rem; }
+        @keyframes flashRed { 0%,100%{ box-shadow: inset 0 5px 15px rgba(0,0,0,0.05); } 50%{ box-shadow: inset 0 0 0 8px rgba(239,68,68,0.7); } }
+        .demo-stage.flash { animation: flashRed 0.3s ease; }
+        .arrow-pad { display:grid; grid-template-columns:repeat(3,60px); grid-template-rows:repeat(2,60px); gap:8px; justify-content:center; margin:15px auto; }
+        .arrow-pad button { font-size:1.4rem; border:none; border-radius:18px; background:#0891b2; color:white; font-weight:900; cursor:pointer; box-shadow:0 4px 0 rgba(0,0,0,0.2); transition:0.1s; }
+        .arrow-pad button:active { transform:translateY(3px); box-shadow:0 1px 0 rgba(0,0,0,0.2); }
+        .arrow-up { grid-column:2; grid-row:1; }
+        .arrow-left { grid-column:1; grid-row:2; }
+        .arrow-down { grid-column:2; grid-row:2; }
+        .arrow-right { grid-column:3; grid-row:2; }
+        .project-step {
+            background: #f0fdfa; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
+            border-right: 6px solid #14b8a6; display:flex; gap:12px; align-items:flex-start;
+        }
+        .project-step .num { background:#14b8a6; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#10b981; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .se { color:#7dd3fc; } .codebox .tx { color:#86efac; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #0891b2; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🖐️ الاستشعار: خلّي شخصيتك تحسّ باللمس!</h1>
+        <p>إزاي البرنامج يعرف إن حاجة لمست حاجة</p>
+    </div>
+
+    <!-- ===== الهدف ===== -->
+    <div class="card">
+        <h2 class="card-title">🎯 هدف النهارده</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            النهارده هنخلّي شخصيتنا في سكراتش <strong>تحسّ بالحاجات اللي حواليها</strong> 🤚!
+            يعني لو لمست حيطة، أو لمست شخصية تانية، أو وصلت لحافة المسرح… البرنامج هيعرف ويتصرف.
+            ده اسمه <strong>الاستشعار (Sensing)</strong> 🟦، وبلوكاته لونها أزرق سماوي حلو.
+        </p>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">🧱</div><h4>لمس الحيطة</h4><p>touching color</p></div>
+            <div class="recap-item"><div class="ricon">🐱</div><h4>لمس شخصية</h4><p>touching Sprite</p></div>
+            <div class="recap-item"><div class="ricon">🟦</div><h4>لمس الحافة</h4><p>touching edge</p></div>
+            <div class="recap-item"><div class="ricon">⌨️</div><h4>ضغط زرار</h4><p>key pressed</p></div>
+        </div>
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b;">
+            ⭐ <strong>افتكر معايا:</strong> في Session 6 اتعلمنا الشرط <span class="scratch-block control">if</span> (لو حصل كذا… اعمل كذا). النهارده هنستخدمه مع الاستشعار عشان شخصيتنا تتفاعل!
+        </div>
+    </div>
+
+    <!-- ===== مفهوم 1: بلوكات اللمس ===== -->
+    <div class="card">
+        <span class="station-badge">🟦 الاستشعار</span>
+        <h2 class="card-title">بلوكات اللمس (Touching؟)</h2>
+        <p style="line-height:1.8;">
+            البلوكات دي شكلها بيضاوي (زي بيضة) وبترجّع إجابة <strong>صح ✅</strong> أو <strong>غلط ❌</strong> بس.
+            يعني بتسأل سؤال، والإجابة "أيوه" أو "لأ":
+        </p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block sensing">touching <span class="scratch-block-input">edge</span> ?</span>
+            <span class="scratch-block sensing">touching <span class="scratch-block-input">Sprite1</span> ?</span>
+            <span class="scratch-block sensing">touching color <span class="scratch-block-input">🔴</span> ?</span>
+        </div>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">🟦</div><h4>touching edge?</h4><p>هل الشخصية لامسة حافة المسرح؟</p></div>
+            <div class="recap-item"><div class="ricon">🐱</div><h4>touching Sprite1?</h4><p>هل لامست شخصية تانية؟</p></div>
+            <div class="recap-item"><div class="ricon">🔴</div><h4>touching color 🔴?</h4><p>هل لامست لون معيّن (زي حيطة حمرا)؟</p></div>
+        </div>
+        <div class="status-box">
+            💡 تخيّل إن شخصيتك عندها <strong>إحساس</strong> زينا! لما إيدك تلمس حاجة سخنة بتحسّ بسرعة 🔥 — البلوكات دي بتدّي نفس الإحساس لشخصيتك.
+        </div>
+    </div>
+
+    <!-- ===== مفهوم 2: الماوس والكيبورد ===== -->
+    <div class="card">
+        <span class="station-badge">⌨️🖱️ تفاعل</span>
+        <h2 class="card-title">الاستشعار بالزراير والماوس</h2>
+        <p style="line-height:1.8;">
+            مش بس اللمس! الشخصية كمان تقدر تحسّ بإيدك انت — لو ضغطت زرار في الكيبورد أو حرّكت الماوس:
+        </p>
+        <div style="text-align:center; margin:15px 0;">
+            <span class="scratch-block sensing">key <span class="scratch-block-input">space</span> pressed ?</span>
+            <span class="scratch-block sensing">mouse down ?</span>
+            <span class="scratch-block sensing">touching <span class="scratch-block-input">mouse-pointer</span> ?</span>
+        </div>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">⌨️</div><h4>key space pressed?</h4><p>هل ضاغط على زرار المسافة؟</p></div>
+            <div class="recap-item"><div class="ricon">🖱️</div><h4>mouse down?</h4><p>هل ضاغط زرار الماوس؟</p></div>
+            <div class="recap-item"><div class="ricon">👆</div><h4>touching mouse-pointer?</h4><p>هل سهم الماوس فوق الشخصية؟</p></div>
+        </div>
+    </div>
+
+    <!-- ===== مفهوم 3: النمط المهم forever + if ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#ffab19;">🔁 السر</span>
+        <h2 class="card-title">السر: نحطها جوه forever + if</h2>
+        <p style="line-height:1.8;">
+            البلوكات دي لوحدها مبتعملش حاجة… لازم نسألها <strong>طول الوقت</strong>!
+            عشان كده بنحطها جوه <span class="scratch-block control">forever</span> (لوب لا نهائي) وجواها <span class="scratch-block control">if</span> (الشرط).
+            كده البرنامج بيفضل <strong>يراقب باستمرار</strong> 👀 لحد ما اللمس يحصل:
+        </p>
+        <div class="codebox">
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="co">if</span> &lt;<span class="se">touching [edge] ?</span>&gt; <span class="co">then</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="lo">say "اصطدمت!"</span><br>
+        </div>
+        <div class="status-box success">
+            ✅ ترجمة بالعربي: "<strong>طول الوقت</strong>… لو الشخصية لمست الحافة → قول اصطدمت!". لو شلنا forever، البرنامج هيشيك مرة واحدة بس وخلاص — وده مش اللي عايزينه!
+        </div>
+    </div>
+
+    <!-- ===== التجربة التفاعلية ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 جرّب بنفسك: الفأر، الحيطة، والهدف!</h2>
+        <p style="line-height:1.8;">
+            ده فأر 🐭 بتتحكم فيه بالأسهم تحت ⬆️⬇️⬅️➡️. حاول توصله للمربع الأخضر 🟢 (الهدف)
+            من غير ما تلمس الحيطة الحمرا 🔴. البرنامج بيراقب باستمرار — زي ما عملنا بالظبط بـ <span class="scratch-block control">forever</span> + <span class="scratch-block control">if</span>!
+        </p>
+
+        <div class="demo-stage" id="demoStage">
+            <div class="wall" id="wall1"></div>
+            <div class="goal" id="goalZone">🎯</div>
+            <div id="mouseChar">🐭</div>
+        </div>
+
+        <div class="arrow-pad">
+            <button class="arrow-up" id="btnUp">⬆️</button>
+            <button class="arrow-left" id="btnLeft">⬅️</button>
+            <button class="arrow-down" id="btnDown">⬇️</button>
+            <button class="arrow-right" id="btnRight">➡️</button>
+        </div>
+
+        <div class="status-box" id="demoStatus">
+            🕹️ استخدم الأسهم تحرّك الفأر. وصّله للهدف الأخضر! (تقدر كمان تستخدم أسهم الكيبورد)
+        </div>
+        <div style="text-align:center;">
+            <button class="ctrl-btn orange" id="resetDemoBtn">🔄 ابدأ من الأول</button>
+        </div>
+    </div>
+
+    <!-- ===== المهام الصغيرة ===== -->
+    <div class="card">
+        <h2 class="card-title">📝 تمارين صغيرة (فكّر الأول!)</h2>
+
+        <div class="mini-task">
+            <h4>1️⃣ لو الشخصية لمست الحافة تقول "آخ!"</h4>
+            <p>عايزين كل ما الشخصية تلمس حافة المسرح، تقول "آخ!" لمدة ثانية. أنهي بلوكات تجمّع؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                <div class="codebox">
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="co">if</span> &lt;<span class="se">touching [edge] ?</span>&gt; <span class="co">then</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="lo">say "آخ!" for 1 seconds</span><br>
+                </div>
+            </div>
+        </div>
+
+        <div class="mini-task">
+            <h4>2️⃣ لو لمست الشخصية التانية تعمل صوت</h4>
+            <p>لو الشخصية بتاعتنا لمست <strong>Sprite2</strong>، عايزينها تشغّل صوت "Meow". أنهي شرط وأنهي بلوك صوت؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                <div class="codebox">
+<span class="co">if</span> &lt;<span class="se">touching [Sprite2] ?</span>&gt; <span class="co">then</span><br>
+&nbsp;&nbsp;<span class="so">start sound [Meow]</span><br>
+                </div>
+                <p style="margin-top:8px;">طبعاً بنحطها جوه <span class="scratch-block control">forever</span> عشان تفضل تراقب 😉</p>
+            </div>
+        </div>
+
+        <div class="mini-task" style="background:linear-gradient(145deg,#cffafe,#a5f3fc); border-color:#06b6d4;">
+            <h4 style="color:#0e7490;">3️⃣ سؤال: ليه بنحط الـ if جوه forever؟</h4>
+            <p>فكّر كويس… ليه مش بنكتب الشرط لوحده بس؟ ليه لازم يكون جوه لوب لا نهائي؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                عشان البرنامج يفضل <strong>يراقب اللمس طول الوقت</strong> مش مرة واحدة! 👀
+                لو كتبنا الشرط لوحده، البرنامج هيشيك مرة واحدة في أول ما يشتغل وخلاص. لكن جوه <span class="scratch-block control">forever</span>،
+                هيشيك… ويشيك… ويشيك للأبد، فأول ما يحصل لمس يحسّ بيه على طول! ⚡
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== المشروع النهائي ===== -->
+    <div class="card" style="border:3px solid #0891b2; background:linear-gradient(145deg,#ffffff,#ecfeff);">
+        <h2 class="card-title">🚧 المشروع: لا تلمس الحيطة!</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            دلوقتي دورك! هنعمل لعبة صغيرة: شخصية بتمشي بأسهم الكيبورد، لازم توصل للون الأخضر 🟢 (الفوز)
+            من غير ما تلمس اللون الأحمر 🔴 (الحيطة). لو لمست الحيطة → ترجع من الأول!
+            ده هيجهّزنا للعبة المتاهة الكبيرة بعدين 🧩
+        </p>
+
+        <div class="status-box">🎯 <strong>الهدف:</strong> حرّك الشخصية بالأسهم، اوصل للأخضر تكسب 🏆، والمس الأحمر ترجع تبدأ من الأول 😅</div>
+
+        <h3 style="color:#0f766e; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
+
+        <div class="project-step"><div class="num">1</div><div>
+            ارسم خلفية (backdrop) فيها <strong>حيطة حمرا 🔴</strong> و <strong>مربع أخضر 🟢</strong> للهدف. وحط الشخصية في نقطة البداية.
+        </div></div>
+        <div class="project-step"><div class="num">2</div><div>
+            ابدأ بحدث وخلّي الشخصية ترجع لنقطة البداية:
+            <div style="margin-top:8px;">
+                <span class="scratch-block events">when 🚩 clicked</span>
+                <span class="scratch-block motion">go to x: <span class="scratch-block-input">0</span> y: <span class="scratch-block-input">0</span></span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">3</div><div>
+            خلّي الشخصية تتحرك بالأسهم: لكل سهم حدث "key pressed" يحرّكها في اتجاهه:
+            <div style="margin-top:8px;">
+                <span class="scratch-block events">when <span class="scratch-block-input">up arrow</span> key pressed</span>
+                <span class="scratch-block motion">point in direction <span class="scratch-block-input">0</span></span>
+                <span class="scratch-block motion">move <span class="scratch-block-input">10</span> steps</span>
+            </div>
+            <p style="margin-top:6px; font-size:0.9rem; color:#475569;">(اعمل نفس الفكرة للأسهم التانية: يمين 90، شمال احنا بنقول 90 ناحية الشمال، تحت 180)</p>
+        </div></div>
+        <div class="project-step"><div class="num">4</div><div>
+            حط لوب لا نهائي يراقب اللمس باستمرار:
+            <div style="margin-top:8px;">
+                <span class="scratch-block control">forever</span>
+                <span class="scratch-block control">if</span>
+                <span class="scratch-block sensing">touching color <span class="scratch-block-input">🔴</span> ?</span>
+                <span class="scratch-block control">then</span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">5</div><div>
+            لو لمس الأحمر → يرجع البداية ويقول "حاول تاني!":
+            <div style="margin-top:8px;">
+                <span class="scratch-block looks">say <span class="scratch-block-input">حاول تاني! 😅</span> for <span class="scratch-block-input">1</span> sec</span>
+                <span class="scratch-block motion">go to x: <span class="scratch-block-input">0</span> y: <span class="scratch-block-input">0</span></span>
+            </div>
+        </div></div>
+        <div class="project-step"><div class="num">6</div><div>
+            وكمان جوه نفس الـ forever، شيك على الهدف: لو لمس الأخضر → "فزت!":
+            <div style="margin-top:8px;">
+                <span class="scratch-block control">if</span>
+                <span class="scratch-block sensing">touching color <span class="scratch-block-input">🟢</span> ?</span>
+                <span class="scratch-block control">then</span>
+                <span class="scratch-block looks">say <span class="scratch-block-input">فزت! 🏆</span></span>
+            </div>
+        </div></div>
+
+        <h3 style="color:#0f766e; margin:20px 0 10px;">🧩 الكود كامل (شكله في سكراتش):</h3>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="mo">go to x: 0 y: 0</span><br>
+<span class="co">forever</span><br>
+&nbsp;&nbsp;<span class="co">if</span> &lt;<span class="se">touching color [🔴] ?</span>&gt; <span class="co">then</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="lo">say "حاول تاني! 😅" for 1 seconds</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="mo">go to x: 0 y: 0</span><br>
+&nbsp;&nbsp;<span class="co">if</span> &lt;<span class="se">touching color [🟢] ?</span>&gt; <span class="co">then</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="lo">say "فزت! 🏆"</span><br>
+<br>
+<span class="ev">when [up arrow] key pressed</span><br>
+&nbsp;&nbsp;<span class="mo">point in direction 0</span><br>
+&nbsp;&nbsp;<span class="mo">move 10 steps</span>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:18px;">
+            🌟 <strong>تحديات إضافية (لو خلصت بسرعة):</strong>
+            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
+                • ضيف حيطة حمرا تانية في مكان مختلف عشان اللعبة تصعب 🧱<br>
+                • خلّي الشخصية تعمل صوت لما تلمس الحيطة 🔊<br>
+                • ضيف عدّاد للمحاولات (هنتعلمه قريب!)
+            </div>
+        </div>
+
+        <h3 style="color:#0f766e; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li>عملت خلفية فيها حيطة حمرا وهدف أخضر</li>
+            <li>الشخصية بترجع نقطة البداية في الأول</li>
+            <li>الشخصية بتتحرك بأسهم الكيبورد</li>
+            <li>استخدمت لوب forever يراقب باستمرار</li>
+            <li>لو لمست الأحمر بترجع وتقول "حاول تاني!"</li>
+            <li>لو لمست الأخضر بتقول "فزت!"</li>
+        </ul>
+    </div>
+
+
+    <footer>
+        🎓 برافو! دلوقتي شخصيتك بقت بتحسّ باللمس 🖐️. استعد نبني لعبة المتاهة الكاملة في الحصة الجاية! 🧩🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Hints toggle =====
+    function toggleHint(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('show');
+        el.textContent = body.classList.contains('show') ? '🙈 اخفي الإجابة' : '👁️ شوف الإجابة';
+    }
+
+    // ===== Final checklist =====
+    document.querySelectorAll('#finalChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+
+    // ===== Interactive demo: mouse, wall, goal =====
+    const stage = document.getElementById('demoStage');
+    const mouseChar = document.getElementById('mouseChar');
+    const wall = document.getElementById('wall1');
+    const goal = document.getElementById('goalZone');
+    const demoStatus = document.getElementById('demoStatus');
+
+    const START = { left: 30, top: 130 };
+    const CHAR_SIZE = 42;   // approx hitbox of the emoji
+    const STEP = 18;
+    let won = false;
+
+    function layout() {
+        const W = stage.clientWidth;
+        const H = stage.clientHeight;
+        // wall: a vertical-ish red barrier in the middle
+        wall.style.left = (W * 0.45) + 'px';
+        wall.style.top = '40px';
+        wall.style.width = '36px';
+        wall.style.height = (H - 80) + 'px';
+        // goal: green zone on the far right
+        goal.style.left = (W - 80) + 'px';
+        goal.style.top = ((H - 70) / 2) + 'px';
+        goal.style.width = '60px';
+        goal.style.height = '70px';
+    }
+
+    function rectOf(el) {
+        return {
+            left: parseFloat(el.style.left) || el.offsetLeft,
+            top: parseFloat(el.style.top) || el.offsetTop,
+            width: el.offsetWidth,
+            height: el.offsetHeight
+        };
+    }
+
+    function overlap(a, b) {
+        return !(a.left + a.width < b.left ||
+                 a.left > b.left + b.width ||
+                 a.top + a.height < b.top ||
+                 a.top > b.top + b.height);
+    }
+
+    function charRect() {
+        return {
+            left: parseFloat(mouseChar.style.left),
+            top: parseFloat(mouseChar.style.top),
+            width: CHAR_SIZE,
+            height: CHAR_SIZE
+        };
+    }
+
+    function placeChar(left, top) {
+        const W = stage.clientWidth;
+        const H = stage.clientHeight;
+        left = Math.max(2, Math.min(left, W - CHAR_SIZE - 2));
+        top = Math.max(2, Math.min(top, H - CHAR_SIZE - 2));
+        mouseChar.style.left = left + 'px';
+        mouseChar.style.top = top + 'px';
+    }
+
+    function flashWall() {
+        stage.classList.add('flash');
+        setTimeout(() => stage.classList.remove('flash'), 320);
+    }
+
+    // This is our forever { if touching ... } running on every move
+    function checkSensing() {
+        if (won) return;
+        const c = charRect();
+        if (overlap(c, rectOf(wall))) {
+            flashWall();
+            mouseChar.textContent = '😵';
+            demoStatus.textContent = '🚫 لمست الحيطة! ارجع وحاول تاني من تاني طريق.';
+            demoStatus.className = 'status-box error';
+            // bounce back to start
+            placeChar(START.left, START.top);
+            setTimeout(() => { if (!won) mouseChar.textContent = '🐭'; }, 500);
+            return;
+        }
+        if (overlap(c, rectOf(goal))) {
+            won = true;
+            mouseChar.textContent = '🎉';
+            demoStatus.textContent = '🎉 وصلت! فزت! 🏆';
+            demoStatus.className = 'status-box success';
+        }
+    }
+
+    function moveChar(dx, dy) {
+        if (won) return;
+        const left = parseFloat(mouseChar.style.left) + dx;
+        const top = parseFloat(mouseChar.style.top) + dy;
+        placeChar(left, top);
+        checkSensing();
+    }
+
+    function resetDemo() {
+        won = false;
+        mouseChar.textContent = '🐭';
+        layout();
+        placeChar(START.left, START.top);
+        demoStatus.textContent = '🕹️ استخدم الأسهم تحرّك الفأر. وصّله للهدف الأخضر! (تقدر كمان تستخدم أسهم الكيبورد)';
+        demoStatus.className = 'status-box';
+        demoStatus.style.background = '#ecfeff';
+        demoStatus.style.borderColor = '#06b6d4';
+    }
+
+    document.getElementById('btnUp').addEventListener('click', () => moveChar(0, -STEP));
+    document.getElementById('btnDown').addEventListener('click', () => moveChar(0, STEP));
+    document.getElementById('btnLeft').addEventListener('click', () => moveChar(-STEP, 0));
+    document.getElementById('btnRight').addEventListener('click', () => moveChar(STEP, 0));
+    document.getElementById('resetDemoBtn').addEventListener('click', resetDemo);
+
+    document.addEventListener('keydown', (e) => {
+        const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        if (keys.indexOf(e.key) === -1) return;
+        e.preventDefault();
+        if (e.key === 'ArrowUp') moveChar(0, -STEP);
+        if (e.key === 'ArrowDown') moveChar(0, STEP);
+        if (e.key === 'ArrowLeft') moveChar(-STEP, 0);
+        if (e.key === 'ArrowRight') moveChar(STEP, 0);
+    });
+
+    window.addEventListener('resize', () => { if (!won) { layout(); placeChar(START.left, START.top); } });
+
+    // init
+    resetDemo();
+</script>
+</body>
+</html>
