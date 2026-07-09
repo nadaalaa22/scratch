@@ -407,7 +407,7 @@
     // Build each session card – no description element
     for (let i = 1; i <= totalSessions; i++) {
       const data = getSessionData(i);
-      const sessionLink = `session_${i}.html`;
+      const sessionLink = `session_${String(i).padStart(2, '0')}.html`;
       const card = document.createElement("a");
       card.href = sessionLink;
       card.className = "session-card";
