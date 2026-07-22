@@ -230,9 +230,11 @@
             ده فأر 🐭 بتتحكم فيه بالأسهم تحت ⬆️⬇️⬅️➡️. حاول توصله للمربع الأخضر 🟢 (الهدف)
             من غير ما تلمس الحيطة الحمرا 🔴. البرنامج بيراقب باستمرار — زي ما عملنا بالظبط بـ <span class="scratch-block control">forever</span> + <span class="scratch-block control">if</span>!
         </p>
+       
 
         <div class="demo-stage" id="demoStage">
             <div class="wall" id="wall1"></div>
+            <div class="wall" id="wall2"></div>
             <div class="goal" id="goalZone">🎯</div>
             <div id="mouseChar">🐭</div>
         </div>
@@ -389,9 +391,8 @@
     </div>
 
 
-     <footer>
-  🎓 برافو! دلوقتي شخصيتك بقت بتحسّ باللمس 🖐️. استعد لمغامرة جديدة في Session 12! 🧩🚀 
-  </footer>
+    <footer>
+  🎓 برافو! دلوقتي شخصيتك بقت بتحسّ باللمس 🖐️. استعد لمغامرة جديدة في Session 12! 🧩🚀    </footer>
 </div>
 
 <script>
@@ -410,7 +411,9 @@
     // ===== Interactive demo: mouse, wall, goal =====
     const stage = document.getElementById('demoStage');
     const mouseChar = document.getElementById('mouseChar');
-    const wall = document.getElementById('wall1');
+    const wallTop = document.getElementById('wall1');
+    const wallBottom = document.getElementById('wall2');
+    const walls = [wallTop, wallBottom];
     const goal = document.getElementById('goalZone');
     const demoStatus = document.getElementById('demoStatus');
 
@@ -422,13 +425,24 @@
     function layout() {
         const W = stage.clientWidth;
         const H = stage.clientHeight;
-        // wall: a vertical-ish red barrier in the middle
-        wall.style.left = (W * 0.45) + 'px';
-        wall.style.top = '40px';
-        wall.style.width = '36px';
-        wall.style.height = (H - 80) + 'px';
+        const wallX = W * 0.45;
+        const wallWidth = 34;
+        // الحيطة مقسومة لجزئين وبينهم "باب" (فتحة) الفأر يعدّي منها
+        const doorTop = Math.round(H * 0.54);      // بداية الفتحة
+        const doorHeight = 95;                     // الفتحة أوسع من الفأر بمراحل
+        const doorBottom = doorTop + doorHeight;   // نهاية الفتحة
+        // الجزء العلوي من الحيطة
+        wallTop.style.left = wallX + 'px';
+        wallTop.style.top = '12px';
+        wallTop.style.width = wallWidth + 'px';
+        wallTop.style.height = (doorTop - 12) + 'px';
+        // الجزء السفلي من الحيطة
+        wallBottom.style.left = wallX + 'px';
+        wallBottom.style.top = doorBottom + 'px';
+        wallBottom.style.width = wallWidth + 'px';
+        wallBottom.style.height = Math.max(0, (H - 12) - doorBottom) + 'px';
         // goal: green zone on the far right
-        goal.style.left = (W - 80) + 'px';
+        goal.style.left = (W - 78) + 'px';
         goal.style.top = ((H - 70) / 2) + 'px';
         goal.style.width = '60px';
         goal.style.height = '70px';
@@ -477,7 +491,8 @@
     function checkSensing() {
         if (won) return;
         const c = charRect();
-        if (overlap(c, rectOf(wall))) {
+        const hitWall = walls.some(function (w) { return overlap(c, rectOf(w)); });
+        if (hitWall) {
             flashWall();
             mouseChar.textContent = '😵';
             demoStatus.textContent = '🚫 لمست الحيطة! ارجع وحاول تاني من تاني طريق.';
@@ -508,7 +523,7 @@
         mouseChar.textContent = '🐭';
         layout();
         placeChar(START.left, START.top);
-        demoStatus.textContent = '🕹️ استخدم الأسهم تحرّك الفأر. وصّله للهدف الأخضر! (تقدر كمان تستخدم أسهم الكيبورد)';
+        demoStatus.textContent = '🕹️ استخدم الأسهم تحرّك الفأر. انزل تحت وعدّي من فتحة الحيطة 🚪 وبعدين اطلع للهدف الأخضر! (تقدر كمان تستخدم أسهم الكيبورد)';
         demoStatus.className = 'status-box';
         demoStatus.style.background = '#ecfeff';
         demoStatus.style.borderColor = '#06b6d4';
