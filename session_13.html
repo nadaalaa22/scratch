@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 13 - البث والرسائل 📢</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #fffbeb 0%, #fef9c3 50%, #fef3c7 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #f59e0b, #eab308, #fbbf24);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(245,158,11,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '📢'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '💬'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #fde68a; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #f59e0b, #eab308);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .station-badge {
+            display:inline-block; background:#f59e0b; color:white; font-weight:900;
+            padding:5px 18px; border-radius:50px; font-size:0.95rem; margin-bottom:12px;
+            box-shadow:0 4px 0 rgba(0,0,0,0.15);
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
+        .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
+        .recap-item:hover { transform: scale(1.03); border-color: #fbbf24; }
+        .recap-item .ricon { font-size: 2.2rem; }
+        .recap-item h4 { color: #b45309; margin: 8px 0 4px; }
+        .recap-item p { font-size: 0.85rem; color: #475569; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.teal { background: #14b8a6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .status-box { background: #fffbeb; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #f59e0b; margin: 15px 0; }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .mini-task {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border: 3px dashed #f59e0b; border-radius: 25px; padding: 20px; margin: 15px 0;
+        }
+        .mini-task h4 { color: #92400e; font-size: 1.15rem; margin-bottom: 8px; }
+        .hint-toggle { cursor: pointer; color: #b45309; font-weight: 800; text-decoration: underline; margin-top: 8px; display: inline-block; }
+        .hint-body { display: none; background: #fff; border-radius: 15px; padding: 12px; margin-top: 8px; border: 2px solid #fcd34d; }
+        .hint-body.show { display: block; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Final project stage */
+        .demo-stage {
+            background: linear-gradient(145deg, #fef3c7, #fde68a);
+            border-radius: 30px; height: 300px; position: relative; overflow: hidden;
+            margin: 20px 0; border: 4px solid #fbbf24; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+            transition: background 0.6s ease;
+        }
+        .demo-stage.park { background: linear-gradient(145deg, #bbf7d0, #86efac); }
+        .stage-char { position: absolute; font-size: 4rem; bottom: 30px; transition: left 0.15s linear, transform 0.2s ease; z-index:10; }
+        #catChar { left: 50px; }
+        #dogChar { right: 50px; }
+        .speech {
+            position: absolute; background: white; padding: 8px 16px; border-radius: 18px;
+            font-weight: 800; font-size: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+            z-index: 20; opacity: 0; transition: opacity 0.25s ease; max-width: 200px; text-align:center;
+            color:#1e293b;
+        }
+        .speech.show { opacity: 1; }
+        .project-step {
+            background: #fffbeb; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
+            border-right: 6px solid #f59e0b; display:flex; gap:12px; align-items:flex-start;
+        }
+        .project-step .num { background:#f59e0b; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#10b981; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .tx { color:#86efac; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #f59e0b; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📢 البث والرسائل: خلّي الشخصيات تتكلم مع بعض!</h1>
+        <p>إزاي شخصية تبعت إشارة وشخصية تانية ترد عليها</p>
+    </div>
+
+    <!-- ===== الهدف ===== -->
+    <div class="card">
+        <h2 class="card-title">🎯 إيه اللي هنتعلمه النهارده؟</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            لحد دلوقتي كل شخصية في سكراتش بتشتغل لوحدها 🙂.
+            بس لو عايز شخصية <strong>تكلّم</strong> شخصية تانية، أو تخلّيها تتحرك في الوقت الصح،
+            محتاج حاجة اسمها <strong>البث (Broadcast)</strong> — يعني تبعت <strong>رسالة (إشارة)</strong> 📡
+            لكل المسرح، واللي مستنّي الرسالة دي يبدأ شغله!
+        </p>
+        <div class="status-box">🌟 <strong>هدف النهارده:</strong> نخلّي شخصيتين يتكلموا ويتنسّقوا مع بعض باستخدام <span class="scratch-block events">broadcast</span> و <span class="scratch-block events">when I receive</span> 🤝</div>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">📢</div><h4>broadcast</h4><p>يبعت رسالة لكل الشخصيات</p></div>
+            <div class="recap-item"><div class="ricon">📡</div><h4>...and wait</h4><p>يبعت ويستنى لحد ما يخلّص</p></div>
+            <div class="recap-item"><div class="ricon">📥</div><h4>when I receive</h4><p>يبدأ شغل لما توصل الرسالة</p></div>
+            <div class="recap-item"><div class="ricon">🎬</div><h4>تبديل المشهد</h4><p>الرسالة تغيّر الخلفية</p></div>
+        </div>
+    </div>
+
+    <!-- ===== الفكرة الكبيرة ===== -->
+    <div class="card">
+        <span class="station-badge">💡 الفكرة الكبيرة</span>
+        <h2 class="card-title">إزاي الشخصيات بتتكلم؟</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            في سكراتش كل شخصية بتشتغل لوحدها في عالمها 🌍.
+            عشان شخصية "تكلّم" التانية، مبتروحلهاش مباشرة… لأ! بتعمل حاجة أذكى:
+            بتبعت <strong>رسالة (إشارة)</strong> لكل المسرح كله 📢.
+            وكل شخصية بتكون <strong>مستنّية</strong> الرسالة دي… أول ما توصلها تتحرّك على طول! ⚡
+        </p>
+        <div style="background:#fffbeb; border-radius:25px; padding:20px; margin:15px 0; border:2px solid #fcd34d;">
+            <p style="font-weight:800; color:#92400e; margin-bottom:10px;">🗣️ زي الحياة الحقيقية بالظبط:</p>
+            <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:center; align-items:center;">
+                <div style="background:white; border-radius:20px; padding:15px; text-align:center; min-width:160px; border:2px solid #fde68a;">
+                    <div style="font-size:2.5rem;">🧑‍🏫</div>
+                    <p style="font-weight:700; color:#475569; margin-top:6px;">المدرّس يقول "ابدأوا!"<br>وكل الطلبة يبدأوا 📝</p>
+                </div>
+                <div style="background:white; border-radius:20px; padding:15px; text-align:center; min-width:160px; border:2px solid #fde68a;">
+                    <div style="font-size:2.5rem;">🏁</div>
+                    <p style="font-weight:700; color:#475569; margin-top:6px;">إشارة بداية السباق<br>وكل العدّائين ينطلقوا 🏃</p>
+                </div>
+            </div>
+        </div>
+        <div class="status-box">📌 الرسالة واحدة، بس ممكن <strong>شخصيات كتير</strong> تستنّاها وكلهم يتحركوا في نفس اللحظة! 🤩</div>
+    </div>
+
+    <!-- ===== البلوكات ===== -->
+    <div class="card">
+        <span class="station-badge">🧩 البلوكات</span>
+        <h2 class="card-title">بلوكات البث (لون الأحداث الأصفر)</h2>
+        <p style="line-height:1.8;">دي البلوكات اللي هنستخدمها، كلها من قسم <strong>الأحداث (Events)</strong> 🟡:</p>
+
+        <div style="background:#fef9c3; border-radius:25px; padding:18px; margin:15px 0;">
+            <div style="text-align:center; margin-bottom:8px;">
+                <span class="scratch-block events">broadcast <span class="scratch-block-input">message1</span></span>
+            </div>
+            <p style="text-align:center; color:#475569; font-weight:700;">📢 يبعت رسالة لكل الشخصيات، ويكمّل على طول من غير ما يستنى.</p>
+        </div>
+
+        <div style="background:#fef9c3; border-radius:25px; padding:18px; margin:15px 0;">
+            <div style="text-align:center; margin-bottom:8px;">
+                <span class="scratch-block events">broadcast <span class="scratch-block-input">message1</span> and wait</span>
+            </div>
+            <p style="text-align:center; color:#475569; font-weight:700;">📡 يبعت الرسالة ويستنى لحد ما اللي بيستقبلها يخلّص شغله، وبعدين يكمّل.</p>
+        </div>
+
+        <div style="background:#fef9c3; border-radius:25px; padding:18px; margin:15px 0;">
+            <div style="text-align:center; margin-bottom:8px;">
+                <span class="scratch-block events">when I receive <span class="scratch-block-input">message1</span></span>
+            </div>
+            <p style="text-align:center; color:#475569; font-weight:700;">📥 يبدأ الكود اللي تحته لما توصل الرسالة دي. (زي ودان مستنّية الإشارة 👂)</p>
+        </div>
+
+        <div class="status-box" style="background:#e0f2fe; border-color:#3b82f6;">
+            ✏️ <strong>معلومة حلوة:</strong> تقدر تغيّر اسم الرسالة لأي حاجة تحبها! مثلاً <span class="scratch-block-input" style="display:inline-block;">ابدأ اللعبة</span> أو <span class="scratch-block-input" style="display:inline-block;">افتح الباب</span> — كده الكود بيبقى مفهوم أكتر 😎
+        </div>
+
+        <div style="background:#f3e8ff; border-radius:25px; padding:18px; margin:15px 0; border:2px solid #d8b4fe;">
+            <p style="font-weight:800; color:#6b21a8;">🎬 وكمان: البث ممكن يغيّر المشهد!</p>
+            <p style="line-height:1.8; color:#475569; margin-top:6px;">
+                ممكن شخصية تبعت رسالة، والمسرح يكون مستنّيها ويبدّل الخلفية في الوقت الصح:
+            </p>
+            <div style="text-align:center; margin-top:10px;">
+                <span class="scratch-block events">when I receive <span class="scratch-block-input">روح الحديقة</span></span>
+                <span class="scratch-block looks">switch backdrop to <span class="scratch-block-input">park</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== تجربة تفاعلية ===== -->
+    <div class="card">
+        <span class="station-badge">🎮 جرّب بنفسك</span>
+        <h2 class="card-title">المسرح الحي: القطة والكلب 🐱🐶</h2>
+        <p style="line-height:1.8;">
+            دوس على الأزرار وشوف البث شغّال قدامك! القطة هتبعت رسالة 📢، والكلب اللي على الناحية التانية
+            هيستقبلها بعد لحظة صغيرة ويرد ويهبّ من الفرحة. وفيه زرار تاني يبدأ السباق ويخلّي الاتنين يجروا سوا 🏁
+        </p>
+
+        <div class="demo-stage" id="liveStage">
+            <div class="stage-char" id="catChar">🐱</div>
+            <div class="stage-char" id="dogChar">🐶</div>
+            <div class="speech" id="catSpeech"></div>
+            <div class="speech" id="dogSpeech"></div>
+        </div>
+
+        <div style="text-align:center; margin-bottom:10px;">
+            <button class="ctrl-btn teal" id="helloBtn">📢 ابعت رسالة (سلام)</button>
+            <button class="ctrl-btn orange" id="raceBtn">🏁 ابدأ السباق</button>
+            <button class="ctrl-btn purple" id="resetStageBtn">🔄 من الأول</button>
+        </div>
+
+        <div class="status-box" id="stageStatus">
+            💡 دوس "ابعت رسالة" وشوف القطة بتبعت إشارة والكلب بيرد عليها 🐶
+        </div>
+    </div>
+
+    <!-- ===== مهمة صغيرة 1 ===== -->
+    <div class="card">
+        <h2 class="card-title">📝 مهام صغيرة — فكّر وجرّب</h2>
+
+        <div class="mini-task">
+            <h4>1️⃣ القطة تبعت رسالة لما تدوس عليها</h4>
+            <p>عايزين لما تدوس على القطة 🐱 تبعت رسالة اسمها "العب". أنهي بلوكات تستخدم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block events">when this sprite clicked</span> →
+                <span class="scratch-block events">broadcast <span class="scratch-block-input">العب</span></span>
+                <p style="margin-top:8px; color:#475569;">كده أول ما تدوس على القطة، الرسالة "العب" بتطير لكل الشخصيات! 📢</p>
+            </div>
+        </div>
+
+        <div class="mini-task">
+            <h4>2️⃣ الكلب يتحرّك ويلوّح لما توصله الرسالة</h4>
+            <p>عايزين الكلب 🐶 يتحرّك ويلوّح (يبدّل أزياء 5 مرات) لما توصله رسالة "العب". إزاي؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block events">when I receive <span class="scratch-block-input">العب</span></span>
+                <div style="margin-top:8px;">
+                    <span class="scratch-block control">repeat <span class="scratch-block-input">5</span></span> وجواها:
+                    <span class="scratch-block looks">next costume</span> +
+                    <span class="scratch-block control">wait <span class="scratch-block-input">0.2</span> seconds</span>
+                </div>
+                <p style="margin-top:8px; color:#475569;">القطة بتبعت "العب"، والكلب مستنّيها ويبدأ يتحرّك على طول! 🎉</p>
+            </div>
+        </div>
+
+        <div class="mini-task" style="background:linear-gradient(145deg,#e0f2fe,#bae6fd); border-color:#3b82f6;">
+            <h4 style="color:#1e40af;">3️⃣ 🤔 سؤال: ليه أصلاً بنستخدم broadcast؟</h4>
+            <p>إيه فايدة البث (broadcast) في سكراتش؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                بنستخدمه عشان <strong>شخصية تشغّل كود في شخصية تانية</strong> (تنسّق بينهم زي الحوار 🗣️)،
+                أو عشان <strong>نبدّل المشهد/الخلفية</strong> 🎬 في الوقت المناسب بالظبط.
+                باختصار: البث هو طريقة الشخصيات إنها "تتكلم" مع بعض! 🤝
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== المشروع النهائي ===== -->
+    <div class="card" style="border:3px solid #f59e0b; background:linear-gradient(145deg,#ffffff,#fffbeb);">
+        <h2 class="card-title">🎭 المشروع: حوار بين صاحبين 🐱🐶</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            دلوقتي دورك! هنعمل مشهد صغير فيه شخصيتين بيتكلموا مع بعض بالبث:
+            القطة بتسلّم وتبعت رسالة 📢، الكلب يستقبلها ويرد 💬، بعدين الكلب يبعت رسالة تانية،
+            وفي الآخر الخلفية تتبدّل لحديقة جميلة 🌳. خلّي الحوار واضح وحلو!
+        </p>
+
+        <div class="status-box">🎯 <strong>الهدف:</strong> شخصيتين يعملوا حوار منظّم باستخدام broadcast و when I receive، وتتبدّل الخلفية في الآخر.</div>
+
+        <h3 style="color:#b45309; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
+
+        <div class="project-step"><div class="num">1</div><div>
+            هات شخصيتين: <strong>قطة 🐱</strong> على الشمال و <strong>كلب 🐶</strong> على اليمين. وهات خلفيتين: واحدة بيت 🏠 وواحدة حديقة 🌳.
+        </div></div>
+        <div class="project-step"><div class="num">2</div><div>
+            القطة تبدأ الكلام: تقول "أهلاً يا كلب!" وبعدين تبعت رسالة <span class="scratch-block-input" style="display:inline-block;">سلام</span> 📢.
+        </div></div>
+        <div class="project-step"><div class="num">3</div><div>
+            الكلب يكون مستنّي الرسالة: لما توصله رسالة "سلام" يقول "أهلاً يا قطة! 🐶"، وبعدين يبعت رسالة <span class="scratch-block-input" style="display:inline-block;">روح الحديقة</span>.
+        </div></div>
+        <div class="project-step"><div class="num">4</div><div>
+            المسرح (Stage) يكون مستنّي رسالة "روح الحديقة" ويبدّل الخلفية للحديقة 🌳.
+        </div></div>
+
+        <h3 style="color:#b45309; margin:20px 0 10px;">🧩 الكود — شخصية القطة 🐱:</h3>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="lo">say "أهلاً يا كلب!" for 2 seconds</span><br>
+<span class="ev">broadcast [سلام]</span>
+        </div>
+
+        <h3 style="color:#b45309; margin:20px 0 10px;">🧩 الكود — شخصية الكلب 🐶:</h3>
+        <div class="codebox">
+<span class="ev">when I receive [سلام]</span><br>
+<span class="lo">say "أهلاً يا قطة! 🐶" for 2 seconds</span><br>
+<span class="co">wait 0.5 seconds</span><br>
+<span class="ev">broadcast [روح الحديقة]</span>
+        </div>
+
+        <div class="status-box" style="background:#f3e8ff; border-color:#8b5cf6; margin-top:15px;">
+            🎬 <strong>وفي المسرح (Stage):</strong>
+            <div style="text-align:center; margin-top:8px;">
+                <span class="scratch-block events">when I receive <span class="scratch-block-input">روح الحديقة</span></span>
+                <span class="scratch-block looks">switch backdrop to <span class="scratch-block-input">park</span></span>
+            </div>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:15px;">
+            🌟 <strong>تحديات إضافية (لو خلّصت بسرعة):</strong>
+            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
+                • خلّي الكلب يهبّ (يقفز) بعد ما يرد 🐶<br>
+                • زوّد شخصية تالتة (عصفور 🐦) يرد لما توصله رسالة "سلام" كمان<br>
+                • شغّل صوت لطيف لما تتبدّل الخلفية للحديقة 🎵
+            </div>
+        </div>
+
+        <h3 style="color:#b45309; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li>عندي شخصيتين: قطة وكلب</li>
+            <li>القطة بتقول كلام وبعدين تعمل broadcast [سلام]</li>
+            <li>الكلب فيه when I receive [سلام] وبيرد</li>
+            <li>الكلب بيعمل broadcast [روح الحديقة]</li>
+            <li>المسرح بيبدّل الخلفية لما يستقبل [روح الحديقة]</li>
+            <li>الحوار بيمشي بالترتيب الصح 🎭</li>
+        </ul>
+    </div>
+
+    <footer>
+        🎓 برافو! دلوقتي شخصياتك بتتكلم وتتنسّق مع بعض بالبث 📢. استعد لمغامرة جديدة في Session 14! 🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Hints toggle =====
+    function toggleHint(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('show');
+        el.textContent = body.classList.contains('show') ? '🙈 اخفي الإجابة' : '👁️ شوف الإجابة';
+    }
+
+    // ===== Final checklist =====
+    document.querySelectorAll('#finalChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+
+    // ===== Live stage: broadcast simulation =====
+    const stage = document.getElementById('liveStage');
+    const catChar = document.getElementById('catChar');
+    const dogChar = document.getElementById('dogChar');
+    const catSpeech = document.getElementById('catSpeech');
+    const dogSpeech = document.getElementById('dogSpeech');
+    const stageStatus = document.getElementById('stageStatus');
+    const helloBtn = document.getElementById('helloBtn');
+    const raceBtn = document.getElementById('raceBtn');
+    const resetStageBtn = document.getElementById('resetStageBtn');
+
+    let timers = [];
+    let raceTimer = null;
+    let busy = false;
+
+    function clearTimers() {
+        timers.forEach(t => clearTimeout(t));
+        timers = [];
+        if (raceTimer) { clearInterval(raceTimer); raceTimer = null; }
+    }
+    function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+    function showSpeech(el, charEl, text) {
+        // position bubble above its character
+        const rect = charEl.getBoundingClientRect();
+        const stageRect = stage.getBoundingClientRect();
+        el.textContent = text;
+        el.style.left = (rect.left - stageRect.left - 30) + 'px';
+        el.style.top = (rect.top - stageRect.top - 50) + 'px';
+        el.classList.add('show');
+    }
+    function hideSpeech(el) { el.classList.remove('show'); }
+
+    function hop(charEl) {
+        charEl.style.transform = 'translateY(-30px)';
+        later(() => { charEl.style.transform = 'translateY(0)'; }, 250);
+    }
+
+    function resetStage() {
+        clearTimers();
+        busy = false;
+        stage.classList.remove('park');
+        catChar.style.left = '50px';
+        dogChar.style.right = '50px';
+        catChar.style.transform = 'translateY(0)';
+        dogChar.style.transform = 'translateY(0)';
+        hideSpeech(catSpeech);
+        hideSpeech(dogSpeech);
+        stageStatus.className = 'status-box';
+        stageStatus.style.background = '#fffbeb';
+        stageStatus.style.borderColor = '#f59e0b';
+        stageStatus.innerHTML = '💡 دوس "ابعت رسالة" وشوف القطة بتبعت إشارة والكلب بيرد عليها 🐶';
+    }
+
+    // Button 1: cat broadcasts "سلام", dog receives and replies + hops
+    function sendHello() {
+        if (busy) return;
+        busy = true;
+        resetStageState();
+        stageStatus.className = 'status-box';
+        stageStatus.style.background = '#fef9c3';
+        stageStatus.style.borderColor = '#f59e0b';
+        stageStatus.innerHTML = '🐱 القطة بتقول كلامها...';
+        showSpeech(catSpeech, catChar, 'أهلاً يا كلب!');
+
+        // after a moment: cat "broadcasts"
+        later(() => {
+            stageStatus.innerHTML = '📢 القطة بعتت رسالة (سلام) لكل المسرح...';
+        }, 1200);
+
+        // dog receives after small delay
+        later(() => {
+            hideSpeech(catSpeech);
+            stageStatus.innerHTML = '📥 الكلب استقبل الرسالة وبيرد!';
+            showSpeech(dogSpeech, dogChar, 'أهلاً يا قطة! 🐶');
+            hop(dogChar);
+        }, 2000);
+
+        later(() => {
+            hideSpeech(dogSpeech);
+            stageStatus.className = 'status-box success';
+            stageStatus.innerHTML = '✅ كده الشخصيتين اتكلموا مع بعض بالبث! 🤝';
+            busy = false;
+        }, 3600);
+    }
+
+    function resetStageState() {
+        clearTimers();
+        stage.classList.remove('park');
+        catChar.style.left = '50px';
+        dogChar.style.right = '50px';
+        hideSpeech(catSpeech);
+        hideSpeech(dogSpeech);
+    }
+
+    // Button 2: broadcast "race" -> both move
+    function startRace() {
+        if (busy) return;
+        busy = true;
+        resetStageState();
+        stageStatus.className = 'status-box';
+        stageStatus.style.background = '#fef9c3';
+        stageStatus.style.borderColor = '#f59e0b';
+        stageStatus.innerHTML = '🏁 رسالة "ابدأ السباق" اتبعتت... الاتنين بيستقبلوها!';
+        showSpeech(catSpeech, catChar, 'يلا نجري! 🏃');
+        showSpeech(dogSpeech, dogChar, 'ماشي! 🐶');
+
+        later(() => { hideSpeech(catSpeech); hideSpeech(dogSpeech); }, 1100);
+
+        let catPos = 50;
+        let dogPos = 50; // measured from right
+        const maxMove = stage.clientWidth - 160;
+        raceTimer = setInterval(() => {
+            catPos += 4 + Math.random() * 6;
+            dogPos += 4 + Math.random() * 6;
+            if (catPos > maxMove) catPos = maxMove;
+            if (dogPos > maxMove) dogPos = maxMove;
+            catChar.style.left = catPos + 'px';
+            dogChar.style.right = dogPos + 'px';
+            if (catPos >= maxMove && dogPos >= maxMove) {
+                clearInterval(raceTimer); raceTimer = null;
+                stageStatus.className = 'status-box success';
+                stageStatus.innerHTML = '🎉 رسالة واحدة خلّت الاتنين يجروا في نفس الوقت!';
+                busy = false;
+            }
+        }, 90);
+    }
+
+    helloBtn.addEventListener('click', sendHello);
+    raceBtn.addEventListener('click', startRace);
+    resetStageBtn.addEventListener('click', resetStage);
+
+    // init
+    resetStage();
+</script>
+</body>
+</html>
