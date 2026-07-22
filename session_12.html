@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Session 12 - الإحداثيات والانزلاق 🗺️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', 'Comic Neue', sans-serif;
+            background: linear-gradient(145deg, #eff6ff 0%, #f0f9ff 50%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        :root {
+            --scratch-motion: #4c97ff;
+            --scratch-looks: #9966ff;
+            --scratch-sound: #ff80ab;
+            --scratch-events: #ffbf00;
+            --scratch-control: #ffab19;
+        }
+        @keyframes floatHero { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-10px); } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .hero {
+            background: linear-gradient(135deg, #4c97ff, #3b82f6, #2563eb);
+            background-size: 200% 200%;
+            animation: floatHero 4s ease-in-out infinite, gradientShift 6s ease infinite;
+            border-radius: 50px; padding: 40px 30px; text-align: center; color: white;
+            margin-bottom: 30px; box-shadow: 0 25px 50px rgba(37,99,235,0.3);
+            position: relative; overflow: hidden;
+        }
+        .hero::before { content: '🗺️'; position: absolute; font-size: 8rem; opacity: 0.12; top: -20px; left: 20px; animation: floatHero 3s ease-in-out infinite reverse; }
+        .hero::after { content: '🚀'; position: absolute; font-size: 6rem; opacity: 0.12; bottom: -10px; right: 30px; animation: floatHero 4s ease-in-out infinite; }
+        .hero h1 { font-size: 2.4rem; font-weight: 900; text-shadow: 3px 3px 0 rgba(0,0,0,0.2); margin-bottom: 15px; }
+        .hero p { font-size: 1.15rem; background: rgba(255,255,255,0.25); display: inline-block; padding: 10px 30px; border-radius: 50px; backdrop-filter: blur(10px); font-weight: 700; }
+        .card {
+            background: white; border-radius: 40px; padding: 30px; margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: 3px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #bfdbfe; transform: translateY(-5px); }
+        .card-title {
+            font-size: 1.8rem; font-weight: 900;
+            background: linear-gradient(120deg, #4c97ff, #2563eb);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            margin-bottom: 20px;
+        }
+        .station-badge {
+            display:inline-block; background:#4c97ff; color:white; font-weight:900;
+            padding:5px 18px; border-radius:50px; font-size:0.95rem; margin-bottom:12px;
+            box-shadow:0 4px 0 rgba(0,0,0,0.15);
+        }
+        .scratch-block {
+            display: inline-flex; align-items: center; padding: 8px 16px; border-radius: 4px;
+            font-weight: bold; font-family: monospace; font-size: 0.95rem;
+            margin: 4px; box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            color: white; text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+        }
+        .scratch-block.motion { background: #4c97ff; }
+        .scratch-block.looks { background: #9966ff; }
+        .scratch-block.sound { background: #ff80ab; }
+        .scratch-block.events { background: #ffbf00; }
+        .scratch-block.control { background: #ffab19; }
+        .scratch-block.sensing { background: #5cb1d6; }
+        .scratch-block-input { background: white; color: #333; padding: 2px 8px; border-radius: 15px; margin: 0 3px; font-weight: bold; }
+        .recap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 15px; margin: 15px 0; }
+        .recap-item { background: #f8fafc; border-radius: 20px; padding: 15px; text-align: center; border: 2px solid #e2e8f0; transition: 0.2s; }
+        .recap-item:hover { transform: scale(1.03); border-color: #4c97ff; }
+        .recap-item .ricon { font-size: 2.2rem; }
+        .recap-item h4 { color: #1d4ed8; margin: 8px 0 4px; }
+        .recap-item p { font-size: 0.85rem; color: #475569; }
+        .ctrl-btn {
+            border: none; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.9rem;
+            font-weight: 800; cursor: pointer; transition: 0.1s; box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+            font-family: 'Tajawal', sans-serif; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.2); }
+        .ctrl-btn.teal { background: #14b8a6; }
+        .ctrl-btn.green { background: #10b981; }
+        .ctrl-btn.orange { background: #f59e0b; }
+        .ctrl-btn.purple { background: #8b5cf6; }
+        .ctrl-btn.blue { background: #4c97ff; }
+        .status-box { background: #eff6ff; border-radius: 25px; padding: 15px; text-align: center; font-weight: 800; border-right: 6px solid #4c97ff; margin: 15px 0; }
+        .status-box.success { background: #d1fae5; border-color: #10b981; }
+        .status-box.error { background: #fee2e2; border-color: #ef4444; }
+        .mini-task {
+            background: linear-gradient(145deg, #fef9c3, #fde68a);
+            border: 3px dashed #f59e0b; border-radius: 25px; padding: 20px; margin: 15px 0;
+        }
+        .mini-task h4 { color: #92400e; font-size: 1.15rem; margin-bottom: 8px; }
+        .hint-toggle { cursor: pointer; color: #1d4ed8; font-weight: 800; text-decoration: underline; margin-top: 8px; display: inline-block; }
+        .hint-body { display: none; background: #fff; border-radius: 15px; padding: 12px; margin-top: 8px; border: 2px solid #bfdbfe; }
+        .hint-body.show { display: block; animation: popIn 0.3s ease; }
+        @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Interactive grid stage */
+        .demo-stage {
+            background: linear-gradient(145deg, #dbeafe, #bfdbfe);
+            border-radius: 30px; height: 340px; position: relative; overflow: hidden;
+            margin: 20px 0; border: 4px solid #93c5fd; box-shadow: inset 0 5px 15px rgba(0,0,0,0.05);
+            cursor: crosshair;
+        }
+        .stage-grid {
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            background-image: linear-gradient(rgba(37,99,235,0.10) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(37,99,235,0.10) 1px, transparent 1px);
+            background-size: 34px 34px;
+            pointer-events: none;
+        }
+        .axis-x, .axis-y { position:absolute; background:rgba(37,99,235,0.4); pointer-events:none; }
+        .axis-x { left:0; right:0; top:50%; height:2px; }
+        .axis-y { top:0; bottom:0; left:50%; width:2px; }
+        .center-dot { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:12px; height:12px; background:#2563eb; border:2px solid #fff; border-radius:50%; pointer-events:none; z-index:5; }
+        .center-label { position:absolute; top:calc(50% + 10px); left:calc(50% + 10px); font-size:0.7rem; font-weight:800; color:#1d4ed8; pointer-events:none; }
+        .edge-label { position:absolute; font-size:0.75rem; font-weight:800; color:#1d4ed8; background:rgba(255,255,255,0.7); padding:2px 8px; border-radius:10px; pointer-events:none; z-index:4; }
+        #rocket { position: absolute; font-size: 2.6rem; top: 50%; left: 50%; transform: translate(-50%,-50%); transition: top 0.1s linear, left 0.1s linear; z-index:10; }
+        #rocket.gliding { transition: top 1s ease-in-out, left 1s ease-in-out; }
+        .pos-label { background:#1e293b; color:#7dd3fc; font-family:monospace; font-weight:800; border-radius:18px; padding:8px 18px; display:inline-block; font-size:1.05rem; }
+        .project-step {
+            background: #eff6ff; border-radius: 20px; padding: 15px 20px; margin: 10px 0;
+            border-right: 6px solid #4c97ff; display:flex; gap:12px; align-items:flex-start;
+        }
+        .project-step .num { background:#4c97ff; color:white; font-weight:900; min-width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .checklist { list-style:none; padding:0; }
+        .checklist li { background:#fff; border:2px solid #e2e8f0; border-radius:15px; padding:10px 15px; margin:8px 0; font-weight:700; color:#334155; cursor:pointer; transition:0.15s; }
+        .checklist li:hover { border-color:#4c97ff; }
+        .checklist li.done { background:#d1fae5; border-color:#10b981; color:#065f46; text-decoration:line-through; }
+        .checklist li::before { content:'⬜ '; }
+        .checklist li.done::before { content:'✅ '; }
+        .codebox { background: #1e293b; border-radius: 15px; padding: 18px; direction: ltr; text-align: left; font-family: monospace; color: #e2e8f0; margin-top: 10px; line-height: 1.9; font-size:0.95rem; }
+        .codebox .ev { color:#fbbf24; } .codebox .mo { color:#60a5fa; } .codebox .lo { color:#c084fc; } .codebox .so { color:#f472b6; } .codebox .co { color:#fb923c; } .codebox .tx { color:#86efac; }
+        footer { text-align: center; margin-top: 20px; padding: 20px; background: #2563eb; color: white; border-radius: 40px 40px 0 0; font-weight:700;}
+        @media (max-width: 640px) { .hero h1 { font-size: 1.5rem; } .demo-stage { height: 300px; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🗺️ الإحداثيات والانزلاق: حرّك شخصيتك لأي مكان بنعومة</h1>
+        <p>المسرح زي خريطة كنز، وكل مكان ليه عنوان</p>
+    </div>
+
+    <!-- ===== الهدف ===== -->
+    <div class="card">
+        <h2 class="card-title">🎯 هدف الحصة النهارده</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            النهارده هنتعلم نحرّك شخصيتنا لأي مكان نختاره على المسرح 🚀.
+            هنتخيّل المسرح زي <strong>خريطة كنز فيها شبكة مربعات</strong>، وكل مكان عليها ليه "عنوان".
+            وهنعرف نخلّي الشخصية <strong>تنطّ فوراً</strong> لمكان، أو <strong>تنزلق بنعومة</strong> زي ما تكون بتطير 🪄.
+        </p>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">🧭</div><h4>العنوان</h4><p>كل مكان ليه x و y</p></div>
+            <div class="recap-item"><div class="ricon">⚡</div><h4>go to</h4><p>تنطّ فوراً لمكان</p></div>
+            <div class="recap-item"><div class="ricon">🪄</div><h4>glide</h4><p>تنزلق بالراحة</p></div>
+            <div class="recap-item"><div class="ricon">🎲</div><h4>random / mouse</h4><p>من غير أرقام خالص</p></div>
+        </div>
+    </div>
+
+    <!-- ===== المسرح كخريطة كنز ===== -->
+    <div class="card">
+        <span class="station-badge">🗺️ الفكرة الكبيرة</span>
+        <h2 class="card-title">المسرح زي خريطة كنز فيها شبكة</h2>
+        <p style="line-height:1.8;">
+            تخيّل إن المسرح بتاع سكراتش مرسوم عليه <strong>شبكة مربعات</strong> زي ورق المربعات 📐.
+            كل مكان على الشبكة ليه <strong>عنوان من رقمين</strong>:
+            <strong style="color:#2563eb;">x</strong> بيقول المكان أفقي (يمين وشمال)،
+            و<strong style="color:#2563eb;">y</strong> بيقول المكان رأسي (فوق وتحت).
+        </p>
+
+        <!-- شبكة توضيحية بسيطة -->
+        <div style="position:relative; height:240px; background:linear-gradient(145deg,#dbeafe,#bfdbfe); border-radius:25px; border:3px solid #93c5fd; overflow:hidden; margin:18px 0;">
+            <div class="stage-grid"></div>
+            <div class="axis-x"></div>
+            <div class="axis-y"></div>
+            <div class="center-dot"></div>
+            <div class="center-label">المركز (0, 0) 🎯</div>
+            <div class="edge-label" style="top:50%; right:12px; transform:translateY(-50%);">يمين ➡️</div>
+            <div class="edge-label" style="top:50%; left:12px; transform:translateY(-50%);">⬅️ شمال</div>
+            <div class="edge-label" style="left:50%; top:10px; transform:translateX(-50%);">⬆️ فوق</div>
+            <div class="edge-label" style="left:50%; bottom:10px; transform:translateX(-50%);">تحت ⬇️</div>
+        </div>
+
+        <div class="status-box">
+            🎯 <strong>أهم حاجة:</strong> نُص المسرح بالظبط هو <strong>المركز</strong>، وعنوانه <strong>(0 , 0)</strong>.
+            من المركز ممكن نروح يمين أو شمال أو فوق أو تحت.
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b;">
+            💡 <strong>أسهل خدعة:</strong> عشان تعرف عنوان أي مكان — حرّك الشخصية بإيدك على المسرح
+            وبُص على رقم <strong>x</strong> و <strong>y</strong> اللي بيظهروا تحت المسرح. كده عرفت العنوان من غير حساب! 😎
+        </div>
+    </div>
+
+    <!-- ===== بلوكات الحركة للأماكن ===== -->
+    <div class="card">
+        <span class="station-badge" style="background:#4c97ff;">🧱 البلوكات</span>
+        <h2 class="card-title">بلوكات تنقل شخصيتك لأي مكان</h2>
+
+        <h3 style="color:#1d4ed8; margin:10px 0;">⚡ go to — تنطّ فوراً</h3>
+        <p style="line-height:1.8;">البلوك ده بينقل الشخصية <strong>على طول</strong> لمكان معيّن (من غير ما تشوف الحركة):</p>
+        <div style="text-align:center; margin:12px 0;">
+            <span class="scratch-block motion">go to x: <span class="scratch-block-input">0</span> y: <span class="scratch-block-input">0</span></span>
+        </div>
+
+        <h3 style="color:#1d4ed8; margin:18px 0 10px;">🪄 glide — تنزلق بنعومة (ده الأجمل!)</h3>
+        <p style="line-height:1.8;">البلوك ده بينقل الشخصية لمكان <strong>بالراحة</strong> وانت بتشوف الحركة وهي ماشية:</p>
+        <div style="text-align:center; margin:12px 0;">
+            <span class="scratch-block motion">glide <span class="scratch-block-input">1</span> secs to x: <span class="scratch-block-input">0</span> y: <span class="scratch-block-input">0</span></span>
+        </div>
+
+        <h3 style="color:#1d4ed8; margin:18px 0 10px;">🎲 أسهل طريقة — من غير أرقام خالص</h3>
+        <p style="line-height:1.8;">لو مش عايز تكتب أرقام، استخدم دول:</p>
+        <div style="text-align:center; margin:12px 0;">
+            <span class="scratch-block motion">go to <span class="scratch-block-input">random position</span></span>
+            <span class="scratch-block motion">go to <span class="scratch-block-input">mouse-pointer</span></span>
+        </div>
+        <p style="line-height:1.8; color:#475569;">
+            🎲 <strong>random position</strong> بتوديها مكان عشوائي على المسرح،
+            و🖱️ <strong>mouse-pointer</strong> بتوديها لمكان الماوس على طول.
+        </p>
+
+        <h3 style="color:#1d4ed8; margin:18px 0 10px;">👣 حركات صغيرة بأرقام بسيطة</h3>
+        <p style="line-height:1.8;">لو عايز تحرّكها خطوة صغيرة بس:</p>
+        <div style="text-align:center; margin:12px 0;">
+            <span class="scratch-block motion">change x by <span class="scratch-block-input">10</span></span>
+            <span class="scratch-block motion">change y by <span class="scratch-block-input">10</span></span>
+        </div>
+        <div class="recap-grid">
+            <div class="recap-item"><div class="ricon">➡️</div><h4>change x by 10</h4><p>تتحرك خطوة لليمين</p></div>
+            <div class="recap-item"><div class="ricon">⬆️</div><h4>change y by 10</h4><p>تتحرك خطوة لفوق</p></div>
+        </div>
+    </div>
+
+    <!-- ===== التجربة التفاعلية ===== -->
+    <div class="card">
+        <h2 class="card-title">🎮 جرّب بنفسك: حرّك الصاروخ على الخريطة</h2>
+        <p style="line-height:1.8;">
+            دوس في أي مكان على الخريطة 👇 وشوف الصاروخ بينطّ لهناك (زي <span class="scratch-block motion" style="font-size:0.8rem;">go to mouse-pointer</span>).
+            وجرّب الأزرار وشوف العنوان (x و y) بيتغيّر تحت!
+        </p>
+
+        <div class="demo-stage" id="mapStage">
+            <div class="stage-grid"></div>
+            <div class="axis-x"></div>
+            <div class="axis-y"></div>
+            <div class="center-dot"></div>
+            <div class="center-label">المركز (0,0)</div>
+            <div id="rocket">🚀</div>
+        </div>
+
+        <div style="text-align:center; margin:10px 0;">
+            <span class="pos-label" id="posLabel">x: 0 &nbsp; y: 0</span>
+        </div>
+
+        <div style="text-align:center; margin:15px 0; line-height:2.4;">
+            <button class="ctrl-btn blue" id="glideCenterBtn">🪄 glide للمركز</button>
+            <button class="ctrl-btn purple" id="randomBtn">🎲 go to random</button>
+            <button class="ctrl-btn green" id="changeXBtn">change x by 30 ➡️</button>
+            <button class="ctrl-btn green" id="changeYBtn">change y by 30 ⬆️</button>
+        </div>
+        <div class="status-box" id="mapStatus">
+            🖱️ دوس على الخريطة عشان الصاروخ يروح هناك على طول!
+        </div>
+    </div>
+
+    <!-- ===== المهام الصغيرة ===== -->
+    <div class="card">
+        <h2 class="card-title">📝 تمارين سريعة</h2>
+
+        <div class="mini-task">
+            <h4>1) خلّي الشخصية تنزلق للمركز أول البرنامج 🎯</h4>
+            <p>عايزين أول ما نضغط العلم الأخضر 🚩، الشخصية تنزلق بالراحة لنُص المسرح (المركز). أنهي بلوكات تستخدم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block events">when 🚩 clicked</span> →
+                <span class="scratch-block motion">glide <span class="scratch-block-input">1</span> secs to x: <span class="scratch-block-input">0</span> y: <span class="scratch-block-input">0</span></span><br>
+                المركز عنوانه (0 , 0)، و glide بينقلها بنعومة 🪄.
+            </div>
+        </div>
+
+        <div class="mini-task">
+            <h4>2) خلّيها تروح مكان الماوس 🖱️</h4>
+            <p>عايزين الشخصية تنطّ لمكان الماوس على طول من غير ما نكتب أي أرقام. أنهي بلوك؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الحل</span>
+            <div class="hint-body">
+                <span class="scratch-block motion">go to <span class="scratch-block-input">mouse-pointer</span></span><br>
+                ده بياخدها لمكان الماوس على طول — أسهل طريقة خالص! 😎
+            </div>
+        </div>
+
+        <div class="mini-task" style="background:linear-gradient(145deg,#dbeafe,#bfdbfe); border-color:#3b82f6;">
+            <h4 style="color:#1e40af;">3) 🤔 إيه الفرق بين go to و glide؟</h4>
+            <p>الاتنين بينقلوا الشخصية لمكان… طب إيه الفرق بينهم؟</p>
+            <span class="hint-toggle" onclick="toggleHint(this)">👁️ شوف الإجابة</span>
+            <div class="hint-body">
+                <strong>go to</strong> ⚡ بينقلها <strong>فوراً</strong> (تختفي من مكانها وتظهر في المكان الجديد على طول).<br>
+                <strong>glide</strong> 🪄 بينقلها <strong>بالراحة</strong> وانت <strong>بتشوف الحركة</strong> وهي ماشية لحد ما توصل. (ده الأجمل والأنعم!)
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== المشروع النهائي: رحلة الكنز ===== -->
+    <div class="card" style="border:3px solid #2563eb; background:linear-gradient(145deg,#ffffff,#eff6ff);">
+        <h2 class="card-title">🗺️ المشروع: رحلة الكنز 💎</h2>
+        <p style="line-height:1.8; font-size:1.05rem;">
+            دلوقتي دورك! هنخلّي شخصيتنا 🧭 تعمل <strong>رحلة على الخريطة</strong>:
+            تبدأ من <strong>نقطة البداية</strong> 🏁، تنزلق لـ <strong>شجرة النخل</strong> 🌴،
+            وبعدين تنزلق لـ <strong>الكنز</strong> 💎، وفي الآخر تقول "لقيت الكنز!".
+            كلها بـ <span class="scratch-block motion" style="font-size:0.8rem;">glide</span> عشان تبان الحركة حلوة 🪄.
+        </p>
+
+        <div class="status-box">🎯 <strong>الهدف:</strong> الشخصية تنزلق بين 3 أماكن على الخريطة بالترتيب، وفي الآخر تقول "لقيت الكنز! 💎"</div>
+
+        <h3 style="color:#1d4ed8; margin:15px 0 10px;">📋 الخطوات (نفّذها في سكراتش):</h3>
+
+        <div class="project-step"><div class="num">1</div><div>
+            ابدأ البرنامج بحدث: <span class="scratch-block events">when 🚩 clicked</span>
+        </div></div>
+        <div class="project-step"><div class="num">2</div><div>
+            خلّي الشخصية تروح <strong>نقطة البداية 🏁</strong> الأول (شمال تحت):
+            <span class="scratch-block motion">go to x: <span class="scratch-block-input">-150</span> y: <span class="scratch-block-input">-100</span></span>
+            <br><span style="font-size:0.85rem; color:#64748b;">💡 مش لازم تحفظ الأرقام — حرّك الشخصية بإيدك للمكان اللي عايزه وبُص على x و y تحت المسرح.</span>
+        </div></div>
+        <div class="project-step"><div class="num">3</div><div>
+            تنزلق لـ <strong>شجرة النخل 🌴</strong>:
+            <span class="scratch-block motion">glide <span class="scratch-block-input">2</span> secs to x: <span class="scratch-block-input">0</span> y: <span class="scratch-block-input">80</span></span>
+        </div></div>
+        <div class="project-step"><div class="num">4</div><div>
+            تنزلق لـ <strong>الكنز 💎</strong>:
+            <span class="scratch-block motion">glide <span class="scratch-block-input">2</span> secs to x: <span class="scratch-block-input">150</span> y: <span class="scratch-block-input">-80</span></span>
+        </div></div>
+        <div class="project-step"><div class="num">5</div><div>
+            وأخيراً تفرح وتقول إنها لقيت الكنز:
+            <span class="scratch-block looks">say <span class="scratch-block-input">لقيت الكنز! 💎</span> for <span class="scratch-block-input">2</span> sec</span>
+        </div></div>
+
+        <h3 style="color:#1d4ed8; margin:20px 0 10px;">🧩 الكود كامل (شكله في سكراتش):</h3>
+        <div class="codebox">
+<span class="ev">when 🚩 clicked</span><br>
+<span class="mo">go to x: -150 y: -100</span> &nbsp;<span class="tx">// 🏁 البداية</span><br>
+<span class="mo">glide 2 secs to x: 0 y: 80</span> &nbsp;<span class="tx">// 🌴 شجرة النخل</span><br>
+<span class="mo">glide 2 secs to x: 150 y: -80</span> &nbsp;<span class="tx">// 💎 الكنز</span><br>
+<span class="lo">say "لقيت الكنز! 💎" for 2 seconds</span>
+        </div>
+
+        <div class="status-box" style="background:#fef9c3; border-color:#f59e0b; margin-top:18px;">
+            🌟 <strong>تحديات إضافية (لو خلّصت بسرعة):</strong>
+            <div style="text-align:right; font-weight:600; margin-top:8px; line-height:2;">
+                • غيّر الخلفية (backdrop) لخريطة كنز أو جزيرة 🏝️<br>
+                • ضيف شخصية كنز 💎 ثابتة في الآخر تستنى الشخصية توصلها<br>
+                • خلّي الشخصية تقول اسم كل مكان وهي بتوصله ("وصلت النخلة 🌴")
+            </div>
+        </div>
+
+        <h3 style="color:#1d4ed8; margin:20px 0 10px;">✅ قائمة المراجعة (دوس على اللي خلّصته):</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li>حطيت حدث when green flag clicked</li>
+            <li>الشخصية بتروح نقطة البداية بـ go to</li>
+            <li>بتنزلق للنخلة بـ glide</li>
+            <li>بتنزلق للكنز بـ glide</li>
+            <li>بتقول "لقيت الكنز!" في الآخر</li>
+        </ul>
+    </div>
+
+    <footer>
+        🎓 برافو عليك! دلوقتي بقيت تعرف تحرّك شخصيتك لأي مكان على الخريطة بنعومة. استعد لمغامرة جديدة في Session 13! 🚀
+    </footer>
+</div>
+
+<script>
+    // ===== Hints toggle =====
+    function toggleHint(el) {
+        const body = el.nextElementSibling;
+        body.classList.toggle('show');
+        el.textContent = body.classList.contains('show') ? '🙈 اخفي الإجابة' : '👁️ شوف الإجابة';
+    }
+
+    // ===== Interactive map stage =====
+    const stage = document.getElementById('mapStage');
+    const rocket = document.getElementById('rocket');
+    const posLabel = document.getElementById('posLabel');
+    const mapStatus = document.getElementById('mapStatus');
+
+    // We store the rocket position as a percentage from center.
+    // pxLeft/pxTop are pixel offsets inside the stage.
+    let pxLeft = 0, pxTop = 0; // offset from center in pixels
+
+    function stageSize() {
+        return { w: stage.clientWidth, h: stage.clientHeight };
+    }
+
+    // Convert pixel offset-from-center to friendly Scratch-like coords for DISPLAY.
+    // Scratch stage is 480 wide x 360 tall. We map proportionally.
+    function toScratchCoords() {
+        const { w, h } = stageSize();
+        const x = Math.round((pxLeft / (w / 2)) * 240);
+        const y = Math.round((-pxTop / (h / 2)) * 180); // up = positive
+        return { x, y };
+    }
+
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+    function renderRocket(glide) {
+        const { w, h } = stageSize();
+        // keep rocket inside the stage
+        pxLeft = clamp(pxLeft, -(w/2 - 25), (w/2 - 25));
+        pxTop  = clamp(pxTop,  -(h/2 - 25), (h/2 - 25));
+        rocket.classList.toggle('gliding', !!glide);
+        rocket.style.left = 'calc(50% + ' + pxLeft + 'px)';
+        rocket.style.top  = 'calc(50% + ' + pxTop  + 'px)';
+        const c = toScratchCoords();
+        posLabel.textContent = 'x: ' + c.x + '   y: ' + c.y;
+    }
+
+    // Click on the map -> go to mouse-pointer (instant)
+    stage.addEventListener('click', (e) => {
+        const rect = stage.getBoundingClientRect();
+        pxLeft = (e.clientX - rect.left) - rect.width / 2;
+        pxTop  = (e.clientY - rect.top)  - rect.height / 2;
+        renderRocket(false);
+        mapStatus.className = 'status-box';
+        mapStatus.style.background = '#eff6ff';
+        mapStatus.style.borderColor = '#4c97ff';
+        mapStatus.innerHTML = '⚡ <strong>go to mouse-pointer</strong> — الصاروخ نطّ لمكان الماوس على طول!';
+    });
+
+    // glide to center (smooth)
+    document.getElementById('glideCenterBtn').addEventListener('click', () => {
+        pxLeft = 0; pxTop = 0;
+        renderRocket(true);
+        mapStatus.className = 'status-box success';
+        mapStatus.innerHTML = '🪄 <strong>glide 1 secs to x:0 y:0</strong> — الصاروخ بينزلق بالراحة للمركز!';
+    });
+
+    // go to random (instant)
+    document.getElementById('randomBtn').addEventListener('click', () => {
+        const { w, h } = stageSize();
+        pxLeft = (Math.random() * (w - 60)) - (w - 60) / 2;
+        pxTop  = (Math.random() * (h - 60)) - (h - 60) / 2;
+        renderRocket(false);
+        mapStatus.className = 'status-box';
+        mapStatus.style.background = '#f3e8ff';
+        mapStatus.style.borderColor = '#8b5cf6';
+        mapStatus.innerHTML = '🎲 <strong>go to random position</strong> — الصاروخ نطّ لمكان عشوائي!';
+    });
+
+    // change x by 30 (move right)
+    document.getElementById('changeXBtn').addEventListener('click', () => {
+        const { w } = stageSize();
+        pxLeft += w * 0.10; // a friendly visual step to the right
+        renderRocket(true);
+        mapStatus.className = 'status-box success';
+        mapStatus.innerHTML = '➡️ <strong>change x by 30</strong> — الصاروخ اتحرك خطوة لليمين!';
+    });
+
+    // change y by 30 (move up)
+    document.getElementById('changeYBtn').addEventListener('click', () => {
+        const { h } = stageSize();
+        pxTop -= h * 0.10; // up
+        renderRocket(true);
+        mapStatus.className = 'status-box success';
+        mapStatus.innerHTML = '⬆️ <strong>change y by 30</strong> — الصاروخ اتحرك خطوة لفوق!';
+    });
+
+    // initial render
+    renderRocket(false);
+    window.addEventListener('resize', () => renderRocket(false));
+
+    // ===== Final checklist =====
+    document.querySelectorAll('#finalChecklist li').forEach(li => {
+        li.addEventListener('click', () => li.classList.toggle('done'));
+    });
+</script>
+</body>
+</html>
